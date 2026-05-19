@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { formulas } from '../data/formulas';
 import type { Formula } from '../data/formulas';
 import MathRenderer from '../components/MathRenderer';
-import { Check, CheckCircle2, Award, Layers, Search, RotateCcw } from 'lucide-react';
+import { Award, Layers, Search, RotateCcw } from 'lucide-react';
 import { useAppContext } from '../App';
 
 interface CategoryStyle {
@@ -92,13 +92,13 @@ export default function FormulaBoard() {
   const { language, seenFormulas, toggleSeenFormula } = useAppContext();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCourse, setSelectedCourse] = useState<'all' | 'nla' | 'opt'>('all');
-  const [selectedStatus, setSelectedStatus] = useState<'all' | 'mastered' | 'to-learn'>('all');
+  const [selectedStatus, setSelectedStatus] = useState<'all' | 'green' | 'yellow' | 'red' | 'to-learn'>('all');
   const [selectedFormula, setSelectedFormula] = useState<Formula | null>(null);
 
   const isHe = language === 'he';
 
-  const toggleSeen = (id: string) => {
-    toggleSeenFormula(id);
+  const toggleSeen = (id: string, status?: 'green' | 'yellow' | 'red' | null) => {
+    toggleSeenFormula(id, status);
   };
 
   const resetAllProgress = () => {
@@ -107,10 +107,10 @@ export default function FormulaBoard() {
       : 'Are you sure you want to reset all formula mastery indicators?';
       
     if (window.confirm(confirmMsg)) {
-      // Toggle all mastered formulas off, which automatically updates local storage and triggers cloud sync!
+      // Toggle all mastered/marked formulas off
       Object.keys(seenFormulas).forEach(id => {
         if (seenFormulas[id]) {
-          toggleSeenFormula(id);
+          toggleSeenFormula(id, null);
         }
       });
     }
@@ -127,10 +127,11 @@ export default function FormulaBoard() {
                           catMatch.toLowerCase().includes(searchQuery.toLowerCase());
                           
     const matchesCourse = selectedCourse === 'all' || f.courseId === selectedCourse;
-    const isMastered = !!seenFormulas[f.id];
     const matchesStatus = selectedStatus === 'all' || 
-                          (selectedStatus === 'mastered' && isMastered) || 
-                          (selectedStatus === 'to-learn' && !isMastered);
+                          (selectedStatus === 'green' && (seenFormulas[f.id] === 'green' || seenFormulas[f.id] === true)) || 
+                          (selectedStatus === 'yellow' && seenFormulas[f.id] === 'yellow') || 
+                          (selectedStatus === 'red' && seenFormulas[f.id] === 'red') || 
+                          (selectedStatus === 'to-learn' && !seenFormulas[f.id]);
     
     return matchesSearch && matchesCourse && matchesStatus;
   });
@@ -139,11 +140,21 @@ export default function FormulaBoard() {
   const totalNLA = formulas.filter(f => f.courseId === 'nla').length;
   const totalOPT = formulas.filter(f => f.courseId === 'opt').length;
   
-  const masteredNLA = formulas.filter(f => f.courseId === 'nla' && seenFormulas[f.id]).length;
-  const masteredOPT = formulas.filter(f => f.courseId === 'opt' && seenFormulas[f.id]).length;
+  const greenNLA = formulas.filter(f => f.courseId === 'nla' && (seenFormulas[f.id] === 'green' || seenFormulas[f.id] === true)).length;
+  const yellowNLA = formulas.filter(f => f.courseId === 'nla' && seenFormulas[f.id] === 'yellow').length;
+  const redNLA = formulas.filter(f => f.courseId === 'nla' && seenFormulas[f.id] === 'red').length;
 
-  const pctNLA = totalNLA > 0 ? Math.round((masteredNLA / totalNLA) * 100) : 0;
-  const pctOPT = totalOPT > 0 ? Math.round((masteredOPT / totalOPT) * 100) : 0;
+  const greenOPT = formulas.filter(f => f.courseId === 'opt' && (seenFormulas[f.id] === 'green' || seenFormulas[f.id] === true)).length;
+  const yellowOPT = formulas.filter(f => f.courseId === 'opt' && seenFormulas[f.id] === 'yellow').length;
+  const redOPT = formulas.filter(f => f.courseId === 'opt' && seenFormulas[f.id] === 'red').length;
+
+  const pctGreenNLA = totalNLA > 0 ? Math.round((greenNLA / totalNLA) * 100) : 0;
+  const pctYellowNLA = totalNLA > 0 ? Math.round((yellowNLA / totalNLA) * 100) : 0;
+  const pctRedNLA = totalNLA > 0 ? Math.round((redNLA / totalNLA) * 100) : 0;
+
+  const pctGreenOPT = totalOPT > 0 ? Math.round((greenOPT / totalOPT) * 100) : 0;
+  const pctYellowOPT = totalOPT > 0 ? Math.round((yellowOPT / totalOPT) * 100) : 0;
+  const pctRedOPT = totalOPT > 0 ? Math.round((redOPT / totalOPT) * 100) : 0;
 
   // Group by category
   const categoriesMap: Record<string, typeof formulas> = {};
@@ -174,8 +185,10 @@ export default function FormulaBoard() {
   
   const lFilterMastery = isHe ? 'מדד שליטה בחומר' : 'Mastery status';
   const lFilterAll = isHe ? 'הכל' : 'All';
-  const lFilterMastered = isHe ? 'שולט' : 'Mastered';
-  const lFilterToLearn = isHe ? 'ללמוד' : 'To Learn';
+  const lFilterMastered = isHe ? 'שולט 😄' : 'Mastered 😄';
+  const lFilterLearning = isHe ? 'בתהליך 😐' : 'Learning 😐';
+  const lFilterStruggling = isHe ? 'מתקשה 😡' : 'Struggling 😡';
+  const lFilterToLearn = isHe ? 'ללמוד 📝' : 'To Learn 📝';
   
   const lNoMatches = isHe ? 'לא נמצאו נוסחאות מתאימות' : 'No matching equations found';
   const lNoMatchesSub = isHe ? 'נסה לשנות את מילות החיפוש או פילטר הקטגוריות.' : 'Try adjusting your search query or filter keywords.';
@@ -184,8 +197,6 @@ export default function FormulaBoard() {
   const lDefSentence = isHe ? 'משפט הגדרה:' : 'Definition Sentence:';
   const lCoreDefSentence = isHe ? 'משפט הגדרה מרכזי' : 'Core Definition Sentence';
   const lStatusLabel = isHe ? 'סטטוס:' : 'Status:';
-  const lMarkToLearn = isHe ? "סמן כ'צריך ללמוד'" : 'Mark as to-learn';
-  const lMarkMastered = isHe ? "סמן כ'שולט בחומר'" : 'Mark as mastered';
 
   return (
     <motion.div
@@ -202,37 +213,95 @@ export default function FormulaBoard() {
         </p>
       </header>
 
-      {/* Progress Dashboard */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem', marginBottom: '3rem' }}>
+      {/* Progress Dashboard with Tri-Color Progress Bars */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem', marginBottom: '3rem' }}>
         {/* NLA Progress Card */}
-        <div className="glass-panel" style={{ padding: '1.5rem 2rem', borderTop: '4px solid var(--primary-color)' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.8rem' }}>
-            <span style={{ fontWeight: 'bold', fontSize: '1.1rem' }}>{lNlaTitle}</span>
-            <span style={{ background: 'var(--primary-color)', color: 'white', padding: '0.2rem 0.6rem', borderRadius: '12px', fontSize: '0.8rem' }}>
-              {masteredNLA} / {totalNLA} {lFilterMastered}
+        <div className="glass-panel" style={{ padding: '1.5rem 1.75rem', borderTop: '4px solid var(--primary-color)', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span style={{ fontWeight: 800, fontSize: '1.15rem', color: 'var(--text-primary)' }}>{lNlaTitle}</span>
+            <span style={{ background: 'var(--primary-color)', color: 'white', padding: '0.2rem 0.65rem', borderRadius: '12px', fontSize: '0.78rem', fontWeight: 'bold' }}>
+              {totalNLA} {isHe ? 'נוסחאות' : 'equations'}
             </span>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <div style={{ flex: 1, height: '10px', background: 'var(--math-bg)', borderRadius: '5px', overflow: 'hidden' }}>
-              <div style={{ height: '100%', width: `${pctNLA}%`, background: 'var(--primary-color)', borderRadius: '5px', transition: 'width 0.6s ease' }} />
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+            {/* Green progress bar */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', color: 'var(--text-secondary)', fontWeight: 600 }}>
+                <span>😄 {isHe ? 'שולט' : 'Mastered'}</span>
+                <span>{greenNLA} / {totalNLA} ({pctGreenNLA}%)</span>
+              </div>
+              <div style={{ height: '8px', background: 'var(--math-bg)', borderRadius: '4px', overflow: 'hidden' }}>
+                <div style={{ height: '100%', width: `${pctGreenNLA}%`, background: 'var(--success)', borderRadius: '4px', transition: 'width 0.4s ease' }} />
+              </div>
             </div>
-            <span style={{ fontWeight: 'bold', fontSize: '1.2rem', minWidth: '45px', textAlign: isHe ? 'left' : 'right' }}>{pctNLA}%</span>
+
+            {/* Yellow progress bar */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', color: 'var(--text-secondary)', fontWeight: 600 }}>
+                <span>😐 {isHe ? 'בתהליך' : 'Learning'}</span>
+                <span>{yellowNLA} / {totalNLA} ({pctYellowNLA}%)</span>
+              </div>
+              <div style={{ height: '8px', background: 'var(--math-bg)', borderRadius: '4px', overflow: 'hidden' }}>
+                <div style={{ height: '100%', width: `${pctYellowNLA}%`, background: '#f59e0b', borderRadius: '4px', transition: 'width 0.4s ease' }} />
+              </div>
+            </div>
+
+            {/* Red progress bar */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', color: 'var(--text-secondary)', fontWeight: 600 }}>
+                <span>😡 {isHe ? 'מתקשה' : 'Struggling'}</span>
+                <span>{redNLA} / {totalNLA} ({pctRedNLA}%)</span>
+              </div>
+              <div style={{ height: '8px', background: 'var(--math-bg)', borderRadius: '4px', overflow: 'hidden' }}>
+                <div style={{ height: '100%', width: `${pctRedNLA}%`, background: '#ef4444', borderRadius: '4px', transition: 'width 0.4s ease' }} />
+              </div>
+            </div>
           </div>
         </div>
 
         {/* OPT Progress Card */}
-        <div className="glass-panel" style={{ padding: '1.5rem 2rem', borderTop: '4px solid var(--secondary-color)' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.8rem' }}>
-            <span style={{ fontWeight: 'bold', fontSize: '1.1rem' }}>{lOptTitle}</span>
-            <span style={{ background: 'var(--secondary-color)', color: 'white', padding: '0.2rem 0.6rem', borderRadius: '12px', fontSize: '0.8rem' }}>
-              {masteredOPT} / {totalOPT} {lFilterMastered}
+        <div className="glass-panel" style={{ padding: '1.5rem 1.75rem', borderTop: '4px solid var(--secondary-color)', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span style={{ fontWeight: 800, fontSize: '1.15rem', color: 'var(--text-primary)' }}>{lOptTitle}</span>
+            <span style={{ background: 'var(--secondary-color)', color: 'white', padding: '0.2rem 0.65rem', borderRadius: '12px', fontSize: '0.78rem', fontWeight: 'bold' }}>
+              {totalOPT} {isHe ? 'נוסחאות' : 'equations'}
             </span>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <div style={{ flex: 1, height: '10px', background: 'var(--math-bg)', borderRadius: '5px', overflow: 'hidden' }}>
-              <div style={{ height: '100%', width: `${pctOPT}%`, background: 'var(--secondary-color)', borderRadius: '5px', transition: 'width 0.6s ease' }} />
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+            {/* Green progress bar */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', color: 'var(--text-secondary)', fontWeight: 600 }}>
+                <span>😄 {isHe ? 'שולט' : 'Mastered'}</span>
+                <span>{greenOPT} / {totalOPT} ({pctGreenOPT}%)</span>
+              </div>
+              <div style={{ height: '8px', background: 'var(--math-bg)', borderRadius: '4px', overflow: 'hidden' }}>
+                <div style={{ height: '100%', width: `${pctGreenOPT}%`, background: 'var(--success)', borderRadius: '4px', transition: 'width 0.4s ease' }} />
+              </div>
             </div>
-            <span style={{ fontWeight: 'bold', fontSize: '1.2rem', minWidth: '45px', textAlign: isHe ? 'left' : 'right' }}>{pctOPT}%</span>
+
+            {/* Yellow progress bar */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', color: 'var(--text-secondary)', fontWeight: 600 }}>
+                <span>😐 {isHe ? 'בתהליך' : 'Learning'}</span>
+                <span>{yellowOPT} / {totalOPT} ({pctYellowOPT}%)</span>
+              </div>
+              <div style={{ height: '8px', background: 'var(--math-bg)', borderRadius: '4px', overflow: 'hidden' }}>
+                <div style={{ height: '100%', width: `${pctYellowOPT}%`, background: '#f59e0b', borderRadius: '4px', transition: 'width 0.4s ease' }} />
+              </div>
+            </div>
+
+            {/* Red progress bar */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', color: 'var(--text-secondary)', fontWeight: 600 }}>
+                <span>😡 {isHe ? 'מתקשה' : 'Struggling'}</span>
+                <span>{redOPT} / {totalOPT} ({pctRedOPT}%)</span>
+              </div>
+              <div style={{ height: '8px', background: 'var(--math-bg)', borderRadius: '4px', overflow: 'hidden' }}>
+                <div style={{ height: '100%', width: `${pctRedOPT}%`, background: '#ef4444', borderRadius: '4px', transition: 'width 0.4s ease' }} />
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -278,7 +347,7 @@ export default function FormulaBoard() {
           {/* Course filter group */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
             <span style={{ fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '1px', color: 'var(--text-muted)', fontWeight: 'bold' }}>{lFilterTopic}</span>
-            <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
               <button 
                 onClick={() => setSelectedCourse('all')}
                 style={{
@@ -288,7 +357,8 @@ export default function FormulaBoard() {
                   background: selectedCourse === 'all' ? 'var(--primary-color)' : 'var(--math-bg)',
                   color: selectedCourse === 'all' ? 'white' : 'var(--text-primary)',
                   border: '1px solid var(--surface-border)',
-                  cursor: 'pointer'
+                  cursor: 'pointer',
+                  fontWeight: 600
                 }}
               >
                 {lFilterAllCourses}
@@ -302,7 +372,8 @@ export default function FormulaBoard() {
                   background: selectedCourse === 'nla' ? 'var(--primary-color)' : 'var(--math-bg)',
                   color: selectedCourse === 'nla' ? 'white' : 'var(--text-primary)',
                   border: '1px solid var(--surface-border)',
-                  cursor: 'pointer'
+                  cursor: 'pointer',
+                  fontWeight: 600
                 }}
               >
                 {lFilterNla}
@@ -316,7 +387,8 @@ export default function FormulaBoard() {
                   background: selectedCourse === 'opt' ? 'var(--primary-color)' : 'var(--math-bg)',
                   color: selectedCourse === 'opt' ? 'white' : 'var(--text-primary)',
                   border: '1px solid var(--surface-border)',
-                  cursor: 'pointer'
+                  cursor: 'pointer',
+                  fontWeight: 600
                 }}
               >
                 {lFilterOpt}
@@ -324,10 +396,10 @@ export default function FormulaBoard() {
             </div>
           </div>
 
-          {/* Status filter group */}
+          {/* Status filter group (Now supporting 5 comprehensive modes!) */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
             <span style={{ fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '1px', color: 'var(--text-muted)', fontWeight: 'bold' }}>{lFilterMastery}</span>
-            <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
               <button 
                 onClick={() => setSelectedStatus('all')}
                 style={{
@@ -337,24 +409,56 @@ export default function FormulaBoard() {
                   background: selectedStatus === 'all' ? 'var(--accent-color)' : 'var(--math-bg)',
                   color: selectedStatus === 'all' ? 'white' : 'var(--text-primary)',
                   border: '1px solid var(--surface-border)',
-                  cursor: 'pointer'
+                  cursor: 'pointer',
+                  fontWeight: 600
                 }}
               >
                 {lFilterAll}
               </button>
               <button 
-                onClick={() => setSelectedStatus('mastered')}
+                onClick={() => setSelectedStatus('green')}
                 style={{
                   padding: '0.4rem 1rem',
                   fontSize: '0.85rem',
                   borderRadius: '16px',
-                  background: selectedStatus === 'mastered' ? 'var(--success)' : 'var(--math-bg)',
-                  color: selectedStatus === 'mastered' ? 'white' : 'var(--text-primary)',
+                  background: selectedStatus === 'green' ? 'var(--success)' : 'var(--math-bg)',
+                  color: selectedStatus === 'green' ? 'white' : 'var(--text-primary)',
                   border: '1px solid var(--surface-border)',
-                  cursor: 'pointer'
+                  cursor: 'pointer',
+                  fontWeight: 600
                 }}
               >
                 {lFilterMastered}
+              </button>
+              <button 
+                onClick={() => setSelectedStatus('yellow')}
+                style={{
+                  padding: '0.4rem 1rem',
+                  fontSize: '0.85rem',
+                  borderRadius: '16px',
+                  background: selectedStatus === 'yellow' ? '#f59e0b' : 'var(--math-bg)',
+                  color: selectedStatus === 'yellow' ? 'white' : 'var(--text-primary)',
+                  border: '1px solid var(--surface-border)',
+                  cursor: 'pointer',
+                  fontWeight: 600
+                }}
+              >
+                {lFilterLearning}
+              </button>
+              <button 
+                onClick={() => setSelectedStatus('red')}
+                style={{
+                  padding: '0.4rem 1rem',
+                  fontSize: '0.85rem',
+                  borderRadius: '16px',
+                  background: selectedStatus === 'red' ? '#ef4444' : 'var(--math-bg)',
+                  color: selectedStatus === 'red' ? 'white' : 'var(--text-primary)',
+                  border: '1px solid var(--surface-border)',
+                  cursor: 'pointer',
+                  fontWeight: 600
+                }}
+              >
+                {lFilterStruggling}
               </button>
               <button 
                 onClick={() => setSelectedStatus('to-learn')}
@@ -362,10 +466,11 @@ export default function FormulaBoard() {
                   padding: '0.4rem 1rem',
                   fontSize: '0.85rem',
                   borderRadius: '16px',
-                  background: selectedStatus === 'to-learn' ? 'var(--warning)' : 'var(--math-bg)',
+                  background: selectedStatus === 'to-learn' ? '#64748b' : 'var(--math-bg)',
                   color: selectedStatus === 'to-learn' ? 'white' : 'var(--text-primary)',
                   border: '1px solid var(--surface-border)',
-                  cursor: 'pointer'
+                  cursor: 'pointer',
+                  fontWeight: 600
                 }}
               >
                 {lFilterToLearn}
@@ -415,7 +520,6 @@ export default function FormulaBoard() {
               {/* Grid of Cards */}
               <div className="layout-grid">
                 {items.map(f => {
-                  const isSeen = seenFormulas[f.id];
                   const formulaName = isHe ? (f.nameHe || f.name) : f.name;
                   const formulaDesc = isHe ? (f.descriptionHe || f.description) : f.description;
                   
@@ -428,49 +532,114 @@ export default function FormulaBoard() {
                         display: 'flex',
                         flexDirection: 'column',
                         position: 'relative',
-                        borderColor: isSeen ? 'var(--success)' : 'var(--surface-border)',
+                        borderColor: seenFormulas[f.id] === 'green' || seenFormulas[f.id] === true
+                          ? 'var(--success)'
+                          : seenFormulas[f.id] === 'yellow'
+                          ? '#f59e0b'
+                          : seenFormulas[f.id] === 'red'
+                          ? '#ef4444'
+                          : 'var(--surface-border)',
                         borderLeftWidth: isHe ? '1px' : '5px',
                         borderLeftColor: isHe ? 'var(--surface-border)' : style.border,
                         borderRightWidth: isHe ? '5px' : '1px',
                         borderRightColor: isHe ? style.border : 'var(--surface-border)',
-                        boxShadow: isSeen ? '0 8px 24px rgba(16, 185, 129, 0.1)' : `0 4px 12px ${style.shadow}`,
+                        boxShadow: seenFormulas[f.id] === 'green' || seenFormulas[f.id] === true
+                          ? '0 8px 24px rgba(16, 185, 129, 0.12)'
+                          : seenFormulas[f.id] === 'yellow'
+                          ? '0 8px 24px rgba(245, 158, 11, 0.12)'
+                          : seenFormulas[f.id] === 'red'
+                          ? '0 8px 24px rgba(239, 68, 68, 0.12)'
+                          : `0 4px 12px ${style.shadow}`,
                         cursor: 'pointer',
-                        transition: 'transform 0.2s, box-shadow 0.2s',
+                        transition: 'transform 0.2s, box-shadow 0.2s, border-color 0.2s',
                         userSelect: 'none'
                       }}
-                      whileHover={{ transform: 'translateY(-4px)', boxShadow: isSeen ? '0 12px 30px rgba(16, 185, 129, 0.15)' : `0 8px 20px ${style.glow}` }}
+                      whileHover={{ 
+                        transform: 'translateY(-4px)', 
+                        boxShadow: seenFormulas[f.id] === 'green' || seenFormulas[f.id] === true
+                          ? '0 12px 30px rgba(16, 185, 129, 0.18)'
+                          : seenFormulas[f.id] === 'yellow'
+                          ? '0 12px 30px rgba(245, 158, 11, 0.18)'
+                          : seenFormulas[f.id] === 'red'
+                          ? '0 12px 30px rgba(239, 68, 68, 0.18)'
+                          : `0 8px 20px ${style.glow}` 
+                      }}
                     >
-                      {/* Mark Status Trigger Button */}
-                      <button 
-                        onClick={(e) => {
-                          e.stopPropagation(); // Prevent modal opening on mark click
-                          toggleSeen(f.id);
-                        }}
+                      {/* 3-Tier Emoji Marking Row */}
+                      <div 
+                        onClick={(e) => e.stopPropagation()} // Prevent card click
                         style={{
                           position: 'absolute',
-                          top: '1.25rem',
-                          right: isHe ? 'auto' : '1.25rem',
-                          left: isHe ? '1.25rem' : 'auto',
-                          background: isSeen ? 'rgba(16, 185, 129, 0.15)' : 'var(--math-bg)',
-                          border: 'none',
-                          borderRadius: '50%',
-                          width: '38px',
-                          height: '38px',
+                          top: '1.1rem',
+                          right: isHe ? 'auto' : '1.1rem',
+                          left: isHe ? '1.1rem' : 'auto',
                           display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          cursor: 'pointer',
-                          color: isSeen ? 'var(--success)' : 'var(--text-muted)',
-                          transition: 'all 0.2s',
-                          borderWidth: '1px',
-                          borderStyle: 'solid',
-                          borderColor: isSeen ? 'var(--success)' : 'var(--surface-border)',
-                          zIndex: 2
+                          gap: '0.3rem',
+                          zIndex: 5,
+                          background: 'var(--surface-color)',
+                          padding: '0.2rem',
+                          borderRadius: '20px',
+                          border: '1px solid var(--surface-border)',
+                          boxShadow: 'var(--shadow-sm)'
                         }}
-                        title={isSeen ? lMarkToLearn : lMarkMastered}
                       >
-                        {isSeen ? <CheckCircle2 size={19} /> : <Check size={19} />}
-                      </button>
+                        {/* 😄 Green button */}
+                        <button
+                          onClick={() => toggleSeen(f.id, seenFormulas[f.id] === 'green' ? null : 'green')}
+                          style={{
+                            width: '26px', height: '26px', borderRadius: '50%',
+                            background: seenFormulas[f.id] === 'green' || seenFormulas[f.id] === true ? 'rgba(16, 185, 129, 0.18)' : 'transparent',
+                            border: seenFormulas[f.id] === 'green' || seenFormulas[f.id] === true ? '1.5px solid var(--success)' : '1px dashed transparent',
+                            cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            fontSize: '0.88rem', transition: 'all 0.2s ease', outline: 'none',
+                            opacity: seenFormulas[f.id] === 'green' || seenFormulas[f.id] === true ? 1 : 0.45,
+                            boxShadow: seenFormulas[f.id] === 'green' || seenFormulas[f.id] === true ? '0 0 8px rgba(16, 185, 129, 0.4)' : 'none'
+                          }}
+                          onMouseEnter={(e) => { e.currentTarget.style.opacity = '1'; }}
+                          onMouseLeave={(e) => { if (seenFormulas[f.id] !== 'green' && seenFormulas[f.id] !== true) e.currentTarget.style.opacity = '0.45'; }}
+                          title={isHe ? 'שולט 😄' : 'Mastered 😄'}
+                        >
+                          😄
+                        </button>
+
+                        {/* 😐 Yellow button */}
+                        <button
+                          onClick={() => toggleSeen(f.id, seenFormulas[f.id] === 'yellow' ? null : 'yellow')}
+                          style={{
+                            width: '26px', height: '26px', borderRadius: '50%',
+                            background: seenFormulas[f.id] === 'yellow' ? 'rgba(245, 158, 11, 0.18)' : 'transparent',
+                            border: seenFormulas[f.id] === 'yellow' ? '1.5px solid #f59e0b' : '1px dashed transparent',
+                            cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            fontSize: '0.88rem', transition: 'all 0.2s ease', outline: 'none',
+                            opacity: seenFormulas[f.id] === 'yellow' ? 1 : 0.45,
+                            boxShadow: seenFormulas[f.id] === 'yellow' ? '0 0 8px rgba(245, 158, 11, 0.4)' : 'none'
+                          }}
+                          onMouseEnter={(e) => { e.currentTarget.style.opacity = '1'; }}
+                          onMouseLeave={(e) => { if (seenFormulas[f.id] !== 'yellow') e.currentTarget.style.opacity = '0.45'; }}
+                          title={isHe ? 'בתהליך 😐' : 'Learning 😐'}
+                        >
+                          😐
+                        </button>
+
+                        {/* 😡 Red button */}
+                        <button
+                          onClick={() => toggleSeen(f.id, seenFormulas[f.id] === 'red' ? null : 'red')}
+                          style={{
+                            width: '26px', height: '26px', borderRadius: '50%',
+                            background: seenFormulas[f.id] === 'red' ? 'rgba(239, 68, 68, 0.18)' : 'transparent',
+                            border: seenFormulas[f.id] === 'red' ? '1.5px solid #ef4444' : '1px dashed transparent',
+                            cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            fontSize: '0.88rem', transition: 'all 0.2s ease', outline: 'none',
+                            opacity: seenFormulas[f.id] === 'red' ? 1 : 0.45,
+                            boxShadow: seenFormulas[f.id] === 'red' ? '0 0 8px rgba(239, 68, 68, 0.4)' : 'none'
+                          }}
+                          onMouseEnter={(e) => { e.currentTarget.style.opacity = '1'; }}
+                          onMouseLeave={(e) => { if (seenFormulas[f.id] !== 'red') e.currentTarget.style.opacity = '0.45'; }}
+                          title={isHe ? 'מתקשה 😡' : 'Struggling 😡'}
+                        >
+                          😡
+                        </button>
+                      </div>
 
                       {/* Course badge indicator */}
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.4rem' }}>
@@ -489,8 +658,8 @@ export default function FormulaBoard() {
                         fontSize: '1.2rem', 
                         marginTop: '0.2rem', 
                         marginBottom: '1rem', 
-                        paddingRight: isHe ? '0' : '2.5rem', 
-                        paddingLeft: isHe ? '2.5rem' : '0', 
+                        paddingRight: isHe ? '0' : '5.5rem', 
+                        paddingLeft: isHe ? '5.5rem' : '0', 
                         whiteSpace: 'normal', 
                         wordBreak: 'break-word', 
                         color: 'var(--text-primary)' 
@@ -523,21 +692,52 @@ export default function FormulaBoard() {
                         </p>
                       </div>
 
-                      {/* Mastered celebration badge */}
-                      {isSeen && (
+                      {/* Celebration status badge */}
+                      {seenFormulas[f.id] && (
                         <div style={{ 
                           display: 'flex', 
                           alignItems: 'center', 
                           gap: '0.4rem', 
                           marginTop: '1rem',
                           padding: '0.4rem 0.8rem',
-                          background: 'rgba(16, 185, 129, 0.1)', 
+                          background: seenFormulas[f.id] === 'green' || seenFormulas[f.id] === true
+                            ? 'rgba(16, 185, 129, 0.1)'
+                            : seenFormulas[f.id] === 'yellow'
+                            ? 'rgba(245, 158, 11, 0.1)'
+                            : 'rgba(239, 68, 68, 0.1)', 
                           borderRadius: 'var(--radius-sm)',
-                          border: '1px solid rgba(16, 185, 129, 0.2)',
+                          border: `1px solid ${
+                            seenFormulas[f.id] === 'green' || seenFormulas[f.id] === true
+                              ? 'rgba(16, 185, 129, 0.2)'
+                              : seenFormulas[f.id] === 'yellow'
+                              ? 'rgba(245, 158, 11, 0.2)'
+                              : 'rgba(239, 68, 68, 0.2)'
+                          }`,
                           alignSelf: 'flex-start'
                         }}>
-                          <Award size={16} color="var(--success)" />
-                          <span style={{ fontSize: '0.8rem', color: 'var(--success)', fontWeight: 'bold' }}>{lFilterMastered}</span>
+                          <Award size={16} color={
+                            seenFormulas[f.id] === 'green' || seenFormulas[f.id] === true
+                              ? 'var(--success)'
+                              : seenFormulas[f.id] === 'yellow'
+                              ? '#f59e0b'
+                              : '#ef4444'
+                          } />
+                          <span style={{ 
+                            fontSize: '0.8rem', 
+                            color: seenFormulas[f.id] === 'green' || seenFormulas[f.id] === true
+                              ? 'var(--success)'
+                              : seenFormulas[f.id] === 'yellow'
+                              ? '#f59e0b'
+                              : '#ef4444', 
+                            fontWeight: 'bold' 
+                          }}>
+                            {seenFormulas[f.id] === 'green' || seenFormulas[f.id] === true
+                              ? (isHe ? 'שולט' : 'Mastered')
+                              : seenFormulas[f.id] === 'yellow'
+                              ? (isHe ? 'בתהליך' : 'Learning')
+                              : (isHe ? 'מתקשה' : 'Struggling')
+                            }
+                          </span>
                         </div>
                       )}
                     </motion.div>
@@ -710,27 +910,84 @@ export default function FormulaBoard() {
                 {/* Mastery Action Toggle */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid var(--surface-border)', paddingTop: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
                   <span style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', fontWeight: '500' }}>
-                    {lStatusLabel} {seenFormulas[selectedFormula.id] ? `✨ ${lFilterMastered}` : `📝 ${lFilterToLearn}`}
+                    {lStatusLabel} {
+                      seenFormulas[selectedFormula.id] === 'green' || seenFormulas[selectedFormula.id] === true
+                        ? `😄 ${isHe ? 'שולט' : 'Mastered'}`
+                        : seenFormulas[selectedFormula.id] === 'yellow'
+                        ? `😐 ${isHe ? 'בתהליך' : 'Learning'}`
+                        : seenFormulas[selectedFormula.id] === 'red'
+                        ? `😡 ${isHe ? 'מתקשה' : 'Struggling'}`
+                        : `📝 ${isHe ? 'צריך ללמוד' : 'To Learn'}`
+                    }
                   </span>
-                  <button
-                    onClick={() => toggleSeen(selectedFormula.id)}
-                    style={{
-                      background: seenFormulas[selectedFormula.id] ? 'rgba(16, 185, 129, 0.15)' : 'var(--primary-color)',
-                      color: seenFormulas[selectedFormula.id] ? 'var(--success)' : '#fff',
-                      border: `1px solid ${seenFormulas[selectedFormula.id] ? 'var(--success)' : 'transparent'}`,
-                      padding: '0.65rem 1.3rem',
-                      borderRadius: 'var(--radius-sm)',
-                      cursor: 'pointer',
-                      fontWeight: 'bold',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.5rem',
-                      transition: 'all 0.2s'
-                    }}
-                  >
-                    {seenFormulas[selectedFormula.id] ? <CheckCircle2 size={18} /> : <Check size={18} />}
-                    {seenFormulas[selectedFormula.id] ? lMarkToLearn : lMarkMastered}
-                  </button>
+
+                  <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                    {/* 😄 Green button */}
+                    <button
+                      onClick={() => toggleSeen(selectedFormula.id, seenFormulas[selectedFormula.id] === 'green' ? null : 'green')}
+                      style={{
+                        background: seenFormulas[selectedFormula.id] === 'green' || seenFormulas[selectedFormula.id] === true ? 'rgba(16, 185, 129, 0.15)' : 'var(--math-bg)',
+                        color: seenFormulas[selectedFormula.id] === 'green' || seenFormulas[selectedFormula.id] === true ? 'var(--success)' : 'var(--text-primary)',
+                        border: `1px solid ${seenFormulas[selectedFormula.id] === 'green' || seenFormulas[selectedFormula.id] === true ? 'var(--success)' : 'var(--surface-border)'}`,
+                        padding: '0.55rem 1rem',
+                        borderRadius: 'var(--radius-sm)',
+                        cursor: 'pointer',
+                        fontWeight: 'bold',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.4rem',
+                        transition: 'all 0.2s',
+                        boxShadow: seenFormulas[selectedFormula.id] === 'green' || seenFormulas[selectedFormula.id] === true ? '0 0 10px rgba(16, 185, 129, 0.25)' : 'none'
+                      }}
+                    >
+                      <span>😄</span>
+                      <span>{isHe ? 'שולט' : 'Mastered'}</span>
+                    </button>
+
+                    {/* 😐 Yellow button */}
+                    <button
+                      onClick={() => toggleSeen(selectedFormula.id, seenFormulas[selectedFormula.id] === 'yellow' ? null : 'yellow')}
+                      style={{
+                        background: seenFormulas[selectedFormula.id] === 'yellow' ? 'rgba(245, 158, 11, 0.15)' : 'var(--math-bg)',
+                        color: seenFormulas[selectedFormula.id] === 'yellow' ? '#f59e0b' : 'var(--text-primary)',
+                        border: `1px solid ${seenFormulas[selectedFormula.id] === 'yellow' ? '#f59e0b' : 'var(--surface-border)'}`,
+                        padding: '0.55rem 1rem',
+                        borderRadius: 'var(--radius-sm)',
+                        cursor: 'pointer',
+                        fontWeight: 'bold',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.4rem',
+                        transition: 'all 0.2s',
+                        boxShadow: seenFormulas[selectedFormula.id] === 'yellow' ? '0 0 10px rgba(245, 158, 11, 0.25)' : 'none'
+                      }}
+                    >
+                      <span>😐</span>
+                      <span>{isHe ? 'בתהליך' : 'Learning'}</span>
+                    </button>
+
+                    {/* 😡 Red button */}
+                    <button
+                      onClick={() => toggleSeen(selectedFormula.id, seenFormulas[selectedFormula.id] === 'red' ? null : 'red')}
+                      style={{
+                        background: seenFormulas[selectedFormula.id] === 'red' ? 'rgba(239, 68, 68, 0.15)' : 'var(--math-bg)',
+                        color: seenFormulas[selectedFormula.id] === 'red' ? '#ef4444' : 'var(--text-primary)',
+                        border: `1px solid ${seenFormulas[selectedFormula.id] === 'red' ? '#ef4444' : 'var(--surface-border)'}`,
+                        padding: '0.55rem 1rem',
+                        borderRadius: 'var(--radius-sm)',
+                        cursor: 'pointer',
+                        fontWeight: 'bold',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.4rem',
+                        transition: 'all 0.2s',
+                        boxShadow: seenFormulas[selectedFormula.id] === 'red' ? '0 0 10px rgba(239, 68, 68, 0.25)' : 'none'
+                      }}
+                    >
+                      <span>😡</span>
+                      <span>{isHe ? 'מתקשה' : 'Struggling'}</span>
+                    </button>
+                  </div>
                 </div>
               </motion.div>
             </div>

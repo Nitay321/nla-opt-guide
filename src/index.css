@@ -269,6 +269,20 @@ a:hover {
    📱 Elegant Mobile & Tablet Responsiveness
    ========================================== */
 
+/* Centering and balancing navigation items on intermediate screens when wrapping occurs */
+@media (max-width: 1024px) {
+  nav.glass-panel {
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 1.25rem !important;
+  }
+  nav.glass-panel > div {
+    justify-content: center !important;
+    flex-wrap: wrap !important;
+  }
+}
+
 /* Tablet Screens (under 768px) */
 @media (max-width: 768px) {
   :root {

@@ -9,7 +9,7 @@ export const isRealDatabaseConnected = !!(supabaseUrl && supabaseAnonKey);
 
 // Define progress data shape
 export interface UserStudyProgress {
-  seenFormulas: Record<string, boolean>;
+  seenFormulas: Record<string, 'green' | 'yellow' | 'red' | null | boolean>;
   seenModules: Record<string, boolean>;
   quizScores: Record<string, number>;
   theme?: 'dark' | 'light';
@@ -75,10 +75,15 @@ class MockSupabaseClient {
 
     // A helper method for our custom mock login dialog
     signInMockUser: (user: { name: string; email: string; avatarUrl?: string }) => {
+      const normalizedEmail = user.email.trim().toLowerCase();
+      // Generate a unique, database-safe ID based on the email address
+      const base64Email = btoa(normalizedEmail).replace(/[^a-zA-Z0-9]/g, '');
+      const userId = `mock-user-${base64Email}`;
+
       const mockSession = {
         user: {
-          id: 'mock-user-123',
-          email: user.email,
+          id: userId,
+          email: normalizedEmail,
           user_metadata: {
             full_name: user.name,
             avatar_url: user.avatarUrl || `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(user.name)}`
