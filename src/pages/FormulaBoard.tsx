@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { formulas } from '../data/formulas';
 import type { Formula } from '../data/formulas';
 import MathRenderer from '../components/MathRenderer';
-import { Award, Layers, Search, RotateCcw } from 'lucide-react';
+import { Award, Layers, Search, RotateCcw, ChevronDown } from 'lucide-react';
 import { useAppContext } from '../App';
 
 interface CategoryStyle {
@@ -94,6 +94,10 @@ export default function FormulaBoard() {
   const [selectedCourse, setSelectedCourse] = useState<'all' | 'nla' | 'opt'>('all');
   const [selectedStatus, setSelectedStatus] = useState<'all' | 'green' | 'yellow' | 'red' | 'to-learn'>('all');
   const [selectedFormula, setSelectedFormula] = useState<Formula | null>(null);
+  
+  // Collapse Toggles for NLA & OPT Stats Blocks
+  const [nlaExpanded, setNlaExpanded] = useState(false);
+  const [optExpanded, setOptExpanded] = useState(false);
 
   const isHe = language === 'he';
 
@@ -156,6 +160,20 @@ export default function FormulaBoard() {
   const pctYellowOPT = totalOPT > 0 ? Math.round((yellowOPT / totalOPT) * 100) : 0;
   const pctRedOPT = totalOPT > 0 ? Math.round((redOPT / totalOPT) * 100) : 0;
 
+  // Calculate Weighted Subject Mastery Index (😄 = 100%, 😐 = 50%, 😡 = 10%)
+  const indexNLA = totalNLA > 0 
+    ? Math.min(100, Math.round(((greenNLA * 1.0 + yellowNLA * 0.5 + redNLA * 0.1) / totalNLA) * 1000) / 10) 
+    : 0;
+
+  const indexOPT = totalOPT > 0 
+    ? Math.min(100, Math.round(((greenOPT * 1.0 + yellowOPT * 0.5 + redOPT * 0.1) / totalOPT) * 1000) / 10) 
+    : 0;
+
+  const lMasteryIndexTitle = isHe ? 'מדד שליטה בנושא' : 'Subject Mastery Index';
+  const lLegendTitle = isHe 
+    ? '* מדד משוקלל: 😄 שליטה = 100% | 😐 בתהליך = 50% | 😡 מתקשה = 10%' 
+    : '* Weighted Index: 😄 Mastered = 100% | 😐 Learning = 50% | 😡 Struggling = 10%';
+
   // Group by category
   const categoriesMap: Record<string, typeof formulas> = {};
   filteredFormulas.forEach(f => {
@@ -213,97 +231,241 @@ export default function FormulaBoard() {
         </p>
       </header>
 
-      {/* Progress Dashboard with Tri-Color Progress Bars */}
+      {/* Progress Dashboard with Collapsible Stats Cards & Subject Mastery Index */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem', marginBottom: '3rem' }}>
+        
         {/* NLA Progress Card */}
-        <div className="glass-panel" style={{ padding: '1.5rem 1.75rem', borderTop: '4px solid var(--primary-color)', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontWeight: 800, fontSize: '1.15rem', color: 'var(--text-primary)' }}>{lNlaTitle}</span>
-            <span style={{ background: 'var(--primary-color)', color: 'white', padding: '0.2rem 0.65rem', borderRadius: '12px', fontSize: '0.78rem', fontWeight: 'bold' }}>
-              {totalNLA} {isHe ? 'נוסחאות' : 'equations'}
+        <div 
+          className="glass-panel" 
+          style={{ 
+            padding: '1.5rem 1.75rem', 
+            borderTop: '4px solid var(--primary-color)', 
+            display: 'flex', 
+            flexDirection: 'column', 
+            gap: '1rem',
+            transition: 'box-shadow 0.3s ease, transform 0.2s ease'
+          }}
+        >
+          {/* Header (Clickable Toggle) */}
+          <div 
+            onClick={() => setNlaExpanded(!nlaExpanded)}
+            style={{ 
+              display: 'flex', 
+              justifyContent: 'space-between', 
+              alignItems: 'center',
+              cursor: 'pointer',
+              userSelect: 'none'
+            }}
+          >
+            <span style={{ fontWeight: 800, fontSize: '1.15rem', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              {lNlaTitle}
             </span>
-          </div>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-            {/* Green progress bar */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', color: 'var(--text-secondary)', fontWeight: 600 }}>
-                <span>😄 {isHe ? 'שולט' : 'Mastered'}</span>
-                <span>{greenNLA} / {totalNLA} ({pctGreenNLA}%)</span>
-              </div>
-              <div style={{ height: '8px', background: 'var(--math-bg)', borderRadius: '4px', overflow: 'hidden' }}>
-                <div style={{ height: '100%', width: `${pctGreenNLA}%`, background: 'var(--success)', borderRadius: '4px', transition: 'width 0.4s ease' }} />
-              </div>
-            </div>
-
-            {/* Yellow progress bar */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', color: 'var(--text-secondary)', fontWeight: 600 }}>
-                <span>😐 {isHe ? 'בתהליך' : 'Learning'}</span>
-                <span>{yellowNLA} / {totalNLA} ({pctYellowNLA}%)</span>
-              </div>
-              <div style={{ height: '8px', background: 'var(--math-bg)', borderRadius: '4px', overflow: 'hidden' }}>
-                <div style={{ height: '100%', width: `${pctYellowNLA}%`, background: '#f59e0b', borderRadius: '4px', transition: 'width 0.4s ease' }} />
-              </div>
-            </div>
-
-            {/* Red progress bar */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', color: 'var(--text-secondary)', fontWeight: 600 }}>
-                <span>😡 {isHe ? 'מתקשה' : 'Struggling'}</span>
-                <span>{redNLA} / {totalNLA} ({pctRedNLA}%)</span>
-              </div>
-              <div style={{ height: '8px', background: 'var(--math-bg)', borderRadius: '4px', overflow: 'hidden' }}>
-                <div style={{ height: '100%', width: `${pctRedNLA}%`, background: '#ef4444', borderRadius: '4px', transition: 'width 0.4s ease' }} />
-              </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+              <span style={{ background: 'var(--primary-color)', color: 'white', padding: '0.2rem 0.65rem', borderRadius: '12px', fontSize: '0.78rem', fontWeight: 'bold' }}>
+                {totalNLA} {isHe ? 'נוסחאות' : 'equations'}
+              </span>
+              <ChevronDown 
+                size={18} 
+                style={{ 
+                  transform: nlaExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
+                  transition: 'transform 0.25s ease',
+                  color: 'var(--text-secondary)'
+                }} 
+              />
             </div>
           </div>
+
+          {/* Subject Mastery Index (Blue Bar - Always Visible) */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', margin: '0.2rem 0' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: '#3b82f6', fontWeight: 700 }}>
+              <span>🔹 {lMasteryIndexTitle}</span>
+              <span>{indexNLA}%</span>
+            </div>
+            <div style={{ height: '9px', background: 'var(--math-bg)', borderRadius: '4.5px', overflow: 'hidden', boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.1)' }}>
+              <div 
+                style={{ 
+                  height: '100%', 
+                  width: `${indexNLA}%`, 
+                  background: 'linear-gradient(90deg, #3b82f6, #6366f1)', 
+                  borderRadius: '4.5px', 
+                  transition: 'width 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+                  boxShadow: '0 0 8px rgba(59, 130, 246, 0.5)'
+                }} 
+              />
+            </div>
+          </div>
+
+          {/* Detailed Emoji Progress Bars (Revealed on Click) */}
+          <AnimatePresence initial={false}>
+            {nlaExpanded && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 'auto', opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.25, ease: 'easeInOut' }}
+                style={{ overflow: 'hidden' }}
+              >
+                <div style={{ height: '1px', background: 'rgba(226, 232, 240, 0.15)', margin: '0.5rem 0 1rem 0' }} />
+                
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+                  {/* Green progress bar */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', color: 'var(--text-secondary)', fontWeight: 600 }}>
+                      <span>😄 {isHe ? 'שולט' : 'Mastered'}</span>
+                      <span>{greenNLA} / {totalNLA} ({pctGreenNLA}%)</span>
+                    </div>
+                    <div style={{ height: '8px', background: 'var(--math-bg)', borderRadius: '4px', overflow: 'hidden' }}>
+                      <div style={{ height: '100%', width: `${pctGreenNLA}%`, background: 'var(--success)', borderRadius: '4px', transition: 'width 0.4s ease' }} />
+                    </div>
+                  </div>
+
+                  {/* Yellow progress bar */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', color: 'var(--text-secondary)', fontWeight: 600 }}>
+                      <span>😐 {isHe ? 'בתהליך' : 'Learning'}</span>
+                      <span>{yellowNLA} / {totalNLA} ({pctYellowNLA}%)</span>
+                    </div>
+                    <div style={{ height: '8px', background: 'var(--math-bg)', borderRadius: '4px', overflow: 'hidden' }}>
+                      <div style={{ height: '100%', width: `${pctYellowNLA}%`, background: '#f59e0b', borderRadius: '4px', transition: 'width 0.4s ease' }} />
+                    </div>
+                  </div>
+
+                  {/* Red progress bar */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', color: 'var(--text-secondary)', fontWeight: 600 }}>
+                      <span>😡 {isHe ? 'מתקשה' : 'Struggling'}</span>
+                      <span>{redNLA} / {totalNLA} ({pctRedNLA}%)</span>
+                    </div>
+                    <div style={{ height: '8px', background: 'var(--math-bg)', borderRadius: '4px', overflow: 'hidden' }}>
+                      <div style={{ height: '100%', width: `${pctRedNLA}%`, background: '#ef4444', borderRadius: '4px', transition: 'width 0.4s ease' }} />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Calculation Legend */}
+                <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', textAlign: 'center', marginTop: '1.25rem', fontStyle: 'italic', opacity: 0.8 }}>
+                  {lLegendTitle}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         {/* OPT Progress Card */}
-        <div className="glass-panel" style={{ padding: '1.5rem 1.75rem', borderTop: '4px solid var(--secondary-color)', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div 
+          className="glass-panel" 
+          style={{ 
+            padding: '1.5rem 1.75rem', 
+            borderTop: '4px solid var(--secondary-color)', 
+            display: 'flex', 
+            flexDirection: 'column', 
+            gap: '1rem',
+            transition: 'box-shadow 0.3s ease, transform 0.2s ease'
+          }}
+        >
+          {/* Header (Clickable Toggle) */}
+          <div 
+            onClick={() => setOptExpanded(!optExpanded)}
+            style={{ 
+              display: 'flex', 
+              justifyContent: 'space-between', 
+              alignItems: 'center',
+              cursor: 'pointer',
+              userSelect: 'none'
+            }}
+          >
             <span style={{ fontWeight: 800, fontSize: '1.15rem', color: 'var(--text-primary)' }}>{lOptTitle}</span>
-            <span style={{ background: 'var(--secondary-color)', color: 'white', padding: '0.2rem 0.65rem', borderRadius: '12px', fontSize: '0.78rem', fontWeight: 'bold' }}>
-              {totalOPT} {isHe ? 'נוסחאות' : 'equations'}
-            </span>
-          </div>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-            {/* Green progress bar */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', color: 'var(--text-secondary)', fontWeight: 600 }}>
-                <span>😄 {isHe ? 'שולט' : 'Mastered'}</span>
-                <span>{greenOPT} / {totalOPT} ({pctGreenOPT}%)</span>
-              </div>
-              <div style={{ height: '8px', background: 'var(--math-bg)', borderRadius: '4px', overflow: 'hidden' }}>
-                <div style={{ height: '100%', width: `${pctGreenOPT}%`, background: 'var(--success)', borderRadius: '4px', transition: 'width 0.4s ease' }} />
-              </div>
-            </div>
-
-            {/* Yellow progress bar */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', color: 'var(--text-secondary)', fontWeight: 600 }}>
-                <span>😐 {isHe ? 'בתהליך' : 'Learning'}</span>
-                <span>{yellowOPT} / {totalOPT} ({pctYellowOPT}%)</span>
-              </div>
-              <div style={{ height: '8px', background: 'var(--math-bg)', borderRadius: '4px', overflow: 'hidden' }}>
-                <div style={{ height: '100%', width: `${pctYellowOPT}%`, background: '#f59e0b', borderRadius: '4px', transition: 'width 0.4s ease' }} />
-              </div>
-            </div>
-
-            {/* Red progress bar */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', color: 'var(--text-secondary)', fontWeight: 600 }}>
-                <span>😡 {isHe ? 'מתקשה' : 'Struggling'}</span>
-                <span>{redOPT} / {totalOPT} ({pctRedOPT}%)</span>
-              </div>
-              <div style={{ height: '8px', background: 'var(--math-bg)', borderRadius: '4px', overflow: 'hidden' }}>
-                <div style={{ height: '100%', width: `${pctRedOPT}%`, background: '#ef4444', borderRadius: '4px', transition: 'width 0.4s ease' }} />
-              </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+              <span style={{ background: 'var(--secondary-color)', color: 'white', padding: '0.2rem 0.65rem', borderRadius: '12px', fontSize: '0.78rem', fontWeight: 'bold' }}>
+                {totalOPT} {isHe ? 'נוסחאות' : 'equations'}
+              </span>
+              <ChevronDown 
+                size={18} 
+                style={{ 
+                  transform: optExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
+                  transition: 'transform 0.25s ease',
+                  color: 'var(--text-secondary)'
+                }} 
+              />
             </div>
           </div>
+
+          {/* Subject Mastery Index (Blue Bar - Always Visible) */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', margin: '0.2rem 0' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: '#3b82f6', fontWeight: 700 }}>
+              <span>🔹 {lMasteryIndexTitle}</span>
+              <span>{indexOPT}%</span>
+            </div>
+            <div style={{ height: '9px', background: 'var(--math-bg)', borderRadius: '4.5px', overflow: 'hidden', boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.1)' }}>
+              <div 
+                style={{ 
+                  height: '100%', 
+                  width: `${indexOPT}%`, 
+                  background: 'linear-gradient(90deg, #3b82f6, #6366f1)', 
+                  borderRadius: '4.5px', 
+                  transition: 'width 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+                  boxShadow: '0 0 8px rgba(59, 130, 246, 0.5)'
+                }} 
+              />
+            </div>
+          </div>
+
+          {/* Detailed Emoji Progress Bars (Revealed on Click) */}
+          <AnimatePresence initial={false}>
+            {optExpanded && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 'auto', opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.25, ease: 'easeInOut' }}
+                style={{ overflow: 'hidden' }}
+              >
+                <div style={{ height: '1px', background: 'rgba(226, 232, 240, 0.15)', margin: '0.5rem 0 1rem 0' }} />
+                
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+                  {/* Green progress bar */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', color: 'var(--text-secondary)', fontWeight: 600 }}>
+                      <span>😄 {isHe ? 'שולט' : 'Mastered'}</span>
+                      <span>{greenOPT} / {totalOPT} ({pctGreenOPT}%)</span>
+                    </div>
+                    <div style={{ height: '8px', background: 'var(--math-bg)', borderRadius: '4px', overflow: 'hidden' }}>
+                      <div style={{ height: '100%', width: `${pctGreenOPT}%`, background: 'var(--success)', borderRadius: '4px', transition: 'width 0.4s ease' }} />
+                    </div>
+                  </div>
+
+                  {/* Yellow progress bar */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', color: 'var(--text-secondary)', fontWeight: 600 }}>
+                      <span>😐 {isHe ? 'בתהליך' : 'Learning'}</span>
+                      <span>{yellowOPT} / {totalOPT} ({pctYellowOPT}%)</span>
+                    </div>
+                    <div style={{ height: '8px', background: 'var(--math-bg)', borderRadius: '4px', overflow: 'hidden' }}>
+                      <div style={{ height: '100%', width: `${pctYellowOPT}%`, background: '#f59e0b', borderRadius: '4px', transition: 'width 0.4s ease' }} />
+                    </div>
+                  </div>
+
+                  {/* Red progress bar */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', color: 'var(--text-secondary)', fontWeight: 600 }}>
+                      <span>😡 {isHe ? 'מתקשה' : 'Struggling'}</span>
+                      <span>{redOPT} / {totalOPT} ({pctRedOPT}%)</span>
+                    </div>
+                    <div style={{ height: '8px', background: 'var(--math-bg)', borderRadius: '4px', overflow: 'hidden' }}>
+                      <div style={{ height: '100%', width: `${pctRedOPT}%`, background: '#ef4444', borderRadius: '4px', transition: 'width 0.4s ease' }} />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Calculation Legend */}
+                <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', textAlign: 'center', marginTop: '1.25rem', fontStyle: 'italic', opacity: 0.8 }}>
+                  {lLegendTitle}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
+
       </div>
 
       {/* Control Panel: Search & Filters */}

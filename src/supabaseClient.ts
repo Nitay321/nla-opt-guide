@@ -79,6 +79,7 @@ class MockSupabaseClient {
       // Generate a unique, database-safe ID based on the email address
       const base64Email = btoa(normalizedEmail).replace(/[^a-zA-Z0-9]/g, '');
       const userId = `mock-user-${base64Email}`;
+      const googleId = `google-id-${base64Email}`;
 
       const mockSession = {
         user: {
@@ -86,7 +87,8 @@ class MockSupabaseClient {
           email: normalizedEmail,
           user_metadata: {
             full_name: user.name,
-            avatar_url: user.avatarUrl || `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(user.name)}`
+            avatar_url: user.avatarUrl || `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(user.name)}`,
+            sub: googleId
           }
         },
         expires_at: Math.floor(Date.now() / 1000) + 3600 * 24
