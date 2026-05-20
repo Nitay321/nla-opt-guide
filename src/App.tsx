@@ -24,9 +24,10 @@ interface AppContextType {
   signInWithGoogle: () => void;
   signOut: () => void;
   isSyncing: boolean;
-  triggerSync: () => Promise<void>;
+  triggerSync: (forcedProgress?: Record<string, 'green' | 'yellow' | 'red' | null | boolean>, forcedAvatarUrl?: string) => Promise<void>;
   seenFormulas: Record<string, 'green' | 'yellow' | 'red' | null | boolean>;
   toggleSeenFormula: (id: string, status?: 'green' | 'yellow' | 'red' | null) => void;
+  updateUserAvatar: (avatarId: string) => Promise<void>;
 }
 
 export const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -392,18 +393,6 @@ function AuthModal({ onClose, language, signInMockUser }: { onClose: () => void;
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [googleError, setGoogleError] = useState<string | null>(null);
 
-  // Accordion open states (each collapsible is a "block")
-  const [avatarOpen, setAvatarOpen] = useState(false);
-  const [emailOpen, setEmailOpen] = useState(false);
-  const [showAllAvatars, setShowAllAvatars] = useState(false);
-
-  // Custom user inputs
-  const [customName, setCustomName] = useState('');
-  const [customEmail, setCustomEmail] = useState('');
-
-
-  const [selectedAvatar, setSelectedAvatar] = useState(AVATAR_CHARACTERS[0]);
-
   // Load previously saved user (Welcome Back Screen)
   const [savedUser, setSavedUser] = useState<any>(() => {
     const saved = localStorage.getItem('nla_saved_user');
@@ -458,15 +447,61 @@ function AuthModal({ onClose, language, signInMockUser }: { onClose: () => void;
     }
   };
 
+  // Load simulated user registry with default mocks pre-filled
+  const getSimulatedUserRegistry = (): Record<string, { name: string; avatarUrl: string }> => {
+    const saved = localStorage.getItem('nla_simulated_users');
+    if (saved) return JSON.parse(saved);
+    
+    // Default mock database of recognized accounts
+    const defaults = {
+      'test@example.com': { name: 'John Doe', avatarUrl: 'owl' },
+      'developer@example.com': { name: 'Alex Turing', avatarUrl: 'robot' },
+      '0501234567': { name: 'Shir Levi', avatarUrl: 'cat' }
+    };
+    localStorage.setItem('nla_simulated_users', JSON.stringify(defaults));
+    return defaults;
+  };
+
+  const saveSimulatedUserToRegistry = (identifier: string, name: string, avatarUrl: string) => {
+    const registry = getSimulatedUserRegistry();
+    registry[identifier.toLowerCase()] = { name, avatarUrl };
+    localStorage.setItem('nla_simulated_users', JSON.stringify(registry));
+  };
+
   const handleSimulateGoogleLoginSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (simStep === 1) {
-      if (!simEmail.trim() || !simEmail.includes('@')) {
-        setSimError(isHe ? 'הזן כתובת אימייל תקינה' : 'Enter a valid email address');
+      const input = simEmail.trim().toLowerCase();
+      const isEmail = input.includes('@');
+      const isPhone = /^[+\d\s-]+$/.test(input) && input.replace(/[^\d]/g, '').length >= 6;
+      
+      if (!isEmail && !isPhone) {
+        setSimError(isHe ? 'הזן כתובת אימייל או מספר טלפון תקין' : 'Enter a valid email or phone number');
         return;
       }
       setSimError('');
-      setSimStep(2);
+
+      // Check if we recognize the user by email or phone!
+      const registry = getSimulatedUserRegistry();
+      const recognized = registry[input];
+
+      if (recognized) {
+        // We recognize the user! Skip name screen and proceed directly to connecting with their name!
+        setSimName(recognized.name);
+        setSimStep(3); // Go directly to loading/handshaking state!
+        
+        setTimeout(() => {
+          signInMockUser({
+            name: recognized.name,
+            email: isEmail ? input : `${input}@simulated-phone.com`,
+            avatarUrl: recognized.avatarUrl || 'owl'
+          });
+          onClose();
+        }, 1500);
+      } else {
+        // First-time user: Navigate them to choose a name!
+        setSimStep(2);
+      }
     } else if (simStep === 2) {
       if (!simName.trim()) {
         setSimError(isHe ? 'שדה זה חובה' : 'This field is required');
@@ -475,27 +510,22 @@ function AuthModal({ onClose, language, signInMockUser }: { onClose: () => void;
       setSimError('');
       setSimStep(3);
       
+      const input = simEmail.trim().toLowerCase();
+      const isEmail = input.includes('@');
+      
+      // Save their record in the simulated registry so they are recognized next time!
+      saveSimulatedUserToRegistry(input, simName.trim(), 'owl');
+      
       // Simulate OAuth network handshaking, save user, load database slot, and close!
       setTimeout(() => {
         signInMockUser({
           name: simName.trim(),
-          email: simEmail.trim().toLowerCase(),
-          avatarUrl: selectedAvatar.id
+          email: isEmail ? input : `${input}@simulated-phone.com`,
+          avatarUrl: 'owl' // Default companion to owl initially, can be changed post-login
         });
         onClose();
       }, 1500);
     }
-  };
-
-  const handleCustomSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!customName.trim() || !customEmail.trim()) return;
-    signInMockUser({
-      name: customName.trim(),
-      email: customEmail.trim().toLowerCase(),
-      avatarUrl: selectedAvatar.id
-    });
-    onClose();
   };
 
   const handleQuickLogin = () => {
@@ -507,14 +537,6 @@ function AuthModal({ onClose, language, signInMockUser }: { onClose: () => void;
     onClose();
   };
 
-  const ChevronIcon = ({ isOpen }: { isOpen: boolean }) => (
-    <svg 
-      width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
-      style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.25s ease', color: '#64748b' }}
-    >
-      <polyline points="6 9 12 15 18 9"></polyline>
-    </svg>
-  );
 
   return (
     <div style={{
@@ -842,22 +864,21 @@ function AuthModal({ onClose, language, signInMockUser }: { onClose: () => void;
           </div>
         ) : (
           /* ========================================================
-             STANDARD THREE KEYS LOGIN BLOCK
+             STANDARD GOOGLE-ONLY EXCLUSIVE LOGIN BLOCK
              ======================================================== */
           <>
             <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
               
-              {/* Dynamic Companion Avatar Header (Replacing generic KeyRound) */}
+              {/* Premium Lock/Secure Key Header */}
               <div style={{
                 width: '4rem', height: '4rem', borderRadius: '50%',
-                background: `${selectedAvatar.color}22`, display: 'flex',
+                background: 'rgba(99, 102, 241, 0.08)', display: 'flex',
                 alignItems: 'center', justifyContent: 'center', margin: '0 auto 0.25rem auto',
-                border: `2px solid ${selectedAvatar.color}`,
-                boxShadow: `0 0 15px ${selectedAvatar.color}40`,
-                transition: 'all 0.3s ease',
-                fontSize: '2.2rem'
+                border: '2px solid var(--primary-color)',
+                boxShadow: '0 0 15px rgba(99, 102, 241, 0.2)',
+                fontSize: '2rem'
               }}>
-                {selectedAvatar.emoji}
+                🔐
               </div>
               
               <h1 style={{ fontSize: '1.35rem', fontWeight: 700, color: '#0f172a', margin: 0 }}>
@@ -871,8 +892,8 @@ function AuthModal({ onClose, language, signInMockUser }: { onClose: () => void;
               </p>
             </div>
 
-            {/* KEY 1: PRIMARY - CONTINUE WITH GOOGLE */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', width: '100%' }}>
+            {/* CONTINUE WITH GOOGLE ACTION */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', width: '100%', margin: '0.5rem 0' }}>
               <GoogleSignInButton 
                 onClick={handleGoogleSignInClick} 
                 text={isGoogleLoading ? (isHe ? 'מתחבר...' : 'Connecting...') : (isHe ? 'המשך עם Google' : 'Continue with Google')} 
@@ -892,176 +913,6 @@ function AuthModal({ onClose, language, signInMockUser }: { onClose: () => void;
               )}
             </div>
 
-            {/* Divider */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', margin: '0.05rem 0' }}>
-              <div style={{ flex: 1, height: '1px', background: '#e2e8f0' }} />
-              <span style={{ fontSize: '0.72rem', color: '#94a3b8', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                {isHe ? 'אפשרויות נוספות' : 'More Options'}
-              </span>
-              <div style={{ flex: 1, height: '1px', background: '#e2e8f0' }} />
-            </div>
-
-            {/* KEY 2: CHOOSE STUDY COMPANION AVATAR (Collapsible Accordion) */}
-            <div style={{ display: 'flex', flexDirection: 'column', border: '1px solid #e2e8f0', borderRadius: '10px', overflow: 'hidden', background: '#f8fafc' }}>
-              <button
-                onClick={() => {
-                  setAvatarOpen(!avatarOpen);
-                  setEmailOpen(false);
-                }}
-                style={{
-                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                  padding: '0.7rem 0.85rem', background: '#ffffff', border: 'none',
-                  cursor: 'pointer', outline: 'none', width: '100%',
-                  fontFamily: 'inherit', fontWeight: 600, fontSize: '0.8rem', color: '#334155'
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <span style={{ fontSize: '1rem' }}>{selectedAvatar.emoji}</span>
-                  <span>{isHe ? `מלווה פעיל: ${selectedAvatar.label.he}` : `Study Companion: ${selectedAvatar.label.en}`}</span>
-                </div>
-                <ChevronIcon isOpen={avatarOpen} />
-              </button>
-
-              <AnimatePresence>
-                {avatarOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -6 }}
-                    transition={{ duration: 0.2, ease: 'easeOut' }}
-                    style={{ background: '#f8fafc', borderTop: '1px solid #e2e8f0', width: '100%', paddingBottom: '0.5rem' }}
-                  >
-                    <div style={{ padding: '0.75rem 0.75rem 0.25rem 0.75rem', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.4rem' }}>
-                      {AVATAR_CHARACTERS.slice(0, showAllAvatars ? AVATAR_CHARACTERS.length : 6).map((char) => {
-                        const isSelected = selectedAvatar.id === char.id;
-                        return (
-                          <button
-                            key={char.id}
-                            type="button"
-                            onClick={() => setSelectedAvatar(char)}
-                            style={{
-                              display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.2rem',
-                              padding: '0.45rem 0.2rem', background: '#ffffff', border: isSelected ? `2.5px solid ${char.color}` : '1.5px solid #e2e8f0',
-                              borderRadius: '8px', cursor: 'pointer', transition: 'all 0.15s ease', outline: 'none',
-                              boxShadow: isSelected ? `0 0 10px ${char.color}20` : 'none'
-                            }}
-                          >
-                            <div style={{ width: '1.85rem', height: '1.85rem', borderRadius: '50%', background: `${char.color}12`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem' }}>
-                              {char.emoji}
-                            </div>
-                            <span style={{ fontSize: '0.65rem', fontWeight: isSelected ? 700 : 500, color: isSelected ? '#0f172a' : '#64748b', textAlign: 'center', width: '100%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                              {isHe ? char.label.he : char.label.en}
-                            </span>
-                          </button>
-                        );
-                      })}
-                    </div>
-
-                    <button
-                      type="button"
-                      onClick={() => setShowAllAvatars(!showAllAvatars)}
-                      style={{
-                        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.3rem',
-                        background: 'rgba(99, 102, 241, 0.05)', border: '1px dashed rgba(99, 102, 241, 0.25)',
-                        borderRadius: '8px', padding: '0.4rem 0.8rem', cursor: 'pointer',
-                        fontFamily: 'inherit', fontSize: '0.72rem', fontWeight: 600, color: '#4f46e5',
-                        margin: '0.4rem auto 0.75rem auto', outline: 'none', transition: 'all 0.2s ease',
-                        width: 'fit-content'
-                      }}
-                      onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(99, 102, 241, 0.1)'; }}
-                      onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(99, 102, 241, 0.05)'; }}
-                    >
-                      <span>{showAllAvatars ? '✨' : '➕'}</span>
-                      <span>{showAllAvatars ? (isHe ? 'הצג פחות דמויות' : 'Show Less Avatars') : (isHe ? 'הצג דמויות נוספות' : 'Show More Avatars')}</span>
-                    </button>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-
-            {/* KEY 3: CONTINUE WITH EMAIL & USERNAME (Collapsible Accordion) */}
-            <div style={{ display: 'flex', flexDirection: 'column', border: '1px solid #e2e8f0', borderRadius: '10px', overflow: 'hidden', background: '#f8fafc' }}>
-              <button
-                onClick={() => {
-                  setEmailOpen(!emailOpen);
-                  setAvatarOpen(false);
-                }}
-                style={{
-                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                  padding: '0.7rem 0.85rem', background: '#ffffff', border: 'none',
-                  cursor: 'pointer', outline: 'none', width: '100%',
-                  fontFamily: 'inherit', fontWeight: 600, fontSize: '0.8rem', color: '#334155'
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <span>✉️</span>
-                  <span>{isHe ? 'התחברות עם פרטים מותאמים אישית' : 'Continue with custom account'}</span>
-                </div>
-                <ChevronIcon isOpen={emailOpen} />
-              </button>
-
-              <AnimatePresence>
-                {emailOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -6 }}
-                    transition={{ duration: 0.2, ease: 'easeOut' }}
-                    style={{ background: '#f8fafc', borderTop: '1px solid #e2e8f0', width: '100%' }}
-                  >
-                    <form onSubmit={handleCustomSubmit} style={{ padding: '0.85rem', display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
-                        <label style={{ fontSize: '0.7rem', fontWeight: 600, color: '#475569' }}>
-                          {isHe ? 'שם מלא' : 'Full Name'}
-                        </label>
-                        <input 
-                          type="text" required 
-                          placeholder={isHe ? 'הזן שם מלא' : 'Enter full name'}
-                          value={customName} onChange={e => setCustomName(e.target.value)}
-                          style={{
-                            width: '100%', padding: '0.55rem 0.7rem', background: '#ffffff',
-                            border: '1px solid #cbd5e1', borderRadius: '6px', color: '#0f172a',
-                            fontSize: '0.82rem', outline: 'none', fontFamily: 'inherit',
-                            boxSizing: 'border-box'
-                          }}
-                        />
-                      </div>
-
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
-                        <label style={{ fontSize: '0.7rem', fontWeight: 600, color: '#475569' }}>
-                          {isHe ? 'כתובת אימייל' : 'Email Address'}
-                        </label>
-                        <input 
-                          type="email" required 
-                          placeholder={isHe ? 'name@example.com' : 'name@example.com'}
-                          value={customEmail} onChange={e => setCustomEmail(e.target.value)}
-                          style={{
-                            width: '100%', padding: '0.55rem 0.7rem', background: '#ffffff',
-                            border: '1px solid #cbd5e1', borderRadius: '6px', color: '#0f172a',
-                            fontSize: '0.82rem', outline: 'none', fontFamily: 'inherit',
-                            boxSizing: 'border-box'
-                          }}
-                        />
-                      </div>
-
-                      <button 
-                        type="submit" 
-                        className="btn btn-accent"
-                        style={{
-                          padding: '0.6rem', fontWeight: 600, fontSize: '0.8rem',
-                          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem',
-                          marginTop: '0.25rem'
-                        }}
-                      >
-                        <span>⚡</span>
-                        <span>{isHe ? 'התחבר עם הפרטים שלי' : 'Connect Custom Account'}</span>
-                      </button>
-                    </form>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-
             <div style={{ textAlign: 'center', fontSize: '0.7rem', color: '#64748b', lineHeight: '1.4', marginTop: '0.15rem' }}>
               {isHe 
                 ? 'ההתחברות מאובטחת לחלוטין. בלחיצה על כפתור ההמשך, אתה מסכים לתנאי השירות ומדיניות הפרטיות.' 
@@ -1076,9 +927,17 @@ function AuthModal({ onClose, language, signInMockUser }: { onClose: () => void;
 
 function Navigation({ theme, toggleTheme }: { theme: 'dark' | 'light'; toggleTheme: () => void }) {
   const location = useLocation();
-  const { language, toggleLanguage, zoom, zoomIn, zoomOut, user, signInWithGoogle, signOut, seenFormulas } = useAppContext();
+  const { language, toggleLanguage, zoom, zoomIn, zoomOut, user, signInWithGoogle, signOut, seenFormulas, updateUserAvatar } = useAppContext();
   const [shareOpen, setShareOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [avatarSelectorOpen, setAvatarSelectorOpen] = useState(false);
+
+  // Auto-close avatar selector when profile dropdown closes
+  useEffect(() => {
+    if (!profileOpen) {
+      setAvatarSelectorOpen(false);
+    }
+  }, [profileOpen]);
 
   // Translations for Navigation buttons
   const isHe = language === 'he';
@@ -1240,72 +1099,272 @@ function Navigation({ theme, toggleTheme }: { theme: 'dark' | 'light'; toggleThe
             {/* Profile Dropdown Menu */}
             <AnimatePresence>
               {profileOpen && user && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                  className="glass-panel"
-                  style={{
-                    position: 'absolute',
-                    top: '3.25rem',
-                    right: isHe ? 'auto' : 0,
-                    left: isHe ? 0 : 'auto',
-                    width: '280px',
-                    padding: '1.25rem',
-                    borderRadius: 'var(--radius-sm)',
-                    border: '1px solid var(--surface-border)',
-                    boxShadow: 'var(--shadow-lg)',
-                    zIndex: 999,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '1rem',
-                    textAlign: isHe ? 'right' : 'left'
-                  }}
-                >
-                  <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', borderBottom: '1px solid var(--surface-border)', paddingBottom: '0.85rem' }}>
-                    {renderAvatar(user.avatarUrl, '2.5rem', '1.3rem')}
-                    <div style={{ overflow: 'hidden', flex: 1 }}>
-                      <h4 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user.name}</h4>
-                      <p style={{ margin: 0, fontSize: '0.78rem', color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user.email}</p>
+                <>
+                  <motion.div
+                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                    className="glass-panel"
+                    style={{
+                      position: 'absolute',
+                      top: '3.25rem',
+                      right: isHe ? 'auto' : 0,
+                      left: isHe ? 0 : 'auto',
+                      width: '280px',
+                      padding: '1.25rem',
+                      borderRadius: 'var(--radius-sm)',
+                      border: '1px solid var(--surface-border)',
+                      boxShadow: 'var(--shadow-lg)',
+                      zIndex: 999,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '1rem',
+                      textAlign: isHe ? 'right' : 'left'
+                    }}
+                  >
+                    <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', borderBottom: '1px solid var(--surface-border)', paddingBottom: '0.85rem' }}>
+                      <button
+                        onClick={() => setAvatarSelectorOpen(!avatarSelectorOpen)}
+                        style={{
+                          background: 'transparent',
+                          border: 'none',
+                          cursor: 'pointer',
+                          padding: 0,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          borderRadius: '50%',
+                          transition: 'transform 0.2s ease',
+                          outline: 'none',
+                          position: 'relative'
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.08)'}
+                        onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                        title={isHe ? 'לחץ לשינוי דמות מלווה' : 'Click to change study companion'}
+                      >
+                        {renderAvatar(user.avatarUrl, '2.5rem', '1.3rem')}
+                        <div style={{
+                          position: 'absolute',
+                          bottom: '-2px',
+                          right: '-2px',
+                          background: 'var(--primary-color)',
+                          color: 'white',
+                          borderRadius: '50%',
+                          width: '14px',
+                          height: '14px',
+                          fontSize: '8px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          boxShadow: '0 1px 3px rgba(0,0,0,0.3)',
+                          border: '1px solid var(--bg-color)'
+                        }}>
+                          ✏️
+                        </div>
+                      </button>
+                      <div style={{ overflow: 'hidden', flex: 1 }}>
+                        <h4 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user.name}</h4>
+                        <p style={{ margin: 0, fontSize: '0.78rem', color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user.email}</p>
+                      </div>
                     </div>
-                  </div>
 
-                  {/* Platform Mastery Stats */}
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', fontWeight: 'bold' }}>
-                      <span style={{ color: 'var(--text-secondary)' }}>{isHe ? 'מדד שליטה בנוסחאות' : 'Formula Mastery'}</span>
-                      <span style={{ color: 'var(--accent-color)' }}>{masteryPercentage}%</span>
+                    {/* Platform Mastery Stats */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', fontWeight: 'bold' }}>
+                        <span style={{ color: 'var(--text-secondary)' }}>{isHe ? 'מדד שליטה בנוסחאות' : 'Formula Mastery'}</span>
+                        <span style={{ color: 'var(--accent-color)' }}>{masteryPercentage}%</span>
+                      </div>
+                      <div style={{ width: '100%', height: '6px', background: 'var(--math-bg)', borderRadius: '3px', overflow: 'hidden' }}>
+                        <div style={{ height: '100%', width: `${masteryPercentage}%`, background: 'var(--accent-color)', borderRadius: '3px', transition: 'width 0.4s ease' }} />
+                      </div>
+                      <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
+                        {isHe 
+                          ? `סומנו ${masteredCount} מתוך ${totalFormulasCount} נוסחאות שליטה` 
+                          : `Mastered ${masteredCount} of ${totalFormulasCount} formulas`}
+                      </span>
                     </div>
-                    <div style={{ width: '100%', height: '6px', background: 'var(--math-bg)', borderRadius: '3px', overflow: 'hidden' }}>
-                      <div style={{ height: '100%', width: `${masteryPercentage}%`, background: 'var(--accent-color)', borderRadius: '3px', transition: 'width 0.4s ease' }} />
-                    </div>
-                    <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
-                      {isHe 
-                        ? `סומנו ${masteredCount} מתוך ${totalFormulasCount} נוסחאות שליטה` 
-                        : `Mastered ${masteredCount} of ${totalFormulasCount} formulas`}
-                    </span>
-                  </div>
 
-                  {/* Action Buttons */}
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '0.25rem' }}>
-                    <button
-                      onClick={() => {
-                        signOut();
-                        setProfileOpen(false);
-                      }}
-                      className="btn btn-secondary"
-                      style={{
-                        padding: '0.5rem 0.75rem', fontSize: '0.8rem',
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        gap: '0.5rem', width: '100%', borderColor: 'rgba(239, 68, 68, 0.2)',
-                        color: 'var(--error)'
-                      }}
-                    >
-                      <LogOut size={14} />
-                      {isHe ? 'התנתק מהחשבון' : 'Sign Out'}
-                    </button>
-                  </div>
-                </motion.div>
+                    {/* Choose Study Companion */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', borderTop: '1px solid var(--surface-border)', paddingTop: '0.85rem' }}>
+                      <span style={{ fontSize: '0.8rem', fontWeight: 'bold', color: 'var(--text-secondary)' }}>
+                        {isHe ? 'בחר מלווה למידה פעיל:' : 'Choose Active Companion:'}
+                      </span>
+                      <div style={{
+                        display: 'flex',
+                        gap: '0.45rem',
+                        overflowX: 'auto',
+                        paddingBottom: '0.35rem',
+                        scrollbarWidth: 'none',
+                        msOverflowStyle: 'none'
+                      }} className="companion-scroll-container">
+                        {AVATAR_CHARACTERS.map(char => {
+                          const isSelected = user.avatarUrl === char.id || user.avatarUrl === char.url;
+                          return (
+                            <button
+                              key={char.id}
+                              onClick={() => updateUserAvatar(char.id)}
+                              style={{
+                                flex: '0 0 auto',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                padding: '0.35rem',
+                                borderRadius: 'var(--radius-sm)',
+                                border: isSelected ? `2px solid ${char.color}` : '1.5px solid var(--surface-border)',
+                                background: isSelected ? `${char.color}11` : 'rgba(255,255,255,0.02)',
+                                cursor: 'pointer',
+                                width: '52px',
+                                height: '52px',
+                                transition: 'all 0.2s ease',
+                                outline: 'none'
+                              }}
+                              title={isHe ? char.label.he : char.label.en}
+                            >
+                              <span style={{ fontSize: '1.25rem' }}>{char.emoji}</span>
+                              <span style={{ fontSize: '0.52rem', color: isSelected ? 'var(--text-primary)' : 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', width: '100%', textAlign: 'center', marginTop: '0.1rem' }}>
+                                {isHe ? char.label.he.split(' ')[0] : char.label.en.split(' ')[0]}
+                              </span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '0.25rem', borderTop: '1px solid var(--surface-border)', paddingTop: '0.85rem' }}>
+                      <button
+                        onClick={() => {
+                          signOut();
+                          setProfileOpen(false);
+                        }}
+                        className="btn btn-secondary"
+                        style={{
+                          padding: '0.5rem 0.75rem', fontSize: '0.8rem',
+                          display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          gap: '0.5rem', width: '100%', borderColor: 'rgba(239, 68, 68, 0.2)',
+                          color: 'var(--error)'
+                        }}
+                      >
+                        <LogOut size={14} />
+                        {isHe ? 'התנתק מהחשבון' : 'Sign Out'}
+                      </button>
+                    </div>
+                  </motion.div>
+
+                  {/* Companion Selection Side Menu */}
+                  <AnimatePresence>
+                    {avatarSelectorOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, x: isHe ? 15 : -15, scale: 0.95 }}
+                        animate={{ opacity: 1, x: 0, scale: 1 }}
+                        exit={{ opacity: 0, x: isHe ? 15 : -15, scale: 0.95 }}
+                        className="glass-panel"
+                        style={{
+                          position: 'absolute',
+                          top: '3.25rem',
+                          right: isHe ? 'auto' : '290px',
+                          left: isHe ? '290px' : 'auto',
+                          width: '240px',
+                          padding: '1.25rem',
+                          borderRadius: 'var(--radius-sm)',
+                          border: '1px solid var(--surface-border)',
+                          boxShadow: 'var(--shadow-lg)',
+                          zIndex: 1000,
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: '0.85rem',
+                          textAlign: isHe ? 'right' : 'left'
+                        }}
+                      >
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--surface-border)', paddingBottom: '0.5rem' }}>
+                          <span style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--text-primary)' }}>
+                            {isHe ? 'שינוי דמות מלווה' : 'Change Companion'}
+                          </span>
+                          <button 
+                            onClick={() => setAvatarSelectorOpen(false)}
+                            style={{
+                              background: 'transparent',
+                              border: 'none',
+                              color: 'var(--text-muted)',
+                              cursor: 'pointer',
+                              padding: '0.2rem',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              outline: 'none'
+                            }}
+                          >
+                            <X size={14} />
+                          </button>
+                        </div>
+
+                        <div 
+                          style={{ 
+                            display: 'grid', 
+                            gridTemplateColumns: 'repeat(4, 1fr)', 
+                            gap: '0.45rem',
+                            maxHeight: '260px',
+                            overflowY: 'auto'
+                          }}
+                          className="companion-scroll-container"
+                        >
+                          {AVATAR_CHARACTERS.map(char => {
+                            const isSelected = user.avatarUrl === char.id || user.avatarUrl === char.url;
+                            return (
+                              <button
+                                key={char.id}
+                                onClick={() => {
+                                  updateUserAvatar(char.id);
+                                  setAvatarSelectorOpen(false);
+                                }}
+                                style={{
+                                  display: 'flex',
+                                  flexDirection: 'column',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                  padding: '0.35rem 0.15rem',
+                                  borderRadius: 'var(--radius-sm)',
+                                  border: isSelected ? `2px solid ${char.color}` : '1.5px solid var(--surface-border)',
+                                  background: isSelected ? `${char.color}15` : 'rgba(255,255,255,0.02)',
+                                  cursor: 'pointer',
+                                  transition: 'all 0.2s ease',
+                                  outline: 'none'
+                                }}
+                                title={isHe ? char.label.he : char.label.en}
+                                onMouseEnter={(e) => {
+                                  e.currentTarget.style.transform = 'scale(1.06)';
+                                  e.currentTarget.style.borderColor = char.color;
+                                }}
+                                onMouseLeave={(e) => {
+                                  e.currentTarget.style.transform = 'scale(1)';
+                                  if (!isSelected) {
+                                    e.currentTarget.style.borderColor = 'var(--surface-border)';
+                                  }
+                                }}
+                              >
+                                <span style={{ fontSize: '1.35rem' }}>{char.emoji}</span>
+                                <span style={{ 
+                                  fontSize: '0.52rem', 
+                                  color: isSelected ? 'var(--text-primary)' : 'var(--text-muted)', 
+                                  overflow: 'hidden', 
+                                  textOverflow: 'ellipsis', 
+                                  whiteSpace: 'nowrap', 
+                                  width: '100%', 
+                                  textAlign: 'center', 
+                                  marginTop: '0.15rem',
+                                  fontWeight: isSelected ? 'bold' : 'normal'
+                                }}>
+                                  {isHe ? char.label.he.split(' ')[0] : char.label.en.split(' ')[0]}
+                                </span>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </>
               )}
             </AnimatePresence>
           </div>
@@ -1376,7 +1435,8 @@ function App() {
         id: session.user.id,
         email: session.user.email,
         name: session.user.user_metadata?.full_name || 'Student',
-        avatarUrl: session.user.user_metadata?.avatar_url || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(session.user.email)}`
+        avatarUrl: session.user.user_metadata?.avatar_url || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(session.user.email)}`,
+        googleId: session.user.user_metadata?.sub || (session.user.identities && session.user.identities[0] ? session.user.identities[0].id : '') || ''
       };
       setUser(u);
       
@@ -1430,7 +1490,9 @@ function App() {
         if (progressObj.avatarUrl) {
           setUser((prev: any) => {
             if (!prev) return null;
-            return { ...prev, avatarUrl: progressObj.avatarUrl };
+            const updated = { ...prev, avatarUrl: progressObj.avatarUrl };
+            localStorage.setItem('nla_saved_user', JSON.stringify(updated));
+            return updated;
           });
         }
         console.log('Successfully synced study progress and companion choice from cloud database!');
@@ -1443,15 +1505,19 @@ function App() {
   };
 
   // 3. Backup and sync local progress to cloud database
-  const triggerSync = async (forcedProgress?: Record<string, 'green' | 'yellow' | 'red' | null | boolean>) => {
+  const triggerSync = async (forcedProgress?: Record<string, 'green' | 'yellow' | 'red' | null | boolean>, forcedAvatarUrl?: string) => {
     if (!user) return;
     try {
       setIsSyncing(true);
       const progressToSave = forcedProgress || seenFormulas;
+      const avatarUrlToSave = forcedAvatarUrl || user.avatarUrl;
       
       const payload = {
         seenFormulas: progressToSave,
-        avatarUrl: user.avatarUrl
+        avatarUrl: avatarUrlToSave,
+        fullName: user.name,
+        email: user.email,
+        googleId: user.googleId || ''
       };
       
       const { error } = await supabase
@@ -1469,6 +1535,15 @@ function App() {
     } finally {
       setIsSyncing(false);
     }
+  };
+
+  // Helper method to change selected avatar and auto-sync to DB
+  const updateUserAvatar = async (avatarId: string) => {
+    if (!user) return;
+    const updated = { ...user, avatarUrl: avatarId };
+    setUser(updated);
+    localStorage.setItem('nla_saved_user', JSON.stringify(updated));
+    await triggerSync(undefined, avatarId);
   };
 
   // 4. Toggle formula mastery globally and auto-trigger sync if logged in!
@@ -1556,7 +1631,7 @@ function App() {
     <AppContext.Provider value={{ 
       language, zoom, toggleLanguage, zoomIn, zoomOut,
       user, signInWithGoogle, signOut, isSyncing, triggerSync,
-      seenFormulas, toggleSeenFormula
+      seenFormulas, toggleSeenFormula, updateUserAvatar
     }}>
       <Router>
         <div 
