@@ -1184,52 +1184,7 @@ function Navigation({ theme, toggleTheme }: { theme: 'dark' | 'light'; toggleThe
                       </span>
                     </div>
 
-                    {/* Choose Study Companion */}
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', borderTop: '1px solid var(--surface-border)', paddingTop: '0.85rem' }}>
-                      <span style={{ fontSize: '0.8rem', fontWeight: 'bold', color: 'var(--text-secondary)' }}>
-                        {isHe ? 'בחר מלווה למידה פעיל:' : 'Choose Active Companion:'}
-                      </span>
-                      <div style={{
-                        display: 'flex',
-                        gap: '0.45rem',
-                        overflowX: 'auto',
-                        paddingBottom: '0.35rem',
-                        scrollbarWidth: 'none',
-                        msOverflowStyle: 'none'
-                      }} className="companion-scroll-container">
-                        {AVATAR_CHARACTERS.map(char => {
-                          const isSelected = user.avatarUrl === char.id || user.avatarUrl === char.url;
-                          return (
-                            <button
-                              key={char.id}
-                              onClick={() => updateUserAvatar(char.id)}
-                              style={{
-                                flex: '0 0 auto',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                padding: '0.35rem',
-                                borderRadius: 'var(--radius-sm)',
-                                border: isSelected ? `2px solid ${char.color}` : '1.5px solid var(--surface-border)',
-                                background: isSelected ? `${char.color}11` : 'rgba(255,255,255,0.02)',
-                                cursor: 'pointer',
-                                width: '52px',
-                                height: '52px',
-                                transition: 'all 0.2s ease',
-                                outline: 'none'
-                              }}
-                              title={isHe ? char.label.he : char.label.en}
-                            >
-                              <span style={{ fontSize: '1.25rem' }}>{char.emoji}</span>
-                              <span style={{ fontSize: '0.52rem', color: isSelected ? 'var(--text-primary)' : 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', width: '100%', textAlign: 'center', marginTop: '0.1rem' }}>
-                                {isHe ? char.label.he.split(' ')[0] : char.label.en.split(' ')[0]}
-                              </span>
-                            </button>
-                          );
-                        })}
-                      </div>
-                    </div>
+
 
                     {/* Action Buttons */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '0.25rem', borderTop: '1px solid var(--surface-border)', paddingTop: '0.85rem' }}>
