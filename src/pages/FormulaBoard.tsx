@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { formulas } from '../data/formulas';
 import type { Formula } from '../data/formulas';
 import MathRenderer from '../components/MathRenderer';
-import { Award, Layers, Search, RotateCcw, ChevronDown } from 'lucide-react';
+import { Award, Layers, Search, RotateCcw, ChevronDown, LayoutGrid, List } from 'lucide-react';
 import { useAppContext } from '../App';
 
 interface CategoryStyle {
@@ -94,6 +94,8 @@ export default function FormulaBoard() {
   const [selectedCourse, setSelectedCourse] = useState<'all' | 'nla' | 'opt'>('all');
   const [selectedStatus, setSelectedStatus] = useState<'all' | 'green' | 'yellow' | 'red' | 'to-learn'>('all');
   const [selectedFormula, setSelectedFormula] = useState<Formula | null>(null);
+  const [viewMode, setViewMode] = useState<'grouped' | 'list'>('grouped');
+  const [sortBy, setSortBy] = useState<'name' | 'course' | 'category'>('name');
   
   // Collapse Toggles for NLA & OPT Stats Blocks
   const [nlaExpanded, setNlaExpanded] = useState(false);
@@ -174,15 +176,534 @@ export default function FormulaBoard() {
     ? '* מדד משוקלל: 😄 שליטה = 100% | 😐 בתהליך = 50% | 😡 מתקשה = 10%' 
     : '* Weighted Index: 😄 Mastered = 100% | 😐 Learning = 50% | 😡 Struggling = 10%';
 
+  // Compute Sorted List for List View
+  const sortedFormulas = [...filteredFormulas].sort((a, b) => {
+    if (sortBy === 'name') {
+      const nameA = isHe ? (a.nameHe || a.name) : a.name;
+      const nameB = isHe ? (b.nameHe || b.name) : b.name;
+      return nameA.localeCompare(nameB, isHe ? 'he' : 'en');
+    } else if (sortBy === 'course') {
+      if (a.courseId !== b.courseId) {
+        return a.courseId.localeCompare(b.courseId);
+      }
+      const chapterOrder = Object.keys(CATEGORY_STYLES);
+      return chapterOrder.indexOf(a.category) - chapterOrder.indexOf(b.category);
+    } else {
+      const chapterOrder = Object.keys(CATEGORY_STYLES);
+      const indexA = chapterOrder.indexOf(a.category);
+      const indexB = chapterOrder.indexOf(b.category);
+      if (indexA !== indexB) {
+        return indexA - indexB;
+      }
+      const nameA = isHe ? (a.nameHe || a.name) : a.name;
+      const nameB = isHe ? (b.nameHe || b.name) : b.name;
+      return nameA.localeCompare(nameB, isHe ? 'he' : 'en');
+    }
+  });
+
   // Group by category
   const categoriesMap: Record<string, typeof formulas> = {};
-  filteredFormulas.forEach(f => {
+  sortedFormulas.forEach(f => {
     const cat = isHe ? (f.categoryHe || f.category) : f.category;
     if (!categoriesMap[cat]) {
       categoriesMap[cat] = [];
     }
     categoriesMap[cat].push(f);
   });
+
+  // Reusable card renderer
+  const renderFormulaCard = (f: Formula, showCategory = false) => {
+    const formulaName = isHe ? (f.nameHe || f.name) : f.name;
+    const formulaDesc = isHe ? (f.descriptionHe || f.description) : f.description;
+
+    // Find original category style
+    let style = DEFAULT_STYLE;
+    for (const [engCat, s] of Object.entries(CATEGORY_STYLES)) {
+      if (f.category === engCat) {
+        style = s;
+        break;
+      }
+    }
+
+    if (viewMode === 'list') {
+      return (
+        <motion.div 
+          key={f.id} 
+          className="list-view-card" 
+          onClick={() => setSelectedFormula(f)}
+          style={{ 
+            direction: isHe ? 'rtl' : 'ltr',
+            borderColor: seenFormulas[f.id] === 'green' || seenFormulas[f.id] === true
+              ? 'var(--success)'
+              : seenFormulas[f.id] === 'yellow'
+              ? '#f59e0b'
+              : seenFormulas[f.id] === 'red'
+              ? '#ef4444'
+              : 'var(--surface-border)',
+            borderLeftWidth: isHe ? '1px' : '5px',
+            borderLeftColor: isHe ? 'var(--surface-border)' : style.border,
+            borderRightWidth: isHe ? '5px' : '1px',
+            borderRightColor: isHe ? style.border : 'var(--surface-border)',
+            boxShadow: seenFormulas[f.id] === 'green' || seenFormulas[f.id] === true
+              ? '0 8px 24px rgba(16, 185, 129, 0.08)'
+              : seenFormulas[f.id] === 'yellow'
+              ? '0 8px 24px rgba(245, 158, 11, 0.08)'
+              : seenFormulas[f.id] === 'red'
+              ? '0 8px 24px rgba(239, 68, 68, 0.08)'
+              : `0 4px 12px ${style.shadow}`,
+            cursor: 'pointer',
+            transition: 'transform 0.2s, box-shadow 0.2s, border-color 0.2s',
+            userSelect: 'none'
+          }}
+          whileHover={{ 
+            transform: 'translateY(-2px)', 
+            boxShadow: seenFormulas[f.id] === 'green' || seenFormulas[f.id] === true
+              ? '0 12px 30px rgba(16, 185, 129, 0.14)'
+              : seenFormulas[f.id] === 'yellow'
+              ? '0 12px 30px rgba(245, 158, 11, 0.14)'
+              : seenFormulas[f.id] === 'red'
+              ? '0 12px 30px rgba(239, 68, 68, 0.14)'
+              : `0 8px 20px ${style.glow}` 
+          }}
+        >
+          {/* Column 1: Info Block */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', justifySelf: 'stretch' }}>
+            {/* Badges */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap' }}>
+              <span style={{ 
+                fontSize: '0.72rem', 
+                fontWeight: 'bold', 
+                textTransform: 'uppercase', 
+                color: f.courseId === 'nla' ? 'var(--primary-color)' : 'var(--secondary-color)' 
+              }}>
+                {f.courseId === 'nla' ? 'NLA' : 'OPT'}
+              </span>
+              {showCategory && (
+                <span style={{ 
+                  fontSize: '0.68rem', 
+                  fontWeight: 'bold', 
+                  padding: '0.1rem 0.4rem',
+                  borderRadius: '6px',
+                  backgroundColor: style.badgeBg,
+                  color: style.badgeText,
+                  border: `1px solid ${style.border}`,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px'
+                }}>
+                  {isHe ? (f.categoryHe || f.category) : f.category}
+                </span>
+              )}
+            </div>
+
+            {/* Title */}
+            <h3 style={{ 
+              fontSize: '1.15rem', 
+              margin: '0.15rem 0 0.35rem 0', 
+              whiteSpace: 'normal', 
+              wordBreak: 'break-word', 
+              color: 'var(--text-primary)',
+              fontWeight: 700
+            }}>
+              {formulaName}
+            </h3>
+
+            {/* Definition */}
+            <div style={{ whiteSpace: 'normal', wordBreak: 'break-word' }}>
+              <span style={{ fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.5px', color: style.border, fontWeight: 'bold', display: 'block', marginBottom: '0.15rem' }}>
+                {lDefSentence}
+              </span>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', fontWeight: 500, lineHeight: '1.35', margin: 0 }}>
+                {formulaDesc}
+              </p>
+            </div>
+          </div>
+
+          {/* Column 2: Math Equation Box */}
+          <div style={{ 
+            background: 'var(--math-bg)', 
+            padding: '0.85rem 1rem', 
+            borderRadius: 'var(--radius-sm)', 
+            textAlign: 'center', 
+            overflowX: 'auto',
+            color: 'var(--text-primary)',
+            border: '1px solid var(--surface-border)',
+            boxShadow: `inset 0 1px 4px rgba(0,0,0,0.15)`,
+            justifySelf: 'stretch',
+            alignSelf: 'stretch',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
+            <MathRenderer tex={f.equation} block={true} style={{ fontSize: '1rem' }} />
+          </div>
+
+          {/* Column 3: Mastery actions & Emojis */}
+          <div style={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            gap: '0.75rem', 
+            alignItems: 'center',
+            justifyContent: 'center',
+            justifySelf: 'center',
+            width: '100%'
+          }}>
+            {/* Emojis selector inline wrapper */}
+            <div 
+              onClick={(e) => e.stopPropagation()} 
+              style={{
+                display: 'flex',
+                gap: '0.35rem',
+                background: 'var(--surface-color)',
+                padding: '0.2rem',
+                borderRadius: '20px',
+                border: '1px solid var(--surface-border)',
+                boxShadow: 'var(--shadow-sm)'
+              }}
+            >
+              {/* 😄 Green button */}
+              <button
+                onClick={() => toggleSeen(f.id, seenFormulas[f.id] === 'green' ? null : 'green')}
+                style={{
+                  width: '26px', height: '26px', borderRadius: '50%',
+                  background: seenFormulas[f.id] === 'green' || seenFormulas[f.id] === true ? 'rgba(16, 185, 129, 0.18)' : 'transparent',
+                  border: seenFormulas[f.id] === 'green' || seenFormulas[f.id] === true ? '1.5px solid var(--success)' : '1px dashed transparent',
+                  cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: '0.88rem', transition: 'all 0.2s ease', outline: 'none',
+                  opacity: seenFormulas[f.id] === 'green' || seenFormulas[f.id] === true ? 1 : 0.45,
+                  boxShadow: seenFormulas[f.id] === 'green' || seenFormulas[f.id] === true ? '0 0 8px rgba(16, 185, 129, 0.4)' : 'none'
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.opacity = '1'; }}
+                onMouseLeave={(e) => { if (seenFormulas[f.id] !== 'green' && seenFormulas[f.id] !== true) e.currentTarget.style.opacity = '0.45'; }}
+                title={isHe ? 'שולט 😄' : 'Mastered 😄'}
+              >
+                😄
+              </button>
+
+              {/* 😐 Yellow button */}
+              <button
+                onClick={() => toggleSeen(f.id, seenFormulas[f.id] === 'yellow' ? null : 'yellow')}
+                style={{
+                  width: '26px', height: '26px', borderRadius: '50%',
+                  background: seenFormulas[f.id] === 'yellow' ? 'rgba(245, 158, 11, 0.18)' : 'transparent',
+                  border: seenFormulas[f.id] === 'yellow' ? '1.5px solid #f59e0b' : '1px dashed transparent',
+                  cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: '0.88rem', transition: 'all 0.2s ease', outline: 'none',
+                  opacity: seenFormulas[f.id] === 'yellow' ? 1 : 0.45,
+                  boxShadow: seenFormulas[f.id] === 'yellow' ? '0 0 8px rgba(245, 158, 11, 0.4)' : 'none'
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.opacity = '1'; }}
+                onMouseLeave={(e) => { if (seenFormulas[f.id] !== 'yellow') e.currentTarget.style.opacity = '0.45'; }}
+                title={isHe ? 'בתהליך 😐' : 'Learning 😐'}
+              >
+                😐
+              </button>
+
+              {/* 😡 Red button */}
+              <button
+                onClick={() => toggleSeen(f.id, seenFormulas[f.id] === 'red' ? null : 'red')}
+                style={{
+                  width: '26px', height: '26px', borderRadius: '50%',
+                  background: seenFormulas[f.id] === 'red' ? 'rgba(239, 68, 68, 0.18)' : 'transparent',
+                  border: seenFormulas[f.id] === 'red' ? '1.5px solid #ef4444' : '1px dashed transparent',
+                  cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: '0.88rem', transition: 'all 0.2s ease', outline: 'none',
+                  opacity: seenFormulas[f.id] === 'red' ? 1 : 0.45,
+                  boxShadow: seenFormulas[f.id] === 'red' ? '0 0 8px rgba(239, 68, 68, 0.4)' : 'none'
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.opacity = '1'; }}
+                onMouseLeave={(e) => { if (seenFormulas[f.id] !== 'red') e.currentTarget.style.opacity = '0.45'; }}
+                title={isHe ? 'מתקשה 😡' : 'Struggling 😡'}
+              >
+                😡
+              </button>
+            </div>
+
+            {/* Celebration status badge */}
+            {seenFormulas[f.id] && (
+              <div style={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: '0.3rem', 
+                padding: '0.3rem 0.6rem',
+                background: seenFormulas[f.id] === 'green' || seenFormulas[f.id] === true
+                  ? 'rgba(16, 185, 129, 0.08)'
+                  : seenFormulas[f.id] === 'yellow'
+                  ? 'rgba(245, 158, 11, 0.08)'
+                  : 'rgba(239, 68, 68, 0.08)', 
+                borderRadius: 'var(--radius-sm)',
+                border: `1px solid ${
+                  seenFormulas[f.id] === 'green' || seenFormulas[f.id] === true
+                    ? 'rgba(16, 185, 129, 0.15)'
+                    : seenFormulas[f.id] === 'yellow'
+                    ? 'rgba(245, 158, 11, 0.15)'
+                    : 'rgba(239, 68, 68, 0.15)'
+                }`
+              }}>
+                <Award size={14} color={
+                  seenFormulas[f.id] === 'green' || seenFormulas[f.id] === true
+                    ? 'var(--success)'
+                    : seenFormulas[f.id] === 'yellow'
+                    ? '#f59e0b'
+                    : '#ef4444'
+                } />
+                <span style={{ 
+                  fontSize: '0.75rem', 
+                  color: seenFormulas[f.id] === 'green' || seenFormulas[f.id] === true
+                    ? 'var(--success)'
+                    : seenFormulas[f.id] === 'yellow'
+                    ? '#f59e0b'
+                    : '#ef4444', 
+                  fontWeight: 'bold' 
+                }}>
+                  {seenFormulas[f.id] === 'green' || seenFormulas[f.id] === true
+                    ? (isHe ? 'שולט' : 'Mastered')
+                    : seenFormulas[f.id] === 'yellow'
+                    ? (isHe ? 'בתהליך' : 'Learning')
+                    : (isHe ? 'מתקשה' : 'Struggling')
+                  }
+                </span>
+              </div>
+            )}
+          </div>
+        </motion.div>
+      );
+    }
+
+    return (
+      <motion.div 
+        key={f.id} 
+        className="glass-card" 
+        onClick={() => setSelectedFormula(f)}
+        style={{ 
+          display: 'flex',
+          flexDirection: 'column',
+          position: 'relative',
+          borderColor: seenFormulas[f.id] === 'green' || seenFormulas[f.id] === true
+            ? 'var(--success)'
+            : seenFormulas[f.id] === 'yellow'
+            ? '#f59e0b'
+            : seenFormulas[f.id] === 'red'
+            ? '#ef4444'
+            : 'var(--surface-border)',
+          borderLeftWidth: isHe ? '1px' : '5px',
+          borderLeftColor: isHe ? 'var(--surface-border)' : style.border,
+          borderRightWidth: isHe ? '5px' : '1px',
+          borderRightColor: isHe ? style.border : 'var(--surface-border)',
+          boxShadow: seenFormulas[f.id] === 'green' || seenFormulas[f.id] === true
+            ? '0 8px 24px rgba(16, 185, 129, 0.12)'
+            : seenFormulas[f.id] === 'yellow'
+            ? '0 8px 24px rgba(245, 158, 11, 0.12)'
+            : seenFormulas[f.id] === 'red'
+            ? '0 8px 24px rgba(239, 68, 68, 0.12)'
+            : `0 4px 12px ${style.shadow}`,
+          cursor: 'pointer',
+          transition: 'transform 0.2s, box-shadow 0.2s, border-color 0.2s',
+          userSelect: 'none'
+        }}
+        whileHover={{ 
+          transform: 'translateY(-4px)', 
+          boxShadow: seenFormulas[f.id] === 'green' || seenFormulas[f.id] === true
+            ? '0 12px 30px rgba(16, 185, 129, 0.18)'
+            : seenFormulas[f.id] === 'yellow'
+            ? '0 12px 30px rgba(245, 158, 11, 0.18)'
+            : seenFormulas[f.id] === 'red'
+            ? '0 12px 30px rgba(239, 68, 68, 0.18)'
+            : `0 8px 20px ${style.glow}` 
+        }}
+      >
+        {/* 3-Tier Emoji Marking Row */}
+        <div 
+          onClick={(e) => e.stopPropagation()} // Prevent card click
+          style={{
+            position: 'absolute',
+            top: '1.1rem',
+            right: isHe ? 'auto' : '1.1rem',
+            left: isHe ? '1.1rem' : 'auto',
+            display: 'flex',
+            gap: '0.3rem',
+            zIndex: 5,
+            background: 'var(--surface-color)',
+            padding: '0.2rem',
+            borderRadius: '20px',
+            border: '1px solid var(--surface-border)',
+            boxShadow: 'var(--shadow-sm)'
+          }}
+        >
+          {/* 😄 Green button */}
+          <button
+            onClick={() => toggleSeen(f.id, seenFormulas[f.id] === 'green' ? null : 'green')}
+            style={{
+              width: '26px', height: '26px', borderRadius: '50%',
+              background: seenFormulas[f.id] === 'green' || seenFormulas[f.id] === true ? 'rgba(16, 185, 129, 0.18)' : 'transparent',
+              border: seenFormulas[f.id] === 'green' || seenFormulas[f.id] === true ? '1.5px solid var(--success)' : '1px dashed transparent',
+              cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: '0.88rem', transition: 'all 0.2s ease', outline: 'none',
+              opacity: seenFormulas[f.id] === 'green' || seenFormulas[f.id] === true ? 1 : 0.45,
+              boxShadow: seenFormulas[f.id] === 'green' || seenFormulas[f.id] === true ? '0 0 8px rgba(16, 185, 129, 0.4)' : 'none'
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.opacity = '1'; }}
+            onMouseLeave={(e) => { if (seenFormulas[f.id] !== 'green' && seenFormulas[f.id] !== true) e.currentTarget.style.opacity = '0.45'; }}
+            title={isHe ? 'שולט 😄' : 'Mastered 😄'}
+          >
+            😄
+          </button>
+
+          {/* 😐 Yellow button */}
+          <button
+            onClick={() => toggleSeen(f.id, seenFormulas[f.id] === 'yellow' ? null : 'yellow')}
+            style={{
+              width: '26px', height: '26px', borderRadius: '50%',
+              background: seenFormulas[f.id] === 'yellow' ? 'rgba(245, 158, 11, 0.18)' : 'transparent',
+              border: seenFormulas[f.id] === 'yellow' ? '1.5px solid #f59e0b' : '1px dashed transparent',
+              cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: '0.88rem', transition: 'all 0.2s ease', outline: 'none',
+              opacity: seenFormulas[f.id] === 'yellow' ? 1 : 0.45,
+              boxShadow: seenFormulas[f.id] === 'yellow' ? '0 0 8px rgba(245, 158, 11, 0.4)' : 'none'
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.opacity = '1'; }}
+            onMouseLeave={(e) => { if (seenFormulas[f.id] !== 'yellow') e.currentTarget.style.opacity = '0.45'; }}
+            title={isHe ? 'בתהליך 😐' : 'Learning 😐'}
+          >
+            😐
+          </button>
+
+          {/* 😡 Red button */}
+          <button
+            onClick={() => toggleSeen(f.id, seenFormulas[f.id] === 'red' ? null : 'red')}
+            style={{
+              width: '26px', height: '26px', borderRadius: '50%',
+              background: seenFormulas[f.id] === 'red' ? 'rgba(239, 68, 68, 0.18)' : 'transparent',
+              border: seenFormulas[f.id] === 'red' ? '1.5px solid #ef4444' : '1px dashed transparent',
+              cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: '0.88rem', transition: 'all 0.2s ease', outline: 'none',
+              opacity: seenFormulas[f.id] === 'red' ? 1 : 0.45,
+              boxShadow: seenFormulas[f.id] === 'red' ? '0 0 8px rgba(239, 68, 68, 0.4)' : 'none'
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.opacity = '1'; }}
+            onMouseLeave={(e) => { if (seenFormulas[f.id] !== 'red') e.currentTarget.style.opacity = '0.45'; }}
+            title={isHe ? 'מתקשה 😡' : 'Struggling 😡'}
+          >
+            😡
+          </button>
+        </div>
+
+        {/* Course badge indicator */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.4rem', flexWrap: 'wrap' }}>
+          <span style={{ 
+            fontSize: '0.75rem', 
+            fontWeight: 'bold', 
+            textTransform: 'uppercase', 
+            color: f.courseId === 'nla' ? 'var(--primary-color)' : 'var(--secondary-color)' 
+          }}>
+            {f.courseId === 'nla' ? 'NLA' : 'OPT'}
+          </span>
+          {showCategory && (
+            <span style={{ 
+              fontSize: '0.72rem', 
+              fontWeight: 'bold', 
+              padding: '0.1rem 0.5rem',
+              borderRadius: '6px',
+              backgroundColor: style.badgeBg,
+              color: style.badgeText,
+              border: `1px solid ${style.border}`,
+              textTransform: 'uppercase',
+              letterSpacing: '0.5px'
+            }}>
+              {isHe ? (f.categoryHe || f.category) : f.category}
+            </span>
+          )}
+        </div>
+
+        {/* Equation Title */}
+        <h3 style={{ 
+          fontSize: '1.2rem', 
+          marginTop: '0.2rem', 
+          marginBottom: '1rem', 
+          paddingRight: isHe ? '0' : '5.5rem', 
+          paddingLeft: isHe ? '5.5rem' : '0', 
+          whiteSpace: 'normal', 
+          wordBreak: 'break-word', 
+          color: 'var(--text-primary)' 
+        }}>
+          {formulaName}
+        </h3>
+        
+        {/* Mathematical Equation Box - Beautifully Rendered via MathRenderer */}
+        <div style={{ 
+          background: 'var(--math-bg)', 
+          padding: '1.25rem 1rem', 
+          borderRadius: 'var(--radius-sm)', 
+          textAlign: 'center', 
+          marginBottom: '1.25rem',
+          overflowX: 'auto',
+          color: 'var(--text-primary)',
+          border: '1px solid var(--surface-border)',
+          boxShadow: `inset 0 1px 4px rgba(0,0,0,0.15)`
+        }}>
+          <MathRenderer tex={f.equation} block={true} style={{ fontSize: '1.1rem' }} />
+        </div>
+
+        {/* Explicit Definition Sentence Requirement (Wrapped nicely without scrolling) */}
+        <div style={{ marginBottom: '1rem', flexGrow: 1, whiteSpace: 'normal', wordBreak: 'break-word' }}>
+          <span style={{ fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.5px', color: style.border, fontWeight: 'bold', display: 'block', marginBottom: '0.3rem' }}>
+            {lDefSentence}
+          </span>
+          <p style={{ color: 'var(--text-primary)', fontSize: '0.92rem', fontWeight: 500, lineHeight: '1.4', margin: 0 }}>
+            {formulaDesc}
+          </p>
+        </div>
+
+        {/* Celebration status badge */}
+        {seenFormulas[f.id] && (
+          <div style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '0.4rem', 
+            marginTop: '1rem',
+            padding: '0.4rem 0.8rem',
+            background: seenFormulas[f.id] === 'green' || seenFormulas[f.id] === true
+              ? 'rgba(16, 185, 129, 0.1)'
+              : seenFormulas[f.id] === 'yellow'
+              ? 'rgba(245, 158, 11, 0.1)'
+              : 'rgba(239, 68, 68, 0.1)', 
+            borderRadius: 'var(--radius-sm)',
+            border: `1px solid ${
+              seenFormulas[f.id] === 'green' || seenFormulas[f.id] === true
+                ? 'rgba(16, 185, 129, 0.2)'
+                : seenFormulas[f.id] === 'yellow'
+                ? 'rgba(245, 158, 11, 0.2)'
+                : 'rgba(239, 68, 68, 0.2)'
+            }`,
+            alignSelf: 'flex-start'
+          }}>
+            <Award size={16} color={
+              seenFormulas[f.id] === 'green' || seenFormulas[f.id] === true
+                ? 'var(--success)'
+                : seenFormulas[f.id] === 'yellow'
+                ? '#f59e0b'
+                : '#ef4444'
+            } />
+            <span style={{ 
+              fontSize: '0.8rem', 
+              color: seenFormulas[f.id] === 'green' || seenFormulas[f.id] === true
+                ? 'var(--success)'
+                : seenFormulas[f.id] === 'yellow'
+                ? '#f59e0b'
+                : '#ef4444', 
+              fontWeight: 'bold' 
+            }}>
+              {seenFormulas[f.id] === 'green' || seenFormulas[f.id] === true
+                ? (isHe ? 'שולט' : 'Mastered')
+                : seenFormulas[f.id] === 'yellow'
+                ? (isHe ? 'בתהליך' : 'Learning')
+                : (isHe ? 'מתקשה' : 'Struggling')
+              }
+            </span>
+          </div>
+        )}
+      </motion.div>
+    );
+  };
 
   // Dynamic Translations
   const lTitle = isHe ? 'מרכז הנוסחאות וההגדרות' : 'Formula & Definition Hub';
@@ -207,6 +728,14 @@ export default function FormulaBoard() {
   const lFilterLearning = isHe ? 'בתהליך 😐' : 'Learning 😐';
   const lFilterStruggling = isHe ? 'מתקשה 😡' : 'Struggling 😡';
   const lFilterToLearn = isHe ? 'ללמוד 📝' : 'To Learn 📝';
+
+  const lViewMode = isHe ? 'מצב תצוגה' : 'View Mode';
+  const lGrouped = isHe ? 'תצוגת כרטיסים' : 'Card View';
+  const lSortedList = isHe ? 'רשימה ממוינת' : 'Sorted List';
+  const lSortBy = isHe ? 'מיין לפי' : 'Sort By';
+  const lSortName = isHe ? 'סדר אלפביתי' : 'Alphabetical';
+  const lSortCourse = isHe ? 'קורס' : 'Course';
+  const lSortCategory = isHe ? 'קטגוריה' : 'Category';
   
   const lNoMatches = isHe ? 'לא נמצאו נוסחאות מתאימות' : 'No matching equations found';
   const lNoMatchesSub = isHe ? 'נסה לשנות את מילות החיפוש או פילטר הקטגוריות.' : 'Try adjusting your search query or filter keywords.';
@@ -235,8 +764,13 @@ export default function FormulaBoard() {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem', marginBottom: '3rem' }}>
         
         {/* NLA Progress Card */}
-        <div 
+        <motion.div 
           className="glass-panel" 
+          whileHover={{ 
+            y: -3,
+            boxShadow: '0 12px 30px rgba(99, 102, 241, 0.15)'
+          }}
+          transition={{ duration: 0.2 }}
           style={{ 
             padding: '1.5rem 1.75rem', 
             borderTop: '4px solid var(--primary-color)', 
@@ -247,8 +781,10 @@ export default function FormulaBoard() {
           }}
         >
           {/* Header (Clickable Toggle) */}
-          <div 
+          <motion.div 
             onClick={() => setNlaExpanded(!nlaExpanded)}
+            whileHover={{ scale: 0.99, x: isHe ? -3 : 3 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 20 }}
             style={{ 
               display: 'flex', 
               justifyContent: 'space-between', 
@@ -273,7 +809,7 @@ export default function FormulaBoard() {
                 }} 
               />
             </div>
-          </div>
+          </motion.div>
 
           {/* Subject Mastery Index (Blue Bar - Always Visible) */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', margin: '0.2rem 0' }}>
@@ -349,11 +885,16 @@ export default function FormulaBoard() {
               </motion.div>
             )}
           </AnimatePresence>
-        </div>
+        </motion.div>
 
         {/* OPT Progress Card */}
-        <div 
+        <motion.div 
           className="glass-panel" 
+          whileHover={{ 
+            y: -3,
+            boxShadow: '0 12px 30px rgba(236, 72, 153, 0.15)'
+          }}
+          transition={{ duration: 0.2 }}
           style={{ 
             padding: '1.5rem 1.75rem', 
             borderTop: '4px solid var(--secondary-color)', 
@@ -364,8 +905,10 @@ export default function FormulaBoard() {
           }}
         >
           {/* Header (Clickable Toggle) */}
-          <div 
+          <motion.div 
             onClick={() => setOptExpanded(!optExpanded)}
+            whileHover={{ scale: 0.99, x: isHe ? -3 : 3 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 20 }}
             style={{ 
               display: 'flex', 
               justifyContent: 'space-between', 
@@ -388,7 +931,7 @@ export default function FormulaBoard() {
                 }} 
               />
             </div>
-          </div>
+          </motion.div>
 
           {/* Subject Mastery Index (Blue Bar - Always Visible) */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', margin: '0.2rem 0' }}>
@@ -464,7 +1007,7 @@ export default function FormulaBoard() {
               </motion.div>
             )}
           </AnimatePresence>
-        </div>
+        </motion.div>
 
       </div>
 
@@ -495,420 +1038,239 @@ export default function FormulaBoard() {
           </div>
 
           {/* Reset Progress Button */}
-          <button 
+          <motion.button 
             onClick={resetAllProgress} 
-            className="btn btn-secondary"
-            style={{ padding: '0.75rem 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0 }}
+            className="btn btn-secondary reset-btn"
+            whileHover={{ scale: 1.05, y: -1, boxShadow: '0 4px 12px rgba(236, 72, 153, 0.2)' }}
+            whileTap={{ scale: 0.95 }}
+            style={{ padding: '0.75rem 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0, cursor: 'pointer' }}
           >
-            <RotateCcw size={16} /> {lReset}
-          </button>
+            <RotateCcw size={16} className="reset-icon" />
+            {lReset}
+          </motion.button>
         </div>
 
-        {/* Filter Badges */}
-        <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap', borderTop: '1px solid var(--surface-border)', paddingTop: '1rem' }}>
-          {/* Course filter group */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-            <span style={{ fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '1px', color: 'var(--text-muted)', fontWeight: 'bold' }}>{lFilterTopic}</span>
-            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-              <button 
-                onClick={() => setSelectedCourse('all')}
-                style={{
-                  padding: '0.4rem 1rem',
-                  fontSize: '0.85rem',
-                  borderRadius: '16px',
-                  background: selectedCourse === 'all' ? 'var(--primary-color)' : 'var(--math-bg)',
-                  color: selectedCourse === 'all' ? 'white' : 'var(--text-primary)',
-                  border: '1px solid var(--surface-border)',
-                  cursor: 'pointer',
-                  fontWeight: 600
-                }}
-              >
-                {lFilterAllCourses}
-              </button>
-              <button 
-                onClick={() => setSelectedCourse('nla')}
-                style={{
-                  padding: '0.4rem 1rem',
-                  fontSize: '0.85rem',
-                  borderRadius: '16px',
-                  background: selectedCourse === 'nla' ? 'var(--primary-color)' : 'var(--math-bg)',
-                  color: selectedCourse === 'nla' ? 'white' : 'var(--text-primary)',
-                  border: '1px solid var(--surface-border)',
-                  cursor: 'pointer',
-                  fontWeight: 600
-                }}
-              >
-                {lFilterNla}
-              </button>
-              <button 
-                onClick={() => setSelectedCourse('opt')}
-                style={{
-                  padding: '0.4rem 1rem',
-                  fontSize: '0.85rem',
-                  borderRadius: '16px',
-                  background: selectedCourse === 'opt' ? 'var(--primary-color)' : 'var(--math-bg)',
-                  color: selectedCourse === 'opt' ? 'white' : 'var(--text-primary)',
-                  border: '1px solid var(--surface-border)',
-                  cursor: 'pointer',
-                  fontWeight: 600
-                }}
-              >
-                {lFilterOpt}
-              </button>
+        {/* Filter Controls Panel: Left Column (Topic & View Mode) & Right Column (Sort By & Mastery Status) */}
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'flex-start', 
+          flexWrap: 'wrap', 
+          gap: '2rem 1.5rem', 
+          borderTop: '1px solid var(--surface-border)', 
+          paddingTop: '1.25rem' 
+        }}>
+          {/* Left Column: Topic & View Mode */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', flex: '1 1 300px', minWidth: '280px' }}>
+            {/* Course filter group */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', alignItems: 'flex-start' }}>
+              <span style={{ fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '1px', color: 'var(--text-muted)', fontWeight: 'bold', textAlign: isHe ? 'right' : 'left' }}>{lFilterTopic}</span>
+              <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', justifyContent: 'flex-start' }}>
+                <motion.button 
+                  onClick={() => setSelectedCourse('all')}
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.96 }}
+                  className={`filter-btn filter-btn-primary ${selectedCourse === 'all' ? 'active' : ''}`}
+                >
+                  {lFilterAllCourses}
+                </motion.button>
+                <motion.button 
+                  onClick={() => setSelectedCourse('nla')}
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.96 }}
+                  className={`filter-btn filter-btn-primary ${selectedCourse === 'nla' ? 'active' : ''}`}
+                >
+                  {lFilterNla}
+                </motion.button>
+                <motion.button 
+                  onClick={() => setSelectedCourse('opt')}
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.96 }}
+                  className={`filter-btn filter-btn-secondary ${selectedCourse === 'opt' ? 'active' : ''}`}
+                >
+                  {lFilterOpt}
+                </motion.button>
+              </div>
+            </div>
+
+            {/* View Mode selection group */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', alignItems: 'flex-start' }}>
+              <span style={{ fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '1px', color: 'var(--text-muted)', fontWeight: 'bold', textAlign: isHe ? 'right' : 'left' }}>{lViewMode}</span>
+              <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', justifyContent: 'flex-start' }}>
+                <motion.button 
+                  onClick={() => setViewMode('grouped')}
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.96 }}
+                  className={`filter-btn filter-btn-primary ${viewMode === 'grouped' ? 'active' : ''}`}
+                >
+                  <LayoutGrid size={14} />
+                  {lGrouped}
+                </motion.button>
+                <motion.button 
+                  onClick={() => setViewMode('list')}
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.96 }}
+                  className={`filter-btn filter-btn-primary ${viewMode === 'list' ? 'active' : ''}`}
+                >
+                  <List size={14} />
+                  {lSortedList}
+                </motion.button>
+              </div>
             </div>
           </div>
 
-          {/* Status filter group (Now supporting 5 comprehensive modes!) */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-            <span style={{ fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '1px', color: 'var(--text-muted)', fontWeight: 'bold' }}>{lFilterMastery}</span>
-            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-              <button 
-                onClick={() => setSelectedStatus('all')}
-                style={{
-                  padding: '0.4rem 1rem',
-                  fontSize: '0.85rem',
-                  borderRadius: '16px',
-                  background: selectedStatus === 'all' ? 'var(--accent-color)' : 'var(--math-bg)',
-                  color: selectedStatus === 'all' ? 'white' : 'var(--text-primary)',
-                  border: '1px solid var(--surface-border)',
-                  cursor: 'pointer',
-                  fontWeight: 600
-                }}
-              >
-                {lFilterAll}
-              </button>
-              <button 
-                onClick={() => setSelectedStatus('green')}
-                style={{
-                  padding: '0.4rem 1rem',
-                  fontSize: '0.85rem',
-                  borderRadius: '16px',
-                  background: selectedStatus === 'green' ? 'var(--success)' : 'var(--math-bg)',
-                  color: selectedStatus === 'green' ? 'white' : 'var(--text-primary)',
-                  border: '1px solid var(--surface-border)',
-                  cursor: 'pointer',
-                  fontWeight: 600
-                }}
-              >
-                {lFilterMastered}
-              </button>
-              <button 
-                onClick={() => setSelectedStatus('yellow')}
-                style={{
-                  padding: '0.4rem 1rem',
-                  fontSize: '0.85rem',
-                  borderRadius: '16px',
-                  background: selectedStatus === 'yellow' ? '#f59e0b' : 'var(--math-bg)',
-                  color: selectedStatus === 'yellow' ? 'white' : 'var(--text-primary)',
-                  border: '1px solid var(--surface-border)',
-                  cursor: 'pointer',
-                  fontWeight: 600
-                }}
-              >
-                {lFilterLearning}
-              </button>
-              <button 
-                onClick={() => setSelectedStatus('red')}
-                style={{
-                  padding: '0.4rem 1rem',
-                  fontSize: '0.85rem',
-                  borderRadius: '16px',
-                  background: selectedStatus === 'red' ? '#ef4444' : 'var(--math-bg)',
-                  color: selectedStatus === 'red' ? 'white' : 'var(--text-primary)',
-                  border: '1px solid var(--surface-border)',
-                  cursor: 'pointer',
-                  fontWeight: 600
-                }}
-              >
-                {lFilterStruggling}
-              </button>
-              <button 
-                onClick={() => setSelectedStatus('to-learn')}
-                style={{
-                  padding: '0.4rem 1rem',
-                  fontSize: '0.85rem',
-                  borderRadius: '16px',
-                  background: selectedStatus === 'to-learn' ? '#64748b' : 'var(--math-bg)',
-                  color: selectedStatus === 'to-learn' ? 'white' : 'var(--text-primary)',
-                  border: '1px solid var(--surface-border)',
-                  cursor: 'pointer',
-                  fontWeight: 600
-                }}
-              >
-                {lFilterToLearn}
-              </button>
+          {/* Right Column: Sort By & Mastery Status */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', flex: '1 1 300px', minWidth: '280px' }}>
+            {/* Sort By group (Always Visible) */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', alignItems: 'flex-start' }}>
+              <span style={{ fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '1px', color: 'var(--text-muted)', fontWeight: 'bold', textAlign: isHe ? 'right' : 'left' }}>{lSortBy}</span>
+              <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', justifyContent: 'flex-start' }}>
+                <motion.button 
+                  onClick={() => setSortBy('name')}
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.96 }}
+                  className={`filter-btn filter-btn-secondary ${sortBy === 'name' ? 'active' : ''}`}
+                >
+                  {lSortName}
+                </motion.button>
+                <motion.button 
+                  onClick={() => setSortBy('course')}
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.96 }}
+                  className={`filter-btn filter-btn-secondary ${sortBy === 'course' ? 'active' : ''}`}
+                >
+                  {lSortCourse}
+                </motion.button>
+                <motion.button 
+                  onClick={() => setSortBy('category')}
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.96 }}
+                  className={`filter-btn filter-btn-secondary ${sortBy === 'category' ? 'active' : ''}`}
+                >
+                  {lSortCategory}
+                </motion.button>
+              </div>
+            </div>
+
+            {/* Status filter group (Mastery Status - Always Visible) */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', alignItems: 'flex-start' }}>
+              <span style={{ fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '1px', color: 'var(--text-muted)', fontWeight: 'bold', textAlign: isHe ? 'right' : 'left' }}>{lFilterMastery}</span>
+              <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', justifyContent: 'flex-start' }}>
+                <motion.button 
+                  onClick={() => setSelectedStatus('all')}
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.96 }}
+                  className={`filter-btn filter-btn-accent ${selectedStatus === 'all' ? 'active' : ''}`}
+                >
+                  {lFilterAll}
+                </motion.button>
+                <motion.button 
+                  onClick={() => setSelectedStatus('green')}
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.96 }}
+                  className={`filter-btn filter-btn-success ${selectedStatus === 'green' ? 'active' : ''}`}
+                >
+                  {lFilterMastered}
+                </motion.button>
+                <motion.button 
+                  onClick={() => setSelectedStatus('yellow')}
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.96 }}
+                  className={`filter-btn filter-btn-warning ${selectedStatus === 'yellow' ? 'active' : ''}`}
+                >
+                  {lFilterLearning}
+                </motion.button>
+                <motion.button 
+                  onClick={() => setSelectedStatus('red')}
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.96 }}
+                  className={`filter-btn filter-btn-danger ${selectedStatus === 'red' ? 'active' : ''}`}
+                >
+                  {lFilterStruggling}
+                </motion.button>
+                <motion.button 
+                  onClick={() => setSelectedStatus('to-learn')}
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.96 }}
+                  className={`filter-btn filter-btn-muted ${selectedStatus === 'to-learn' ? 'active' : ''}`}
+                >
+                  {lFilterToLearn}
+                </motion.button>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Formulas Content Grouped by Category */}
-      {Object.keys(categoriesMap).length === 0 ? (
+      {/* Formulas Content Grouped by Category or Single Sorted List */}
+      {filteredFormulas.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '4rem 2rem', background: 'var(--surface-color)', border: '1px dashed var(--surface-border)', borderRadius: 'var(--radius-md)' }}>
           <Layers size={48} color="var(--text-muted)" style={{ marginBottom: '1rem' }} />
           <h3>{lNoMatches}</h3>
           <p style={{ color: 'var(--text-secondary)' }}>{lNoMatchesSub}</p>
         </div>
+      ) : viewMode === 'list' ? (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', marginBottom: '4rem' }}>
+          {sortedFormulas.map(f => renderFormulaCard(f, true))}
+        </div>
       ) : (
-        Object.entries(categoriesMap).map(([category, items]) => {
-          // Find original category style
-          let style = DEFAULT_STYLE;
-          for (const [engCat, s] of Object.entries(CATEGORY_STYLES)) {
-            if (category === engCat || (items[0] && items[0].category === engCat)) {
-              style = s;
-              break;
+        (() => {
+          const chapterOrder = Object.keys(CATEGORY_STYLES);
+          const sortedCategoriesEntries = Object.entries(categoriesMap).sort(([catA, itemsA], [catB, itemsB]) => {
+            const engCatA = itemsA[0]?.category || '';
+            const engCatB = itemsB[0]?.category || '';
+            
+            if (sortBy === 'name') {
+              return catA.localeCompare(catB, isHe ? 'he' : 'en');
+            } else if (sortBy === 'course') {
+              const courseA = itemsA[0]?.courseId || '';
+              const courseB = itemsB[0]?.courseId || '';
+              if (courseA !== courseB) {
+                return courseA === 'nla' ? -1 : 1;
+              }
+              return chapterOrder.indexOf(engCatA) - chapterOrder.indexOf(engCatB);
+            } else {
+              return chapterOrder.indexOf(engCatA) - chapterOrder.indexOf(engCatB);
             }
-          }
-          
-          return (
-            <div key={category} style={{ marginBottom: '4rem' }}>
-              {/* Category Heading Banner */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', borderBottom: '1px solid var(--surface-border)', paddingBottom: '0.8rem', marginBottom: '1.8rem' }}>
-                <div style={{
-                  padding: '0.35rem 0.8rem',
-                  borderRadius: '16px',
-                  backgroundColor: style.badgeBg,
-                  color: style.badgeText,
-                  fontWeight: 'bold',
-                  fontSize: '0.9rem',
-                  textTransform: 'uppercase',
-                  letterSpacing: '1px'
-                }}>
-                  {category}
+          });
+
+          return sortedCategoriesEntries.map(([category, items]) => {
+            // Find original category style
+            let style = DEFAULT_STYLE;
+            for (const [engCat, s] of Object.entries(CATEGORY_STYLES)) {
+              if (category === engCat || (items[0] && items[0].category === engCat)) {
+                style = s;
+                break;
+              }
+            }
+            
+            return (
+              <div key={category} style={{ marginBottom: '4rem' }}>
+                {/* Category Heading Banner */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', borderBottom: '1px solid var(--surface-border)', paddingBottom: '0.8rem', marginBottom: '1.8rem' }}>
+                  <div style={{
+                    padding: '0.35rem 0.8rem',
+                    borderRadius: '16px',
+                    backgroundColor: style.badgeBg,
+                    color: style.badgeText,
+                    fontWeight: 'bold',
+                    fontSize: '0.9rem',
+                    textTransform: 'uppercase',
+                    letterSpacing: '1px'
+                  }}>
+                    {category}
+                  </div>
+                  <span style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>({items.length} {lItemsLabel})</span>
                 </div>
-                <span style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>({items.length} {lItemsLabel})</span>
+
+                {/* Grid of Cards */}
+                <div className="layout-grid">
+                  {items.map(f => renderFormulaCard(f, false))}
+                </div>
               </div>
-
-              {/* Grid of Cards */}
-              <div className="layout-grid">
-                {items.map(f => {
-                  const formulaName = isHe ? (f.nameHe || f.name) : f.name;
-                  const formulaDesc = isHe ? (f.descriptionHe || f.description) : f.description;
-                  
-                  return (
-                    <motion.div 
-                      key={f.id} 
-                      className="glass-card" 
-                      onClick={() => setSelectedFormula(f)}
-                      style={{ 
-                        display: 'flex',
-                        flexDirection: 'column',
-                        position: 'relative',
-                        borderColor: seenFormulas[f.id] === 'green' || seenFormulas[f.id] === true
-                          ? 'var(--success)'
-                          : seenFormulas[f.id] === 'yellow'
-                          ? '#f59e0b'
-                          : seenFormulas[f.id] === 'red'
-                          ? '#ef4444'
-                          : 'var(--surface-border)',
-                        borderLeftWidth: isHe ? '1px' : '5px',
-                        borderLeftColor: isHe ? 'var(--surface-border)' : style.border,
-                        borderRightWidth: isHe ? '5px' : '1px',
-                        borderRightColor: isHe ? style.border : 'var(--surface-border)',
-                        boxShadow: seenFormulas[f.id] === 'green' || seenFormulas[f.id] === true
-                          ? '0 8px 24px rgba(16, 185, 129, 0.12)'
-                          : seenFormulas[f.id] === 'yellow'
-                          ? '0 8px 24px rgba(245, 158, 11, 0.12)'
-                          : seenFormulas[f.id] === 'red'
-                          ? '0 8px 24px rgba(239, 68, 68, 0.12)'
-                          : `0 4px 12px ${style.shadow}`,
-                        cursor: 'pointer',
-                        transition: 'transform 0.2s, box-shadow 0.2s, border-color 0.2s',
-                        userSelect: 'none'
-                      }}
-                      whileHover={{ 
-                        transform: 'translateY(-4px)', 
-                        boxShadow: seenFormulas[f.id] === 'green' || seenFormulas[f.id] === true
-                          ? '0 12px 30px rgba(16, 185, 129, 0.18)'
-                          : seenFormulas[f.id] === 'yellow'
-                          ? '0 12px 30px rgba(245, 158, 11, 0.18)'
-                          : seenFormulas[f.id] === 'red'
-                          ? '0 12px 30px rgba(239, 68, 68, 0.18)'
-                          : `0 8px 20px ${style.glow}` 
-                      }}
-                    >
-                      {/* 3-Tier Emoji Marking Row */}
-                      <div 
-                        onClick={(e) => e.stopPropagation()} // Prevent card click
-                        style={{
-                          position: 'absolute',
-                          top: '1.1rem',
-                          right: isHe ? 'auto' : '1.1rem',
-                          left: isHe ? '1.1rem' : 'auto',
-                          display: 'flex',
-                          gap: '0.3rem',
-                          zIndex: 5,
-                          background: 'var(--surface-color)',
-                          padding: '0.2rem',
-                          borderRadius: '20px',
-                          border: '1px solid var(--surface-border)',
-                          boxShadow: 'var(--shadow-sm)'
-                        }}
-                      >
-                        {/* 😄 Green button */}
-                        <button
-                          onClick={() => toggleSeen(f.id, seenFormulas[f.id] === 'green' ? null : 'green')}
-                          style={{
-                            width: '26px', height: '26px', borderRadius: '50%',
-                            background: seenFormulas[f.id] === 'green' || seenFormulas[f.id] === true ? 'rgba(16, 185, 129, 0.18)' : 'transparent',
-                            border: seenFormulas[f.id] === 'green' || seenFormulas[f.id] === true ? '1.5px solid var(--success)' : '1px dashed transparent',
-                            cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            fontSize: '0.88rem', transition: 'all 0.2s ease', outline: 'none',
-                            opacity: seenFormulas[f.id] === 'green' || seenFormulas[f.id] === true ? 1 : 0.45,
-                            boxShadow: seenFormulas[f.id] === 'green' || seenFormulas[f.id] === true ? '0 0 8px rgba(16, 185, 129, 0.4)' : 'none'
-                          }}
-                          onMouseEnter={(e) => { e.currentTarget.style.opacity = '1'; }}
-                          onMouseLeave={(e) => { if (seenFormulas[f.id] !== 'green' && seenFormulas[f.id] !== true) e.currentTarget.style.opacity = '0.45'; }}
-                          title={isHe ? 'שולט 😄' : 'Mastered 😄'}
-                        >
-                          😄
-                        </button>
-
-                        {/* 😐 Yellow button */}
-                        <button
-                          onClick={() => toggleSeen(f.id, seenFormulas[f.id] === 'yellow' ? null : 'yellow')}
-                          style={{
-                            width: '26px', height: '26px', borderRadius: '50%',
-                            background: seenFormulas[f.id] === 'yellow' ? 'rgba(245, 158, 11, 0.18)' : 'transparent',
-                            border: seenFormulas[f.id] === 'yellow' ? '1.5px solid #f59e0b' : '1px dashed transparent',
-                            cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            fontSize: '0.88rem', transition: 'all 0.2s ease', outline: 'none',
-                            opacity: seenFormulas[f.id] === 'yellow' ? 1 : 0.45,
-                            boxShadow: seenFormulas[f.id] === 'yellow' ? '0 0 8px rgba(245, 158, 11, 0.4)' : 'none'
-                          }}
-                          onMouseEnter={(e) => { e.currentTarget.style.opacity = '1'; }}
-                          onMouseLeave={(e) => { if (seenFormulas[f.id] !== 'yellow') e.currentTarget.style.opacity = '0.45'; }}
-                          title={isHe ? 'בתהליך 😐' : 'Learning 😐'}
-                        >
-                          😐
-                        </button>
-
-                        {/* 😡 Red button */}
-                        <button
-                          onClick={() => toggleSeen(f.id, seenFormulas[f.id] === 'red' ? null : 'red')}
-                          style={{
-                            width: '26px', height: '26px', borderRadius: '50%',
-                            background: seenFormulas[f.id] === 'red' ? 'rgba(239, 68, 68, 0.18)' : 'transparent',
-                            border: seenFormulas[f.id] === 'red' ? '1.5px solid #ef4444' : '1px dashed transparent',
-                            cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            fontSize: '0.88rem', transition: 'all 0.2s ease', outline: 'none',
-                            opacity: seenFormulas[f.id] === 'red' ? 1 : 0.45,
-                            boxShadow: seenFormulas[f.id] === 'red' ? '0 0 8px rgba(239, 68, 68, 0.4)' : 'none'
-                          }}
-                          onMouseEnter={(e) => { e.currentTarget.style.opacity = '1'; }}
-                          onMouseLeave={(e) => { if (seenFormulas[f.id] !== 'red') e.currentTarget.style.opacity = '0.45'; }}
-                          title={isHe ? 'מתקשה 😡' : 'Struggling 😡'}
-                        >
-                          😡
-                        </button>
-                      </div>
-
-                      {/* Course badge indicator */}
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.4rem' }}>
-                        <span style={{ 
-                          fontSize: '0.75rem', 
-                           fontWeight: 'bold', 
-                          textTransform: 'uppercase', 
-                          color: f.courseId === 'nla' ? 'var(--primary-color)' : 'var(--secondary-color)' 
-                        }}>
-                          {f.courseId === 'nla' ? 'NLA' : 'OPT'}
-                        </span>
-                      </div>
-
-                      {/* Equation Title */}
-                      <h3 style={{ 
-                        fontSize: '1.2rem', 
-                        marginTop: '0.2rem', 
-                        marginBottom: '1rem', 
-                        paddingRight: isHe ? '0' : '5.5rem', 
-                        paddingLeft: isHe ? '5.5rem' : '0', 
-                        whiteSpace: 'normal', 
-                        wordBreak: 'break-word', 
-                        color: 'var(--text-primary)' 
-                      }}>
-                        {formulaName}
-                      </h3>
-                      
-                      {/* Mathematical Equation Box - Beautifully Rendered via MathRenderer */}
-                      <div style={{ 
-                        background: 'var(--math-bg)', 
-                        padding: '1.25rem 1rem', 
-                        borderRadius: 'var(--radius-sm)', 
-                        textAlign: 'center', 
-                        marginBottom: '1.25rem',
-                        overflowX: 'auto',
-                        color: 'var(--text-primary)',
-                        border: '1px solid var(--surface-border)',
-                        boxShadow: `inset 0 1px 4px rgba(0,0,0,0.15)`
-                      }}>
-                        <MathRenderer tex={f.equation} block={true} style={{ fontSize: '1.1rem' }} />
-                      </div>
-
-                      {/* Explicit Definition Sentence Requirement (Wrapped nicely without scrolling) */}
-                      <div style={{ marginBottom: '1rem', flexGrow: 1, whiteSpace: 'normal', wordBreak: 'break-word' }}>
-                        <span style={{ fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.5px', color: style.border, fontWeight: 'bold', display: 'block', marginBottom: '0.3rem' }}>
-                          {lDefSentence}
-                        </span>
-                        <p style={{ color: 'var(--text-primary)', fontSize: '0.92rem', fontWeight: 500, lineHeight: '1.4', margin: 0 }}>
-                          {formulaDesc}
-                        </p>
-                      </div>
-
-                      {/* Celebration status badge */}
-                      {seenFormulas[f.id] && (
-                        <div style={{ 
-                          display: 'flex', 
-                          alignItems: 'center', 
-                          gap: '0.4rem', 
-                          marginTop: '1rem',
-                          padding: '0.4rem 0.8rem',
-                          background: seenFormulas[f.id] === 'green' || seenFormulas[f.id] === true
-                            ? 'rgba(16, 185, 129, 0.1)'
-                            : seenFormulas[f.id] === 'yellow'
-                            ? 'rgba(245, 158, 11, 0.1)'
-                            : 'rgba(239, 68, 68, 0.1)', 
-                          borderRadius: 'var(--radius-sm)',
-                          border: `1px solid ${
-                            seenFormulas[f.id] === 'green' || seenFormulas[f.id] === true
-                              ? 'rgba(16, 185, 129, 0.2)'
-                              : seenFormulas[f.id] === 'yellow'
-                              ? 'rgba(245, 158, 11, 0.2)'
-                              : 'rgba(239, 68, 68, 0.2)'
-                          }`,
-                          alignSelf: 'flex-start'
-                        }}>
-                          <Award size={16} color={
-                            seenFormulas[f.id] === 'green' || seenFormulas[f.id] === true
-                              ? 'var(--success)'
-                              : seenFormulas[f.id] === 'yellow'
-                              ? '#f59e0b'
-                              : '#ef4444'
-                          } />
-                          <span style={{ 
-                            fontSize: '0.8rem', 
-                            color: seenFormulas[f.id] === 'green' || seenFormulas[f.id] === true
-                              ? 'var(--success)'
-                              : seenFormulas[f.id] === 'yellow'
-                              ? '#f59e0b'
-                              : '#ef4444', 
-                            fontWeight: 'bold' 
-                          }}>
-                            {seenFormulas[f.id] === 'green' || seenFormulas[f.id] === true
-                              ? (isHe ? 'שולט' : 'Mastered')
-                              : seenFormulas[f.id] === 'yellow'
-                              ? (isHe ? 'בתהליך' : 'Learning')
-                              : (isHe ? 'מתקשה' : 'Struggling')
-                            }
-                          </span>
-                        </div>
-                      )}
-                    </motion.div>
-                  );
-                })}
-              </div>
-            </div>
-          );
-        })
+            );
+          });
+        })()
       )}
 
       {/* POPUP DETAIL MODAL OVERLAY */}

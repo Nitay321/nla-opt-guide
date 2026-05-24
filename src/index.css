@@ -129,6 +129,36 @@ a:hover {
   border-color: var(--card-hover-border);
 }
 
+.list-view-card {
+  background: var(--card-bg-gradient);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-md);
+  padding: 1.5rem 2rem;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+  
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  align-items: center;
+  position: relative;
+}
+
+.list-view-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--card-hover-border);
+}
+
+@media (min-width: 900px) {
+  .list-view-card {
+    grid-template-columns: 1.8fr 1.5fr 1.2fr;
+    gap: 2.5rem;
+  }
+}
+
 /* Gradients */
 .text-gradient {
   background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
@@ -398,10 +428,163 @@ a:hover {
   }
   
   /* Let pagination buttons stack nicely on mobile with full widths */
+  /* Let pagination buttons stack nicely on mobile with full widths */
   .hover-scale {
     min-width: 100% !important;
     font-size: 0.9rem !important;
     padding: 0.85rem 1.25rem !important;
   }
 }
+
+/* ==========================================
+   ✨ Filter Buttons Interaction Styles
+   ========================================== */
+.filter-btn {
+  padding: 0.45rem 1.15rem;
+  font-size: 0.85rem;
+  border-radius: 20px;
+  border: 1px solid var(--surface-border);
+  background: var(--math-bg);
+  color: var(--text-primary);
+  cursor: pointer;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+              color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Primary/Indigo Variant (Topic, View Mode) */
+.filter-btn-primary.active {
+  background: var(--primary-color) !important;
+  color: white !important;
+  border-color: var(--primary-color) !important;
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35) !important;
+}
+.filter-btn-primary.active:hover {
+  background: #4f46e5 !important;
+  box-shadow: 0 6px 18px rgba(99, 102, 241, 0.45) !important;
+}
+.filter-btn-primary:not(.active):hover {
+  background: rgba(99, 102, 241, 0.12) !important;
+  border-color: rgba(99, 102, 241, 0.45) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Secondary/Pink Variant (Sort By, OPT) */
+.filter-btn-secondary.active {
+  background: var(--secondary-color) !important;
+  color: white !important;
+  border-color: var(--secondary-color) !important;
+  box-shadow: 0 4px 14px rgba(236, 72, 153, 0.35) !important;
+}
+.filter-btn-secondary.active:hover {
+  background: #d01d73 !important;
+  box-shadow: 0 6px 18px rgba(236, 72, 153, 0.45) !important;
+}
+.filter-btn-secondary:not(.active):hover {
+  background: rgba(236, 72, 153, 0.12) !important;
+  border-color: rgba(236, 72, 153, 0.45) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Accent/Teal Variant (All Status) */
+.filter-btn-accent.active {
+  background: var(--accent-color) !important;
+  color: white !important;
+  border-color: var(--accent-color) !important;
+  box-shadow: 0 4px 14px rgba(20, 184, 166, 0.35) !important;
+}
+.filter-btn-accent.active:hover {
+  background: #0d9488 !important;
+  box-shadow: 0 6px 18px rgba(20, 184, 166, 0.45) !important;
+}
+.filter-btn-accent:not(.active):hover {
+  background: rgba(20, 184, 166, 0.12) !important;
+  border-color: rgba(20, 184, 166, 0.45) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Success/Green Variant (Mastered 😄) */
+.filter-btn-success.active {
+  background: var(--success) !important;
+  color: white !important;
+  border-color: var(--success) !important;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35) !important;
+}
+.filter-btn-success.active:hover {
+  background: #059669 !important;
+  box-shadow: 0 6px 18px rgba(16, 185, 129, 0.45) !important;
+}
+.filter-btn-success:not(.active):hover {
+  background: rgba(16, 185, 129, 0.12) !important;
+  border-color: rgba(16, 185, 129, 0.45) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Warning/Yellow Variant (Learning 😐) */
+.filter-btn-warning.active {
+  background: var(--warning) !important;
+  color: white !important;
+  border-color: var(--warning) !important;
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35) !important;
+}
+.filter-btn-warning.active:hover {
+  background: #d97706 !important;
+  box-shadow: 0 6px 18px rgba(245, 158, 11, 0.45) !important;
+}
+.filter-btn-warning:not(.active):hover {
+  background: rgba(245, 158, 11, 0.12) !important;
+  border-color: rgba(245, 158, 11, 0.45) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Error/Red Variant (Struggling 😡) */
+.filter-btn-danger.active {
+  background: var(--error) !important;
+  color: white !important;
+  border-color: var(--error) !important;
+  box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35) !important;
+}
+.filter-btn-danger.active:hover {
+  background: #dc2626 !important;
+  box-shadow: 0 6px 18px rgba(239, 68, 68, 0.45) !important;
+}
+.filter-btn-danger:not(.active):hover {
+  background: rgba(239, 68, 68, 0.12) !important;
+  border-color: rgba(239, 68, 68, 0.45) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Muted/Slate Variant (To Learn 📝) */
+.filter-btn-muted.active {
+  background: var(--text-muted) !important;
+  color: white !important;
+  border-color: var(--text-muted) !important;
+  box-shadow: 0 4px 14px rgba(100, 116, 139, 0.35) !important;
+}
+.filter-btn-muted.active:hover {
+  background: #475569 !important;
+  box-shadow: 0 6px 18px rgba(100, 116, 139, 0.45) !important;
+}
+.filter-btn-muted:not(.active):hover {
+  background: rgba(100, 116, 139, 0.12) !important;
+  border-color: rgba(100, 116, 139, 0.45) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Reset Button Icon Rotation Interaction */
+.reset-btn:hover .reset-icon {
+  transform: rotate(-180deg) scale(1.1);
+}
+.reset-icon {
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 
