@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+﻿import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { chapters } from '../data/chapters';
 import { Calculator, Award, ArrowRight, ArrowLeft } from 'lucide-react';
@@ -8,21 +8,21 @@ export default function Home() {
   const { language } = useAppContext();
   const isHe = language === 'he';
 
-  const nlaChapters = chapters.filter(c => c.courseId === 'nla');
-  const optChapters = chapters.filter(c => c.courseId === 'opt');
+  const הסתברותChapters = chapters.filter(c => c.courseId === 'הסתברות');
+  const סטטיסטיקהChapters = chapters.filter(c => c.courseId === 'סטטיסטיקה');
 
   // Translations
-  const lTitle = isHe ? 'פורטל למידה מואצת' : 'Accelerated Mastery Portal';
+  const lTitle = isHe ? '׳₪׳•׳¨׳˜׳ ׳׳׳™׳“׳” ׳׳•׳׳¦׳×' : 'Accelerated Mastery Portal';
   const lSubTitle = isHe 
-    ? 'למד אלגברה ליניארית נומרית (NLA) ואופטימיזציה נומרית (OPT) ביעילות ובמהירות. בחר יחידת לימוד מטה כדי להתחיל למידה פעילה, לקרוא הוכחות פורמליות, לסקור דוגמאות מפורטות ולבחון את עצמך.'
-    : 'Master Numerical Linear Algebra (NLA) and Optimization (OPT) efficiently. Pick a chapter below to start active learning, read proofs, review examples, and test yourself.';
+    ? '׳׳׳“ ׳׳׳’׳‘׳¨׳” ׳׳™׳ ׳™׳׳¨׳™׳× ׳ ׳•׳׳¨׳™׳× (הסתברות) ׳•׳׳•׳₪׳˜׳™׳׳™׳–׳¦׳™׳” ׳ ׳•׳׳¨׳™׳× (סטטיסטיקה) ׳‘׳™׳¢׳™׳׳•׳× ׳•׳‘׳׳”׳™׳¨׳•׳×. ׳‘׳—׳¨ ׳™׳—׳™׳“׳× ׳׳™׳׳•׳“ ׳׳˜׳” ׳›׳“׳™ ׳׳”׳×׳—׳™׳ ׳׳׳™׳“׳” ׳₪׳¢׳™׳׳”, ׳׳§׳¨׳•׳ ׳”׳•׳›׳—׳•׳× ׳₪׳•׳¨׳׳׳™׳•׳×, ׳׳¡׳§׳•׳¨ ׳“׳•׳’׳׳׳•׳× ׳׳₪׳•׳¨׳˜׳•׳× ׳•׳׳‘׳—׳•׳ ׳׳× ׳¢׳¦׳׳.'
+    : 'Master Probability Theory (הסתברות) and סטטיסטיקהimization (סטטיסטיקה) efficiently. Pick a chapter below to start active learning, read proofs, review examples, and test yourself.';
 
-  const lNlaTitle = isHe ? 'אלגברה ליניארית נומרית' : 'Numerical Linear Algebra';
-  const lOptTitle = isHe ? 'אופטימיזציה נומרית' : 'Numerical Optimization';
+  const lהסתברותTitle = isHe ? '׳׳׳’׳‘׳¨׳” ׳׳™׳ ׳™׳׳¨׳™׳× ׳ ׳•׳׳¨׳™׳×' : 'Probability Theory';
+  const lסטטיסטיקהTitle = isHe ? '׳׳•׳₪׳˜׳™׳׳™׳–׳¦׳™׳” ׳ ׳•׳׳¨׳™׳×' : 'Numerical סטטיסטיקהimization';
   
-  const lNlaSub = isHe ? `קוד קורס: NLA • ${nlaChapters.length} יחידות` : `Course Code: NLA • ${nlaChapters.length} Modules`;
-  const lOptSub = isHe ? `קוד קורס: OPT • ${optChapters.length} יחידות` : `Course Code: OPT • ${optChapters.length} Modules`;
-  const lModuleLabel = isHe ? 'יחידה' : 'MODULE';
+  const lהסתברותSub = isHe ? `׳§׳•׳“ ׳§׳•׳¨׳¡: הסתברות ג€¢ ${הסתברותChapters.length} ׳™׳—׳™׳“׳•׳×` : `Course Code: הסתברות ג€¢ ${הסתברותChapters.length} Modules`;
+  const lסטטיסטיקהSub = isHe ? `׳§׳•׳“ ׳§׳•׳¨׳¡: סטטיסטיקה ג€¢ ${סטטיסטיקהChapters.length} ׳™׳—׳™׳“׳•׳×` : `Course Code: סטטיסטיקה ג€¢ ${סטטיסטיקהChapters.length} Modules`;
+  const lModuleLabel = isHe ? '׳™׳—׳™׳“׳”' : 'MODULE';
 
   const ArrowIcon = isHe ? ArrowLeft : ArrowRight;
 
@@ -46,7 +46,7 @@ export default function Home() {
       {/* Course Cards Grid */}
       <div className="layout-grid">
         
-        {/* NLA Column Card */}
+        {/* הסתברות Column Card */}
         <div className="glass-card" style={{ 
           borderColor: 'var(--primary-color)',
           boxShadow: '0 10px 30px rgba(99, 102, 241, 0.05)',
@@ -66,16 +66,16 @@ export default function Home() {
               <Calculator size={28} />
             </div>
             <div>
-              <h2 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 700 }}>{lNlaTitle}</h2>
-              <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{lNlaSub}</span>
+              <h2 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 700 }}>{lהסתברותTitle}</h2>
+              <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{lהסתברותSub}</span>
             </div>
           </div>
           
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', flexGrow: 1 }}>
-            {nlaChapters.map(chapter => {
+            {הסתברותChapters.map(chapter => {
               const chTitle = isHe ? (chapter.titleHe || chapter.title) : chapter.title;
               return (
-                <Link key={chapter.id} to={`/chapter/nla/${chapter.id}`} style={{ textDecoration: 'none' }}>
+                <Link key={chapter.id} to={`/chapter/הסתברות/${chapter.id}`} style={{ textDecoration: 'none' }}>
                   <div 
                     className="glass-panel" 
                     style={{ 
@@ -124,7 +124,7 @@ export default function Home() {
           </div>
         </div>
 
-        {/* OPT Column Card */}
+        {/* סטטיסטיקה Column Card */}
         <div className="glass-card" style={{ 
           borderColor: 'var(--secondary-color)',
           boxShadow: '0 10px 30px rgba(236, 72, 153, 0.05)',
@@ -144,16 +144,16 @@ export default function Home() {
               <Award size={28} />
             </div>
             <div>
-              <h2 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 700 }}>{lOptTitle}</h2>
-              <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{lOptSub}</span>
+              <h2 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 700 }}>{lסטטיסטיקהTitle}</h2>
+              <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{lסטטיסטיקהSub}</span>
             </div>
           </div>
           
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', flexGrow: 1 }}>
-            {optChapters.map(chapter => {
+            {סטטיסטיקהChapters.map(chapter => {
               const chTitle = isHe ? (chapter.titleHe || chapter.title) : chapter.title;
               return (
-                <Link key={chapter.id} to={`/chapter/opt/${chapter.id}`} style={{ textDecoration: 'none' }}>
+                <Link key={chapter.id} to={`/chapter/סטטיסטיקה/${chapter.id}`} style={{ textDecoration: 'none' }}>
                   <div 
                     className="glass-panel" 
                     style={{ 
@@ -206,3 +206,4 @@ export default function Home() {
     </motion.div>
   );
 }
+

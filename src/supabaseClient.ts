@@ -26,7 +26,7 @@ class MockSupabaseClient {
 
   constructor() {
     // Check if there is a saved mock session in localStorage to persist returning users!
-    const savedSession = localStorage.getItem('nla_mock_session');
+    const savedSession = localStorage.getItem('prob_mock_session');
     if (savedSession) {
       try {
         this.currentSession = JSON.parse(savedSession);
@@ -68,7 +68,7 @@ class MockSupabaseClient {
 
     signOut: async () => {
       this.currentSession = null;
-      localStorage.removeItem('nla_mock_session');
+      localStorage.removeItem('prob_mock_session');
       this.notify('SIGNED_OUT', null);
       return { error: null };
     },
@@ -95,7 +95,7 @@ class MockSupabaseClient {
       };
       
       this.currentSession = mockSession;
-      localStorage.setItem('nla_mock_session', JSON.stringify(mockSession));
+      localStorage.setItem('prob_mock_session', JSON.stringify(mockSession));
       this.notify('SIGNED_IN', mockSession);
       return mockSession;
     }
@@ -114,12 +114,12 @@ class MockSupabaseClient {
 
   // Database Mock Operations
   from(table: string) {
-    console.log(`[Mock Database] Querying table: ${table}`);
+    console.log(`[Prob-Stats DB] Querying table: ${table}`);
     return {
       select: () => ({
         eq: (_field: string, value: any) => ({
           single: async () => {
-            const savedData = localStorage.getItem(`nla_mock_db_${table}_${value}`);
+            const savedData = localStorage.getItem(`prob_mock_db_${table}_${value}`);
             if (savedData) {
               try {
                 return { data: JSON.parse(savedData), error: null };
@@ -134,8 +134,8 @@ class MockSupabaseClient {
       upsert: async (data: any) => {
         const userId = data.user_id;
         if (userId) {
-          localStorage.setItem(`nla_mock_db_${table}_${userId}`, JSON.stringify(data));
-          console.log(`[Mock Database] Saved progress for user: ${userId}`);
+          localStorage.setItem(`prob_mock_db_${table}_${userId}`, JSON.stringify(data));
+          console.log(`[Prob-Stats DB] Saved progress for user: ${userId}`);
         }
         return { data, error: null };
       }
