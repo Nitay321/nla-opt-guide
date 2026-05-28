@@ -1,4 +1,4 @@
-﻿import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { useState, useEffect, createContext, useContext } from 'react';
 import Home from './pages/Home';
 import ChapterPage from './pages/ChapterPage';
@@ -159,10 +159,10 @@ function ShareModal({ onClose, language }: { onClose: () => void; language: 'en'
           </div>
           <div>
             <h2 style={{ fontSize: '1.2rem', fontWeight: 700, margin: 0, color: 'var(--text-primary)' }}>
-              {isHe ? '׳©׳×׳£ ׳׳×׳¨ ׳׳™׳׳•׳“׳™' : 'Share Study Guide'}
+              {isHe ? 'שתף אתר לימודי' : 'Share Study Guide'}
             </h2>
             <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: '0.2rem 0 0 0' }}>
-              {isHe ? '׳©׳×׳£ ׳׳× ׳”׳§׳™׳©׳•׳¨ ׳”׳¦׳™׳‘׳•׳¨׳™ ׳¢׳ ׳—׳‘׳¨׳™׳ ׳•׳§׳•׳׳’׳•׳×' : 'Share the public link with friends and colleagues'}
+              {isHe ? 'שתף את הקישור הציבורי עם חברים וקולגות' : 'Share the public link with friends and colleagues'}
             </p>
           </div>
         </div>
@@ -173,7 +173,7 @@ function ShareModal({ onClose, language }: { onClose: () => void; language: 'en'
           {/* Public Link Copy Section */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
             <div style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-muted)' }}>
-              {isHe ? '׳§׳™׳©׳•׳¨ ׳¦׳™׳‘׳•׳¨׳™:' : 'Public Link:'}
+              {isHe ? 'קישור ציבורי:' : 'Public Link:'}
             </div>
             <div style={{
               display: 'flex',
@@ -206,7 +206,7 @@ function ShareModal({ onClose, language }: { onClose: () => void; language: 'en'
                 }}
               >
                 {copiedPublic ? <Check size={12} /> : <Copy size={12} />}
-                <span>{copiedPublic ? (isHe ? '׳”׳•׳¢׳×׳§!' : 'Copied!') : (isHe ? '׳”׳¢׳×׳§' : 'Copy')}</span>
+                <span>{copiedPublic ? (isHe ? 'הועתק!' : 'Copied!') : (isHe ? 'העתק' : 'Copy')}</span>
               </button>
             </div>
           </div>
@@ -223,7 +223,7 @@ function ShareModal({ onClose, language }: { onClose: () => void; language: 'en'
             border: '1px solid var(--surface-border)'
           }}>
             <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-secondary)' }}>
-              {isHe ? '׳¡׳¨׳•׳§ ׳§׳•׳“ ׳–׳” ׳׳’׳™׳©׳” ׳׳™׳™׳“׳™׳× ׳׳›׳ ׳׳›׳©׳™׳¨:' : 'Scan to access instantly from any device:'}
+              {isHe ? 'סרוק קוד זה לגישה מיידית מכל מכשיר:' : 'Scan to access instantly from any device:'}
             </span>
             <div style={{
               background: 'white',
@@ -261,8 +261,8 @@ function ShareModal({ onClose, language }: { onClose: () => void; language: 'en'
                 justifyContent: 'space-between'
               }}
             >
-              <span>{isHe ? '׳׳₪׳©׳¨׳•׳™׳•׳× ׳׳₪׳×׳— (׳—׳™׳‘׳•׳¨ ׳׳§׳•׳׳™)' : 'Developer Options (Local Wi-Fi)'}</span>
-              <span>{showLocalOptions ? 'ג–¼' : 'ג–¶'}</span>
+              <span>{isHe ? 'אפשרויות מפתח (חיבור מקומי)' : 'Developer Options (Local Wi-Fi)'}</span>
+              <span>{showLocalOptions ? '▼' : '▶'}</span>
             </button>
 
             {showLocalOptions && (
@@ -272,9 +272,9 @@ function ShareModal({ onClose, language }: { onClose: () => void; language: 'en'
                 style={{ marginTop: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.75rem', overflow: 'hidden' }}
               >
                 <div style={{ background: 'rgba(255,255,255,0.01)', padding: '0.75rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--surface-border)', fontSize: '0.78rem', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
-                  <strong>{isHe ? '׳—׳™׳‘׳•׳¨ Wi-Fi ׳׳§׳•׳׳™:' : 'Local Wi-Fi connection:'}</strong>
+                  <strong>{isHe ? 'חיבור Wi-Fi מקומי:' : 'Local Wi-Fi connection:'}</strong>
                   <div style={{ marginTop: '0.35rem' }}>
-                    {isHe ? '׳”׳–׳ ׳׳× ׳”-IP ׳”׳׳§׳•׳׳™ ׳©׳ ׳׳—׳©׳‘ ׳”׳₪׳™׳×׳•׳— ׳©׳׳:' : "Enter your hosting computer's local IP:"}
+                    {isHe ? 'הזן את ה-IP המקומי של מחשב הפיתוח שלך:' : "Enter your hosting computer's local IP:"}
                   </div>
                   <input 
                     type="text" 
@@ -327,18 +327,18 @@ function ShareModal({ onClose, language }: { onClose: () => void; language: 'en'
 declare const google: any;
 
 export const AVATAR_CHARACTERS = [
-  { id: 'owl', emoji: 'נ¦‰', label: { en: 'Academic Owl', he: '׳™׳ ׳©׳•׳£ ׳׳׳“׳' }, color: '#818cf8', url: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Galeel' },
-  { id: 'bot', emoji: 'נ₪–', label: { en: 'Study Bot', he: '׳¨׳•׳‘׳•׳˜ ׳׳׳™׳“׳”' }, color: '#34d399', url: 'https://api.dicebear.com/7.x/bottts/svg?seed=Bot' },
-  { id: 'coffee', emoji: 'ג˜•', label: { en: 'Exam Fuel', he: '׳“׳׳§ ׳‘׳—׳™׳ ׳•׳×' }, color: '#fbbf24', url: 'https://api.dicebear.com/7.x/pixel-art/svg?seed=Coffee' },
-  { id: 'wizard', emoji: 'נ§™ג€ג™‚ן¸', label: { en: 'Math Wizard', he: '׳§׳•׳¡׳ ׳׳×׳׳˜׳™' }, color: '#a78bfa', url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Wizard' },
-  { id: 'ninja', emoji: 'נ¥·', label: { en: 'OPT Ninja', he: '׳ ׳™׳ ׳’\'׳× ׳׳•׳₪׳˜׳™׳׳™׳–׳¦׳™׳”' }, color: '#f87171', url: 'https://api.dicebear.com/7.x/bottts/svg?seed=Ninja' },
-  { id: 'rocket', emoji: 'נ€', label: { en: 'Rocket', he: '׳¨׳§׳˜׳× ׳”׳¦׳׳—׳”' }, color: '#38bdf8', url: 'https://api.dicebear.com/7.x/identicon/svg?seed=Rocket' },
-  { id: 'fox', emoji: 'נ¦', label: { en: 'Clever Fox', he: '׳©׳•׳¢׳ ׳₪׳™׳§׳—' }, color: '#f97316', url: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Fox' },
-  { id: 'unicorn', emoji: 'נ¦„', label: { en: 'OPT Unicorn', he: '׳—׳“ ׳§׳¨׳ ׳׳•׳₪׳˜׳™׳׳™' }, color: '#ec4899', url: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Unicorn' },
-  { id: 'alien', emoji: 'נ‘¾', label: { en: 'Math Alien', he: '׳—׳™׳™׳–׳¨ ׳׳×׳׳˜׳™' }, color: '#a855f7', url: 'https://api.dicebear.com/7.x/bottts/svg?seed=Alien' },
-  { id: 'lion', emoji: 'נ¦', label: { en: 'NLA Lion', he: '׳׳¨׳™׳” ׳׳׳’׳‘׳¨׳™' }, color: '#eab308', url: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Lion' },
-  { id: 'panda', emoji: 'נ¼', label: { en: 'Study Panda', he: '׳₪׳ ׳“׳× ׳׳׳™׳“׳”' }, color: '#64748b', url: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Panda' },
-  { id: 'ghost', emoji: 'נ‘»', label: { en: 'Ghost Writer', he: '׳›׳•׳×׳‘ ׳¨׳₪׳׳™׳' }, color: '#cbd5e1', url: 'https://api.dicebear.com/7.x/pixel-art/svg?seed=Ghost' }
+  { id: 'owl', emoji: '🦉', label: { en: 'Academic Owl', he: 'ינשוף למדן' }, color: '#818cf8', url: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Galeel' },
+  { id: 'bot', emoji: '🤖', label: { en: 'Study Bot', he: 'רובוט למידה' }, color: '#34d399', url: 'https://api.dicebear.com/7.x/bottts/svg?seed=Bot' },
+  { id: 'coffee', emoji: '☕', label: { en: 'Exam Fuel', he: 'דלק בחינות' }, color: '#fbbf24', url: 'https://api.dicebear.com/7.x/pixel-art/svg?seed=Coffee' },
+  { id: 'wizard', emoji: '🧙‍♂️', label: { en: 'Math Wizard', he: 'קוסם מתמטי' }, color: '#a78bfa', url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Wizard' },
+  { id: 'ninja', emoji: '🥷', label: { en: 'Stats Ninja', he: 'נינג\'ת סטטיסטיקה' }, color: '#f87171', url: 'https://api.dicebear.com/7.x/bottts/svg?seed=Ninja' },
+  { id: 'rocket', emoji: '🚀', label: { en: 'Rocket', he: 'רקטת הצלחה' }, color: '#38bdf8', url: 'https://api.dicebear.com/7.x/identicon/svg?seed=Rocket' },
+  { id: 'fox', emoji: '🦊', label: { en: 'Clever Fox', he: 'שועל פיקח' }, color: '#f97316', url: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Fox' },
+  { id: 'unicorn', emoji: '🦄', label: { en: 'Stats Unicorn', he: 'חד קרן סטטיסטי' }, color: '#ec4899', url: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Unicorn' },
+  { id: 'alien', emoji: '👾', label: { en: 'Math Alien', he: 'חייזר מתמטי' }, color: '#a855f7', url: 'https://api.dicebear.com/7.x/bottts/svg?seed=Alien' },
+  { id: 'lion', emoji: '🦁', label: { en: 'Prob Lion', he: 'אריה הסתברותי' }, color: '#eab308', url: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Lion' },
+  { id: 'panda', emoji: '🐼', label: { en: 'Study Panda', he: 'פנדת למידה' }, color: '#64748b', url: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Panda' },
+  { id: 'ghost', emoji: '👻', label: { en: 'Ghost Writer', he: 'כותב רפאים' }, color: '#cbd5e1', url: 'https://api.dicebear.com/7.x/pixel-art/svg?seed=Ghost' }
 ];
 
 export const renderAvatar = (avatarUrl: string, size: string = '2.5rem', fontSize: string = '1.3rem') => {
@@ -352,7 +352,7 @@ export const renderAvatar = (avatarUrl: string, size: string = '2.5rem', fontSiz
         boxSizing: 'border-box',
         fontSize: fontSize
       }}>
-        נ‘₪
+        👤
       </div>
     );
   }
@@ -395,7 +395,7 @@ function AuthModal({ onClose, language, signInMockUser }: { onClose: () => void;
 
   // Load previously saved user (Welcome Back Screen)
   const [savedUser, setSavedUser] = useState<any>(() => {
-    const saved = localStorage.getItem('nla_saved_user');
+    const saved = localStorage.getItem('prob_saved_user');
     return saved ? JSON.parse(saved) : null;
   });
 
@@ -449,7 +449,7 @@ function AuthModal({ onClose, language, signInMockUser }: { onClose: () => void;
 
   // Load simulated user registry with default mocks pre-filled
   const getSimulatedUserRegistry = (): Record<string, { name: string; avatarUrl: string }> => {
-    const saved = localStorage.getItem('nla_simulated_users');
+    const saved = localStorage.getItem('prob_simulated_users');
     if (saved) return JSON.parse(saved);
     
     // Default mock database of recognized accounts
@@ -458,14 +458,14 @@ function AuthModal({ onClose, language, signInMockUser }: { onClose: () => void;
       'developer@example.com': { name: 'Alex Turing', avatarUrl: 'robot' },
       '0501234567': { name: 'Shir Levi', avatarUrl: 'cat' }
     };
-    localStorage.setItem('nla_simulated_users', JSON.stringify(defaults));
+    localStorage.setItem('prob_simulated_users', JSON.stringify(defaults));
     return defaults;
   };
 
   const saveSimulatedUserToRegistry = (identifier: string, name: string, avatarUrl: string) => {
     const registry = getSimulatedUserRegistry();
     registry[identifier.toLowerCase()] = { name, avatarUrl };
-    localStorage.setItem('nla_simulated_users', JSON.stringify(registry));
+    localStorage.setItem('prob_simulated_users', JSON.stringify(registry));
   };
 
   const handleSimulateGoogleLoginSubmit = (e: React.FormEvent) => {
@@ -476,7 +476,7 @@ function AuthModal({ onClose, language, signInMockUser }: { onClose: () => void;
       const isPhone = /^[+\d\s-]+$/.test(input) && input.replace(/[^\d]/g, '').length >= 6;
       
       if (!isEmail && !isPhone) {
-        setSimError(isHe ? '׳”׳–׳ ׳›׳×׳•׳‘׳× ׳׳™׳׳™׳™׳ ׳׳• ׳׳¡׳₪׳¨ ׳˜׳׳₪׳•׳ ׳×׳§׳™׳' : 'Enter a valid email or phone number');
+        setSimError(isHe ? 'הזן כתובת אימייל או מספר טלפון תקין' : 'Enter a valid email or phone number');
         return;
       }
       setSimError('');
@@ -504,7 +504,7 @@ function AuthModal({ onClose, language, signInMockUser }: { onClose: () => void;
       }
     } else if (simStep === 2) {
       if (!simName.trim()) {
-        setSimError(isHe ? '׳©׳“׳” ׳–׳” ׳—׳•׳‘׳”' : 'This field is required');
+        setSimError(isHe ? 'שדה זה חובה' : 'This field is required');
         return;
       }
       setSimError('');
@@ -604,10 +604,10 @@ function AuthModal({ onClose, language, signInMockUser }: { onClose: () => void;
               {simStep === 1 && (
                 <>
                   <h2 style={{ fontSize: '1.4rem', fontWeight: 500, color: '#202124', margin: 0 }}>
-                    {isHe ? '׳”׳×׳—׳‘׳¨׳•׳×' : 'Sign in'}
+                    {isHe ? 'התחברות' : 'Sign in'}
                   </h2>
                   <p style={{ color: '#5f6368', fontSize: '0.9rem', margin: 0 }}>
-                    {isHe ? '׳›׳“׳™ ׳׳”׳׳©׳™׳ ׳׳ ׳₪׳•׳¨׳˜׳ ׳”׳׳׳™׳“׳”' : 'to continue to לומדים הסתברות וסטטיסטיקה בכיף'}
+                    {isHe ? 'כדי להמשיך אל פורטל הלמידה' : 'to continue to Anti-Gravity Guide'}
                   </p>
                 </>
               )}
@@ -615,7 +615,7 @@ function AuthModal({ onClose, language, signInMockUser }: { onClose: () => void;
               {simStep === 2 && (
                 <>
                   <h2 style={{ fontSize: '1.4rem', fontWeight: 500, color: '#202124', margin: 0 }}>
-                    {isHe ? '׳”׳–׳ ׳׳× ׳©׳׳' : 'Enter your name'}
+                    {isHe ? 'הזן את שמך' : 'Enter your name'}
                   </h2>
                   <div style={{
                     display: 'flex', alignItems: 'center', gap: '0.4rem',
@@ -623,7 +623,7 @@ function AuthModal({ onClose, language, signInMockUser }: { onClose: () => void;
                     padding: '0.25rem 0.6rem', fontSize: '0.85rem', color: '#3c4043',
                     background: '#f8fafc', marginTop: '0.25rem'
                   }}>
-                    <span>נ‘₪</span>
+                    <span>👤</span>
                     <span>{simEmail}</span>
                   </div>
                 </>
@@ -632,10 +632,10 @@ function AuthModal({ onClose, language, signInMockUser }: { onClose: () => void;
               {simStep === 3 && (
                 <>
                   <h2 style={{ fontSize: '1.4rem', fontWeight: 500, color: '#202124', margin: 0 }}>
-                    {isHe ? '׳׳‘׳¦׳¢ ׳׳™׳׳•׳×...' : 'Authenticating...'}
+                    {isHe ? 'מבצע אימות...' : 'Authenticating...'}
                   </h2>
                   <p style={{ color: '#5f6368', fontSize: '0.9rem', margin: 0 }}>
-                    {isHe ? '׳™׳•׳¦׳¨ ׳—׳™׳‘׳•׳¨ ׳׳׳•׳‘׳˜׳— ׳•׳׳¡׳ ׳›׳¨׳ ׳”׳×׳§׳“׳׳•׳×' : 'Establishing secure handshake & loading slots'}
+                    {isHe ? 'יוצר חיבור מאובטח ומסנכרן התקדמות' : 'Establishing secure handshake & loading slots'}
                   </p>
                 </>
               )}
@@ -649,7 +649,7 @@ function AuthModal({ onClose, language, signInMockUser }: { onClose: () => void;
                     type="email" 
                     required 
                     autoFocus
-                    placeholder={isHe ? '׳׳™׳׳™׳™׳ ׳׳• ׳˜׳׳₪׳•׳' : 'Email or phone'}
+                    placeholder={isHe ? 'אימייל או טלפון' : 'Email or phone'}
                     value={simEmail}
                     onChange={(e) => {
                       setSimEmail(e.target.value);
@@ -672,11 +672,11 @@ function AuthModal({ onClose, language, signInMockUser }: { onClose: () => void;
                   />
                   {simError && (
                     <span style={{ color: '#d93025', fontSize: '0.78rem', display: 'flex', alignItems: 'center', gap: '0.25rem', marginTop: '0.2rem' }}>
-                      ג ן¸ {simError}
+                      ⚠️ {simError}
                     </span>
                   )}
                   <a href="#" onClick={(e) => e.preventDefault()} style={{ alignSelf: 'flex-start', color: '#1a73e8', textDecoration: 'none', fontSize: '0.82rem', fontWeight: 600, marginTop: '0.5rem' }}>
-                    {isHe ? '׳©׳›׳—׳× ׳׳× ׳”׳׳™׳׳™׳™׳?' : 'Forgot email?'}
+                    {isHe ? 'שכחת את האימייל?' : 'Forgot email?'}
                   </a>
                 </div>
               )}
@@ -687,7 +687,7 @@ function AuthModal({ onClose, language, signInMockUser }: { onClose: () => void;
                     type="text" 
                     required 
                     autoFocus
-                    placeholder={isHe ? '׳©׳ ׳₪׳¨׳˜׳™ ׳•׳©׳ ׳׳©׳₪׳—׳”' : 'First & Last Name'}
+                    placeholder={isHe ? 'שם פרטי ושם משפחה' : 'First & Last Name'}
                     value={simName}
                     onChange={(e) => {
                       setSimName(e.target.value);
@@ -710,7 +710,7 @@ function AuthModal({ onClose, language, signInMockUser }: { onClose: () => void;
                   />
                   {simError && (
                     <span style={{ color: '#d93025', fontSize: '0.78rem', display: 'flex', alignItems: 'center', gap: '0.25rem', marginTop: '0.2rem' }}>
-                      ג ן¸ {simError}
+                      ⚠️ {simError}
                     </span>
                   )}
                 </div>
@@ -757,7 +757,7 @@ function AuthModal({ onClose, language, signInMockUser }: { onClose: () => void;
                     onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(26,115,232,0.04)'}
                     onMouseLeave={(e) => e.currentTarget.style.background = 'none'}
                   >
-                    {simStep === 2 ? (isHe ? '׳—׳–׳•׳¨' : 'Back') : (isHe ? '׳‘׳™׳˜׳•׳' : 'Cancel')}
+                    {simStep === 2 ? (isHe ? 'חזור' : 'Back') : (isHe ? 'ביטול' : 'Cancel')}
                   </button>
 
                   <button 
@@ -772,18 +772,18 @@ function AuthModal({ onClose, language, signInMockUser }: { onClose: () => void;
                     onMouseEnter={(e) => e.currentTarget.style.background = '#185abc'}
                     onMouseLeave={(e) => e.currentTarget.style.background = '#1a73e8'}
                   >
-                    {isHe ? '׳”׳‘׳' : 'Next'}
+                    {isHe ? 'הבא' : 'Next'}
                   </button>
                 </div>
               )}
             </form>
 
             <div style={{ display: 'flex', justifyContent: 'space-between', color: '#5f6368', fontSize: '0.74rem' }}>
-              <span>{isHe ? '׳¢׳‘׳¨׳™׳× (׳™׳©׳¨׳׳)' : 'English (United States)'}</span>
+              <span>{isHe ? 'עברית (ישראל)' : 'English (United States)'}</span>
               <div style={{ display: 'flex', gap: '0.8rem' }}>
-                <span>{isHe ? '׳¢׳–׳¨׳”' : 'Help'}</span>
-                <span>{isHe ? '׳₪׳¨׳˜׳™׳•׳×' : 'Privacy'}</span>
-                <span>{isHe ? '׳×׳ ׳׳™׳' : 'Terms'}</span>
+                <span>{isHe ? 'עזרה' : 'Help'}</span>
+                <span>{isHe ? 'פרטיות' : 'Privacy'}</span>
+                <span>{isHe ? 'תנאים' : 'Terms'}</span>
               </div>
             </div>
           </div>
@@ -804,10 +804,10 @@ function AuthModal({ onClose, language, signInMockUser }: { onClose: () => void;
               </div>
 
               <h2 style={{ fontSize: '1.4rem', fontWeight: 700, color: '#0f172a', margin: 0 }}>
-                {isHe ? '׳‘׳¨׳•׳ ׳”׳©׳‘!' : 'Welcome Back!'}
+                {isHe ? 'ברוך השב!' : 'Welcome Back!'}
               </h2>
               <p style={{ color: '#475569', fontSize: '0.85rem', margin: 0, lineHeight: '1.4' }}>
-                {isHe ? '׳ ׳׳¦׳׳” ׳”׳×׳§׳“׳׳•׳× ׳׳׳™׳“׳” ׳©׳׳•׳¨׳” ׳׳—׳©׳‘׳•׳ ׳©׳׳.' : 'Pick up right where you left off. Quick login is ready!'}
+                {isHe ? 'נמצאה התקדמות למידה שמורה לחשבון שלך.' : 'Pick up right where you left off. Quick login is ready!'}
               </p>
             </div>
 
@@ -828,7 +828,7 @@ function AuthModal({ onClose, language, signInMockUser }: { onClose: () => void;
                 <h4 style={{ margin: 0, fontSize: '0.9rem', fontWeight: 600, color: '#1e293b', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{savedUser.name}</h4>
                 <p style={{ margin: 0, fontSize: '0.75rem', color: '#64748b', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{savedUser.email}</p>
               </div>
-              <span style={{ fontSize: '1.1rem' }}>נ“</span>
+              <span style={{ fontSize: '1.1rem' }}>🎓</span>
             </div>
 
             <button 
@@ -846,8 +846,8 @@ function AuthModal({ onClose, language, signInMockUser }: { onClose: () => void;
                 boxShadow: '0 4px 6px -1px rgba(99, 102, 241, 0.2)'
               }}
             >
-              <span>נ€</span>
-              <span>{isHe ? `׳”׳׳©׳ ׳‘׳×׳•׳¨ ${savedUser.name.split(' ')[0]}` : `Continue as ${savedUser.name.split(' ')[0]}`}</span>
+              <span>🚀</span>
+              <span>{isHe ? `המשך בתור ${savedUser.name.split(' ')[0]}` : `Continue as ${savedUser.name.split(' ')[0]}`}</span>
             </button>
 
             <button 
@@ -859,7 +859,7 @@ function AuthModal({ onClose, language, signInMockUser }: { onClose: () => void;
                 textDecoration: 'underline'
               }}
             >
-              {isHe ? '׳”׳×׳—׳‘׳¨ ׳¢׳ ׳׳©׳×׳׳© ׳׳—׳¨' : 'Switch to another account'}
+              {isHe ? 'התחבר עם משתמש אחר' : 'Switch to another account'}
             </button>
           </div>
         ) : (
@@ -878,16 +878,16 @@ function AuthModal({ onClose, language, signInMockUser }: { onClose: () => void;
                 boxShadow: '0 0 15px rgba(99, 102, 241, 0.2)',
                 fontSize: '2rem'
               }}>
-                נ”
+                🔐
               </div>
               
               <h1 style={{ fontSize: '1.35rem', fontWeight: 700, color: '#0f172a', margin: 0 }}>
-                {isHe ? '׳”׳×׳—׳‘׳¨׳•׳× ׳׳₪׳•׳¨׳˜׳ ׳”׳׳׳™׳“׳”' : 'Sign in to Mastery Portal'}
+                {isHe ? 'התחברות לפורטל הלמידה' : 'Sign in to Mastery Portal'}
               </h1>
               
               <p style={{ color: '#475569', fontSize: '0.82rem', margin: 0, lineHeight: '1.4' }}>
                 {isHe 
-                  ? '׳’׳‘׳” ׳•׳¡׳ ׳›׳¨׳ ׳׳× ׳”׳×׳§׳“׳׳•׳× ׳”׳׳׳™׳“׳” ׳•׳׳“׳“׳™ ׳”׳©׳׳™׳˜׳” ׳©׳׳ ׳‘׳¢׳ ׳ ׳‘׳׳•׳₪׳ ׳׳™׳™׳“׳™.' 
+                  ? 'גבה וסנכרן את התקדמות הלמידה ומדדי השליטה שלך בענן באופן מיידי.' 
                   : 'Connect your account to instantly sync and backup your study progress.'}
               </p>
             </div>
@@ -896,7 +896,7 @@ function AuthModal({ onClose, language, signInMockUser }: { onClose: () => void;
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', width: '100%', margin: '0.5rem 0' }}>
               <GoogleSignInButton 
                 onClick={handleGoogleSignInClick} 
-                text={isGoogleLoading ? (isHe ? '׳׳×׳—׳‘׳¨...' : 'Connecting...') : (isHe ? '׳”׳׳©׳ ׳¢׳ Google' : 'Continue with Google')} 
+                text={isGoogleLoading ? (isHe ? 'מתחבר...' : 'Connecting...') : (isHe ? 'המשך עם Google' : 'Continue with Google')} 
                 variant="brand-light" 
                 style={{
                   padding: '0.8rem 1.25rem',
@@ -908,14 +908,14 @@ function AuthModal({ onClose, language, signInMockUser }: { onClose: () => void;
 
               {googleError && (
                 <div style={{ color: '#ef4444', fontSize: '0.78rem', textAlign: 'center', padding: '0.4rem', background: '#fef2f2', borderRadius: '6px', border: '1px solid #fecaca' }}>
-                  ג ן¸ {googleError}
+                  ⚠️ {googleError}
                 </div>
               )}
             </div>
 
             <div style={{ textAlign: 'center', fontSize: '0.7rem', color: '#64748b', lineHeight: '1.4', marginTop: '0.15rem' }}>
               {isHe 
-                ? '׳”׳”׳×׳—׳‘׳¨׳•׳× ׳׳׳•׳‘׳˜׳—׳× ׳׳—׳׳•׳˜׳™׳. ׳‘׳׳—׳™׳¦׳” ׳¢׳ ׳›׳₪׳×׳•׳¨ ׳”׳”׳׳©׳, ׳׳×׳” ׳׳¡׳›׳™׳ ׳׳×׳ ׳׳™ ׳”׳©׳™׳¨׳•׳× ׳•׳׳“׳™׳ ׳™׳•׳× ׳”׳₪׳¨׳˜׳™׳•׳×.' 
+                ? 'ההתחברות מאובטחת לחלוטין. בלחיצה על כפתור ההמשך, אתה מסכים לתנאי השירות ומדיניות הפרטיות.' 
                 : 'Sign-in is fully secure. By continuing, you agree to our Terms of Service and Privacy Policy.'}
             </div>
           </>
@@ -941,9 +941,9 @@ function Navigation({ theme, toggleTheme }: { theme: 'dark' | 'light'; toggleThe
 
   // Translations for Navigation buttons
   const isHe = language === 'he';
-  const tDashboard = isHe ? '׳׳•׳— ׳‘׳§׳¨׳”' : 'Dashboard';
-  const tFormulas = isHe ? '׳ ׳•׳¡׳—׳׳•׳× ׳•׳”׳’׳“׳¨׳•׳×' : 'Formulas & Definitions';
-  const tThemeTitle = isHe ? '׳©׳ ׳” ׳׳¦׳‘ ׳×׳׳•׳¨׳”' : `Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`;
+  const tDashboard = isHe ? 'לוח בקרה' : 'Dashboard';
+  const tFormulas = isHe ? 'נוסחאות והגדרות' : 'Formulas & Definitions';
+  const tThemeTitle = isHe ? 'שנה מצב תאורה' : `Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`;
   
   // Calculate platform mastery percentage dynamically from all formulas in database
   const totalFormulasCount = formulas.length;
@@ -979,7 +979,7 @@ function Navigation({ theme, toggleTheme }: { theme: 'dark' | 'light'; toggleThe
               onClick={zoomOut}
               className="btn btn-secondary"
               style={{ padding: '0.4rem', border: 'none', background: 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-              title={isHe ? '׳”׳§׳˜׳ ׳’׳•׳₪׳' : 'Zoom Out'}
+              title={isHe ? 'הקטן גופן' : 'Zoom Out'}
             >
               <ZoomOut size={16} />
             </button>
@@ -990,7 +990,7 @@ function Navigation({ theme, toggleTheme }: { theme: 'dark' | 'light'; toggleThe
               onClick={zoomIn}
               className="btn btn-secondary"
               style={{ padding: '0.4rem', border: 'none', background: 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-              title={isHe ? '׳”׳’׳“׳ ׳’׳•׳₪׳' : 'Zoom In'}
+              title={isHe ? 'הגדל גופן' : 'Zoom In'}
             >
               <ZoomIn size={16} />
             </button>
@@ -1010,10 +1010,10 @@ function Navigation({ theme, toggleTheme }: { theme: 'dark' | 'light'; toggleThe
               borderColor: 'var(--surface-border)',
               fontWeight: 600
             }}
-            title={isHe ? '׳¢׳‘׳•׳¨ ׳׳׳ ׳’׳׳™׳×' : '׳¢׳‘׳•׳¨ ׳׳¢׳‘׳¨׳™׳×'}
+            title={isHe ? 'עבור לאנגלית' : 'עבור לעברית'}
           >
             <Languages size={18} />
-            <span style={{ fontSize: '0.9rem' }}>{isHe ? 'English' : '׳¢׳‘׳¨׳™׳×'}</span>
+            <span style={{ fontSize: '0.9rem' }}>{isHe ? 'English' : 'עברית'}</span>
           </button>
 
           {/* Share Button */}
@@ -1029,7 +1029,7 @@ function Navigation({ theme, toggleTheme }: { theme: 'dark' | 'light'; toggleThe
               justifyContent: 'center',
               borderColor: 'var(--surface-border)'
             }}
-            title={isHe ? '׳©׳×׳£ ׳׳×׳¨' : 'Share Website'}
+            title={isHe ? 'שתף אתר' : 'Share Website'}
           >
             <Share2 size={18} color="var(--accent-color)" />
           </button>
@@ -1080,7 +1080,7 @@ function Navigation({ theme, toggleTheme }: { theme: 'dark' | 'light'; toggleThe
                   border: '2px solid var(--primary-color)',
                   boxShadow: '0 0 10px rgba(99, 102, 241, 0.15)'
                 }}
-                title={isHe ? '׳”׳×׳—׳‘׳¨ ׳׳©׳׳™׳¨׳× ׳”׳×׳§׳“׳׳•׳×' : 'Sign In to Backup Progress'}
+                title={isHe ? 'התחבר לשמירת התקדמות' : 'Sign In to Backup Progress'}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = 'scale(1.05)';
                   e.currentTarget.style.backgroundColor = 'rgba(99, 102, 241, 0.12)';
@@ -1140,7 +1140,7 @@ function Navigation({ theme, toggleTheme }: { theme: 'dark' | 'light'; toggleThe
                         }}
                         onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.08)'}
                         onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
-                        title={isHe ? '׳׳—׳¥ ׳׳©׳™׳ ׳•׳™ ׳“׳׳•׳× ׳׳׳•׳•׳”' : 'Click to change study companion'}
+                        title={isHe ? 'לחץ לשינוי דמות מלווה' : 'Click to change study companion'}
                       >
                         {renderAvatar(user.avatarUrl, '2.5rem', '1.3rem')}
                         <div style={{
@@ -1159,7 +1159,7 @@ function Navigation({ theme, toggleTheme }: { theme: 'dark' | 'light'; toggleThe
                           boxShadow: '0 1px 3px rgba(0,0,0,0.3)',
                           border: '1px solid var(--bg-color)'
                         }}>
-                          גן¸
+                          ✏️
                         </div>
                       </button>
                       <div style={{ overflow: 'hidden', flex: 1 }}>
@@ -1171,7 +1171,7 @@ function Navigation({ theme, toggleTheme }: { theme: 'dark' | 'light'; toggleThe
                     {/* Platform Mastery Stats */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', fontWeight: 'bold' }}>
-                        <span style={{ color: 'var(--text-secondary)' }}>{isHe ? '׳׳“׳“ ׳©׳׳™׳˜׳” ׳‘׳ ׳•׳¡׳—׳׳•׳×' : 'Formula Mastery'}</span>
+                        <span style={{ color: 'var(--text-secondary)' }}>{isHe ? 'מדד שליטה בנוסחאות' : 'Formula Mastery'}</span>
                         <span style={{ color: 'var(--accent-color)' }}>{masteryPercentage}%</span>
                       </div>
                       <div style={{ width: '100%', height: '6px', background: 'var(--math-bg)', borderRadius: '3px', overflow: 'hidden' }}>
@@ -1179,7 +1179,7 @@ function Navigation({ theme, toggleTheme }: { theme: 'dark' | 'light'; toggleThe
                       </div>
                       <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
                         {isHe 
-                          ? `׳¡׳•׳׳ ׳• ${masteredCount} ׳׳×׳•׳ ${totalFormulasCount} ׳ ׳•׳¡׳—׳׳•׳× ׳©׳׳™׳˜׳”` 
+                          ? `סומנו ${masteredCount} מתוך ${totalFormulasCount} נוסחאות שליטה` 
                           : `Mastered ${masteredCount} of ${totalFormulasCount} formulas`}
                       </span>
                     </div>
@@ -1202,7 +1202,7 @@ function Navigation({ theme, toggleTheme }: { theme: 'dark' | 'light'; toggleThe
                         }}
                       >
                         <LogOut size={14} />
-                        {isHe ? '׳”׳×׳ ׳×׳§ ׳׳”׳—׳©׳‘׳•׳' : 'Sign Out'}
+                        {isHe ? 'התנתק מהחשבון' : 'Sign Out'}
                       </button>
                     </div>
                   </motion.div>
@@ -1234,7 +1234,7 @@ function Navigation({ theme, toggleTheme }: { theme: 'dark' | 'light'; toggleThe
                       >
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--surface-border)', paddingBottom: '0.5rem' }}>
                           <span style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--text-primary)' }}>
-                            {isHe ? '׳©׳™׳ ׳•׳™ ׳“׳׳•׳× ׳׳׳•׳•׳”' : 'Change Companion'}
+                            {isHe ? 'שינוי דמות מלווה' : 'Change Companion'}
                           </span>
                           <button 
                             onClick={() => setAvatarSelectorOpen(false)}
@@ -1396,7 +1396,7 @@ function App() {
       setUser(u);
       
       // Persist user profile locally for "Welcome Back" auth experience
-      localStorage.setItem('nla_saved_user', JSON.stringify(u));
+      localStorage.setItem('prob_saved_user', JSON.stringify(u));
       
       // Auto-load their saved progress from database upon sign-in!
       await loadProgressFromDatabase(session.user.id);
@@ -1446,7 +1446,7 @@ function App() {
           setUser((prev: any) => {
             if (!prev) return null;
             const updated = { ...prev, avatarUrl: progressObj.avatarUrl };
-            localStorage.setItem('nla_saved_user', JSON.stringify(updated));
+            localStorage.setItem('prob_saved_user', JSON.stringify(updated));
             return updated;
           });
         }
@@ -1497,7 +1497,7 @@ function App() {
     if (!user) return;
     const updated = { ...user, avatarUrl: avatarId };
     setUser(updated);
-    localStorage.setItem('nla_saved_user', JSON.stringify(updated));
+    localStorage.setItem('prob_saved_user', JSON.stringify(updated));
     await triggerSync(undefined, avatarId);
   };
 
@@ -1627,4 +1627,3 @@ function App() {
 }
 
 export default App;
-

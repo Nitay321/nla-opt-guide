@@ -91,15 +91,15 @@ const DEFAULT_STYLE: CategoryStyle = {
 export default function FormulaBoard() {
   const { language, seenFormulas, toggleSeenFormula } = useAppContext();
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCourse, setSelectedCourse] = useState<'all' | 'nla' | 'opt'>('all');
+  const [selectedCourse, setSelectedCourse] = useState<'all' | 'prob' | 'stats'>('all');
   const [selectedStatus, setSelectedStatus] = useState<'all' | 'green' | 'yellow' | 'red' | 'to-learn'>('all');
   const [selectedFormula, setSelectedFormula] = useState<Formula | null>(null);
   const [viewMode, setViewMode] = useState<'grouped' | 'list'>('grouped');
   const [sortBy, setSortBy] = useState<'name' | 'course' | 'category'>('name');
   
   // Collapse Toggles for NLA & OPT Stats Blocks
-  const [nlaExpanded, setNlaExpanded] = useState(false);
-  const [optExpanded, setOptExpanded] = useState(false);
+  const [probExpanded, setProbExpanded] = useState(false);
+  const [statsExpanded, setStatsExpanded] = useState(false);
 
   const isHe = language === 'he';
 
@@ -143,32 +143,32 @@ export default function FormulaBoard() {
   });
 
   // Calculate Metrics
-  const totalNLA = formulas.filter(f => f.courseId === 'nla').length;
-  const totalOPT = formulas.filter(f => f.courseId === 'opt').length;
+  const totalPROB = formulas.filter(f => f.courseId === 'prob').length;
+  const totalSTATS = formulas.filter(f => f.courseId === 'stats').length;
   
-  const greenNLA = formulas.filter(f => f.courseId === 'nla' && (seenFormulas[f.id] === 'green' || seenFormulas[f.id] === true)).length;
-  const yellowNLA = formulas.filter(f => f.courseId === 'nla' && seenFormulas[f.id] === 'yellow').length;
-  const redNLA = formulas.filter(f => f.courseId === 'nla' && seenFormulas[f.id] === 'red').length;
+  const greenPROB = formulas.filter(f => f.courseId === 'prob' && (seenFormulas[f.id] === 'green' || seenFormulas[f.id] === true)).length;
+  const yellowPROB = formulas.filter(f => f.courseId === 'prob' && seenFormulas[f.id] === 'yellow').length;
+  const redPROB = formulas.filter(f => f.courseId === 'prob' && seenFormulas[f.id] === 'red').length;
 
-  const greenOPT = formulas.filter(f => f.courseId === 'opt' && (seenFormulas[f.id] === 'green' || seenFormulas[f.id] === true)).length;
-  const yellowOPT = formulas.filter(f => f.courseId === 'opt' && seenFormulas[f.id] === 'yellow').length;
-  const redOPT = formulas.filter(f => f.courseId === 'opt' && seenFormulas[f.id] === 'red').length;
+  const greenSTATS = formulas.filter(f => f.courseId === 'stats' && (seenFormulas[f.id] === 'green' || seenFormulas[f.id] === true)).length;
+  const yellowSTATS = formulas.filter(f => f.courseId === 'stats' && seenFormulas[f.id] === 'yellow').length;
+  const redSTATS = formulas.filter(f => f.courseId === 'stats' && seenFormulas[f.id] === 'red').length;
 
-  const pctGreenNLA = totalNLA > 0 ? Math.round((greenNLA / totalNLA) * 100) : 0;
-  const pctYellowNLA = totalNLA > 0 ? Math.round((yellowNLA / totalNLA) * 100) : 0;
-  const pctRedNLA = totalNLA > 0 ? Math.round((redNLA / totalNLA) * 100) : 0;
+  const pctGreenPROB = totalPROB > 0 ? Math.round((greenPROB / totalPROB) * 100) : 0;
+  const pctYellowPROB = totalPROB > 0 ? Math.round((yellowPROB / totalPROB) * 100) : 0;
+  const pctRedPROB = totalPROB > 0 ? Math.round((redPROB / totalPROB) * 100) : 0;
 
-  const pctGreenOPT = totalOPT > 0 ? Math.round((greenOPT / totalOPT) * 100) : 0;
-  const pctYellowOPT = totalOPT > 0 ? Math.round((yellowOPT / totalOPT) * 100) : 0;
-  const pctRedOPT = totalOPT > 0 ? Math.round((redOPT / totalOPT) * 100) : 0;
+  const pctGreenSTATS = totalSTATS > 0 ? Math.round((greenSTATS / totalSTATS) * 100) : 0;
+  const pctYellowSTATS = totalSTATS > 0 ? Math.round((yellowSTATS / totalSTATS) * 100) : 0;
+  const pctRedSTATS = totalSTATS > 0 ? Math.round((redSTATS / totalSTATS) * 100) : 0;
 
   // Calculate Weighted Subject Mastery Index (😄 = 100%, 😐 = 50%, 😡 = 10%)
-  const indexNLA = totalNLA > 0 
-    ? Math.min(100, Math.round(((greenNLA * 1.0 + yellowNLA * 0.5 + redNLA * 0.1) / totalNLA) * 1000) / 10) 
+  const indexPROB = totalPROB > 0 
+    ? Math.min(100, Math.round(((greenPROB * 1.0 + yellowPROB * 0.5 + redPROB * 0.1) / totalPROB) * 1000) / 10) 
     : 0;
 
-  const indexOPT = totalOPT > 0 
-    ? Math.min(100, Math.round(((greenOPT * 1.0 + yellowOPT * 0.5 + redOPT * 0.1) / totalOPT) * 1000) / 10) 
+  const indexSTATS = totalSTATS > 0 
+    ? Math.min(100, Math.round(((greenSTATS * 1.0 + yellowSTATS * 0.5 + redSTATS * 0.1) / totalSTATS) * 1000) / 10) 
     : 0;
 
   const lMasteryIndexTitle = isHe ? 'מדד שליטה בנושא' : 'Subject Mastery Index';
@@ -274,9 +274,9 @@ export default function FormulaBoard() {
                 fontSize: '0.72rem', 
                 fontWeight: 'bold', 
                 textTransform: 'uppercase', 
-                color: f.courseId === 'nla' ? 'var(--primary-color)' : 'var(--secondary-color)' 
+                color: f.courseId === 'prob' ? 'var(--primary-color)' : 'var(--secondary-color)' 
               }}>
-                {f.courseId === 'nla' ? 'NLA' : 'OPT'}
+                {f.courseId === 'prob' ? 'NLA' : 'OPT'}
               </span>
               {showCategory && (
                 <span style={{ 
@@ -593,9 +593,9 @@ export default function FormulaBoard() {
             fontSize: '0.75rem', 
             fontWeight: 'bold', 
             textTransform: 'uppercase', 
-            color: f.courseId === 'nla' ? 'var(--primary-color)' : 'var(--secondary-color)' 
+            color: f.courseId === 'prob' ? 'var(--primary-color)' : 'var(--secondary-color)' 
           }}>
-            {f.courseId === 'nla' ? 'NLA' : 'OPT'}
+            {f.courseId === 'prob' ? 'NLA' : 'OPT'}
           </span>
           {showCategory && (
             <span style={{ 
@@ -711,16 +711,16 @@ export default function FormulaBoard() {
     ? 'דף נוסחאות אינטראקטיבי להכנה מהירה למבחן. למד הגדרות, חקור משוואות ב-LaTeX, ולחץ על כל כרטיס כדי לפתוח מסך מפורט.'
     : 'Interactive formula sheet for rapid exam preparation. Study definitions, examine equations in beautiful LaTeX, and tap any card to open a full popup screen.';
   
-  const lNlaTitle = isHe ? 'אלגברה ליניארית נומרית' : 'Numerical Linear Algebra';
-  const lOptTitle = isHe ? 'אופטימיזציה נומרית' : 'Numerical Optimization';
+  const lProbTitle = isHe ? 'אלגברה ליניארית נומרית' : 'Numerical Linear Algebra';
+  const lStatsTitle = isHe ? 'אופטימיזציה נומרית' : 'Numerical Optimization';
   
   const lSearchPlaceholder = isHe ? 'חפש משוואות, מילות מפתח או קטגוריות...' : 'Search equations, definition keywords or categories...';
   const lReset = isHe ? 'איפוס' : 'Reset';
   
   const lFilterTopic = isHe ? 'נושא' : 'Topic';
   const lFilterAllCourses = isHe ? 'כל הקורסים' : 'All Courses';
-  const lFilterNla = isHe ? 'אלגברה ליניארית נומרית (NLA)' : 'NLA (Linear Algebra)';
-  const lFilterOpt = isHe ? 'אופטימיזציה נומרית (OPT)' : 'Optimization';
+  const lFilterProb = isHe ? 'אלגברה ליניארית נומרית (NLA)' : 'NLA (Linear Algebra)';
+  const lFilterStats = isHe ? 'אופטימיזציה נומרית (OPT)' : 'Optimization';
   
   const lFilterMastery = isHe ? 'מדד שליטה בחומר' : 'Mastery status';
   const lFilterAll = isHe ? 'הכל' : 'All';
@@ -782,7 +782,7 @@ export default function FormulaBoard() {
         >
           {/* Header (Clickable Toggle) */}
           <motion.div 
-            onClick={() => setNlaExpanded(!nlaExpanded)}
+            onClick={() => setProbExpanded(!probExpanded)}
             whileHover={{ scale: 0.99, x: isHe ? -3 : 3 }}
             transition={{ type: 'spring', stiffness: 400, damping: 20 }}
             style={{ 
@@ -794,16 +794,16 @@ export default function FormulaBoard() {
             }}
           >
             <span style={{ fontWeight: 800, fontSize: '1.15rem', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              {lNlaTitle}
+              {lProbTitle}
             </span>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
               <span style={{ background: 'var(--primary-color)', color: 'white', padding: '0.2rem 0.65rem', borderRadius: '12px', fontSize: '0.78rem', fontWeight: 'bold' }}>
-                {totalNLA} {isHe ? 'נוסחאות' : 'equations'}
+                {totalPROB} {isHe ? 'נוסחאות' : 'equations'}
               </span>
               <ChevronDown 
                 size={18} 
                 style={{ 
-                  transform: nlaExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
+                  transform: probExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
                   transition: 'transform 0.25s ease',
                   color: 'var(--text-secondary)'
                 }} 
@@ -815,13 +815,13 @@ export default function FormulaBoard() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', margin: '0.2rem 0' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: '#3b82f6', fontWeight: 700 }}>
               <span>🔹 {lMasteryIndexTitle}</span>
-              <span>{indexNLA}%</span>
+              <span>{indexPROB}%</span>
             </div>
             <div style={{ height: '9px', background: 'var(--math-bg)', borderRadius: '4.5px', overflow: 'hidden', boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.1)' }}>
               <div 
                 style={{ 
                   height: '100%', 
-                  width: `${indexNLA}%`, 
+                  width: `${indexPROB}%`, 
                   background: 'linear-gradient(90deg, #3b82f6, #6366f1)', 
                   borderRadius: '4.5px', 
                   transition: 'width 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
@@ -833,7 +833,7 @@ export default function FormulaBoard() {
 
           {/* Detailed Emoji Progress Bars (Revealed on Click) */}
           <AnimatePresence initial={false}>
-            {nlaExpanded && (
+            {probExpanded && (
               <motion.div
                 initial={{ height: 0, opacity: 0 }}
                 animate={{ height: 'auto', opacity: 1 }}
@@ -848,10 +848,10 @@ export default function FormulaBoard() {
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', color: 'var(--text-secondary)', fontWeight: 600 }}>
                       <span>😄 {isHe ? 'שולט' : 'Mastered'}</span>
-                      <span>{greenNLA} / {totalNLA} ({pctGreenNLA}%)</span>
+                      <span>{greenPROB} / {totalPROB} ({pctGreenPROB}%)</span>
                     </div>
                     <div style={{ height: '8px', background: 'var(--math-bg)', borderRadius: '4px', overflow: 'hidden' }}>
-                      <div style={{ height: '100%', width: `${pctGreenNLA}%`, background: 'var(--success)', borderRadius: '4px', transition: 'width 0.4s ease' }} />
+                      <div style={{ height: '100%', width: `${pctGreenPROB}%`, background: 'var(--success)', borderRadius: '4px', transition: 'width 0.4s ease' }} />
                     </div>
                   </div>
 
@@ -859,10 +859,10 @@ export default function FormulaBoard() {
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', color: 'var(--text-secondary)', fontWeight: 600 }}>
                       <span>😐 {isHe ? 'בתהליך' : 'Learning'}</span>
-                      <span>{yellowNLA} / {totalNLA} ({pctYellowNLA}%)</span>
+                      <span>{yellowPROB} / {totalPROB} ({pctYellowPROB}%)</span>
                     </div>
                     <div style={{ height: '8px', background: 'var(--math-bg)', borderRadius: '4px', overflow: 'hidden' }}>
-                      <div style={{ height: '100%', width: `${pctYellowNLA}%`, background: '#f59e0b', borderRadius: '4px', transition: 'width 0.4s ease' }} />
+                      <div style={{ height: '100%', width: `${pctYellowPROB}%`, background: '#f59e0b', borderRadius: '4px', transition: 'width 0.4s ease' }} />
                     </div>
                   </div>
 
@@ -870,10 +870,10 @@ export default function FormulaBoard() {
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', color: 'var(--text-secondary)', fontWeight: 600 }}>
                       <span>😡 {isHe ? 'מתקשה' : 'Struggling'}</span>
-                      <span>{redNLA} / {totalNLA} ({pctRedNLA}%)</span>
+                      <span>{redPROB} / {totalPROB} ({pctRedPROB}%)</span>
                     </div>
                     <div style={{ height: '8px', background: 'var(--math-bg)', borderRadius: '4px', overflow: 'hidden' }}>
-                      <div style={{ height: '100%', width: `${pctRedNLA}%`, background: '#ef4444', borderRadius: '4px', transition: 'width 0.4s ease' }} />
+                      <div style={{ height: '100%', width: `${pctRedPROB}%`, background: '#ef4444', borderRadius: '4px', transition: 'width 0.4s ease' }} />
                     </div>
                   </div>
                 </div>
@@ -906,7 +906,7 @@ export default function FormulaBoard() {
         >
           {/* Header (Clickable Toggle) */}
           <motion.div 
-            onClick={() => setOptExpanded(!optExpanded)}
+            onClick={() => setStatsExpanded(!statsExpanded)}
             whileHover={{ scale: 0.99, x: isHe ? -3 : 3 }}
             transition={{ type: 'spring', stiffness: 400, damping: 20 }}
             style={{ 
@@ -917,15 +917,15 @@ export default function FormulaBoard() {
               userSelect: 'none'
             }}
           >
-            <span style={{ fontWeight: 800, fontSize: '1.15rem', color: 'var(--text-primary)' }}>{lOptTitle}</span>
+            <span style={{ fontWeight: 800, fontSize: '1.15rem', color: 'var(--text-primary)' }}>{lStatsTitle}</span>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
               <span style={{ background: 'var(--secondary-color)', color: 'white', padding: '0.2rem 0.65rem', borderRadius: '12px', fontSize: '0.78rem', fontWeight: 'bold' }}>
-                {totalOPT} {isHe ? 'נוסחאות' : 'equations'}
+                {totalSTATS} {isHe ? 'נוסחאות' : 'equations'}
               </span>
               <ChevronDown 
                 size={18} 
                 style={{ 
-                  transform: optExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
+                  transform: statsExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
                   transition: 'transform 0.25s ease',
                   color: 'var(--text-secondary)'
                 }} 
@@ -937,13 +937,13 @@ export default function FormulaBoard() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', margin: '0.2rem 0' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: '#3b82f6', fontWeight: 700 }}>
               <span>🔹 {lMasteryIndexTitle}</span>
-              <span>{indexOPT}%</span>
+              <span>{indexSTATS}%</span>
             </div>
             <div style={{ height: '9px', background: 'var(--math-bg)', borderRadius: '4.5px', overflow: 'hidden', boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.1)' }}>
               <div 
                 style={{ 
                   height: '100%', 
-                  width: `${indexOPT}%`, 
+                  width: `${indexSTATS}%`, 
                   background: 'linear-gradient(90deg, #3b82f6, #6366f1)', 
                   borderRadius: '4.5px', 
                   transition: 'width 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
@@ -955,7 +955,7 @@ export default function FormulaBoard() {
 
           {/* Detailed Emoji Progress Bars (Revealed on Click) */}
           <AnimatePresence initial={false}>
-            {optExpanded && (
+            {statsExpanded && (
               <motion.div
                 initial={{ height: 0, opacity: 0 }}
                 animate={{ height: 'auto', opacity: 1 }}
@@ -970,10 +970,10 @@ export default function FormulaBoard() {
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', color: 'var(--text-secondary)', fontWeight: 600 }}>
                       <span>😄 {isHe ? 'שולט' : 'Mastered'}</span>
-                      <span>{greenOPT} / {totalOPT} ({pctGreenOPT}%)</span>
+                      <span>{greenSTATS} / {totalSTATS} ({pctGreenSTATS}%)</span>
                     </div>
                     <div style={{ height: '8px', background: 'var(--math-bg)', borderRadius: '4px', overflow: 'hidden' }}>
-                      <div style={{ height: '100%', width: `${pctGreenOPT}%`, background: 'var(--success)', borderRadius: '4px', transition: 'width 0.4s ease' }} />
+                      <div style={{ height: '100%', width: `${pctGreenSTATS}%`, background: 'var(--success)', borderRadius: '4px', transition: 'width 0.4s ease' }} />
                     </div>
                   </div>
 
@@ -981,10 +981,10 @@ export default function FormulaBoard() {
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', color: 'var(--text-secondary)', fontWeight: 600 }}>
                       <span>😐 {isHe ? 'בתהליך' : 'Learning'}</span>
-                      <span>{yellowOPT} / {totalOPT} ({pctYellowOPT}%)</span>
+                      <span>{yellowSTATS} / {totalSTATS} ({pctYellowSTATS}%)</span>
                     </div>
                     <div style={{ height: '8px', background: 'var(--math-bg)', borderRadius: '4px', overflow: 'hidden' }}>
-                      <div style={{ height: '100%', width: `${pctYellowOPT}%`, background: '#f59e0b', borderRadius: '4px', transition: 'width 0.4s ease' }} />
+                      <div style={{ height: '100%', width: `${pctYellowSTATS}%`, background: '#f59e0b', borderRadius: '4px', transition: 'width 0.4s ease' }} />
                     </div>
                   </div>
 
@@ -992,10 +992,10 @@ export default function FormulaBoard() {
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', color: 'var(--text-secondary)', fontWeight: 600 }}>
                       <span>😡 {isHe ? 'מתקשה' : 'Struggling'}</span>
-                      <span>{redOPT} / {totalOPT} ({pctRedOPT}%)</span>
+                      <span>{redSTATS} / {totalSTATS} ({pctRedSTATS}%)</span>
                     </div>
                     <div style={{ height: '8px', background: 'var(--math-bg)', borderRadius: '4px', overflow: 'hidden' }}>
-                      <div style={{ height: '100%', width: `${pctRedOPT}%`, background: '#ef4444', borderRadius: '4px', transition: 'width 0.4s ease' }} />
+                      <div style={{ height: '100%', width: `${pctRedSTATS}%`, background: '#ef4444', borderRadius: '4px', transition: 'width 0.4s ease' }} />
                     </div>
                   </div>
                 </div>
@@ -1075,20 +1075,20 @@ export default function FormulaBoard() {
                   {lFilterAllCourses}
                 </motion.button>
                 <motion.button 
-                  onClick={() => setSelectedCourse('nla')}
+                  onClick={() => setSelectedCourse('prob')}
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.96 }}
-                  className={`filter-btn filter-btn-primary ${selectedCourse === 'nla' ? 'active' : ''}`}
+                  className={`filter-btn filter-btn-primary ${selectedCourse === 'prob' ? 'active' : ''}`}
                 >
-                  {lFilterNla}
+                  {lFilterProb}
                 </motion.button>
                 <motion.button 
-                  onClick={() => setSelectedCourse('opt')}
+                  onClick={() => setSelectedCourse('stats')}
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.96 }}
-                  className={`filter-btn filter-btn-secondary ${selectedCourse === 'opt' ? 'active' : ''}`}
+                  className={`filter-btn filter-btn-secondary ${selectedCourse === 'stats' ? 'active' : ''}`}
                 >
-                  {lFilterOpt}
+                  {lFilterStats}
                 </motion.button>
               </div>
             </div>
@@ -1226,7 +1226,7 @@ export default function FormulaBoard() {
               const courseA = itemsA[0]?.courseId || '';
               const courseB = itemsB[0]?.courseId || '';
               if (courseA !== courseB) {
-                return courseA === 'nla' ? -1 : 1;
+                return courseA === 'prob' ? -1 : 1;
               }
               return chapterOrder.indexOf(engCatA) - chapterOrder.indexOf(engCatB);
             } else {
@@ -1359,13 +1359,13 @@ export default function FormulaBoard() {
                     fontSize: '0.8rem', 
                     fontWeight: 'bold', 
                     textTransform: 'uppercase', 
-                    color: selectedFormula.courseId === 'nla' ? 'var(--primary-color)' : 'var(--secondary-color)',
+                    color: selectedFormula.courseId === 'prob' ? 'var(--primary-color)' : 'var(--secondary-color)',
                     padding: '0.3rem 0.75rem',
-                    background: selectedFormula.courseId === 'nla' ? 'rgba(99, 102, 241, 0.12)' : 'rgba(236, 72, 153, 0.12)',
+                    background: selectedFormula.courseId === 'prob' ? 'rgba(99, 102, 241, 0.12)' : 'rgba(236, 72, 153, 0.12)',
                     borderRadius: '8px',
-                    border: `1px solid ${selectedFormula.courseId === 'nla' ? 'rgba(99, 102, 241, 0.2)' : 'rgba(236, 72, 153, 0.2)'}`
+                    border: `1px solid ${selectedFormula.courseId === 'prob' ? 'rgba(99, 102, 241, 0.2)' : 'rgba(236, 72, 153, 0.2)'}`
                   }}>
-                    {selectedFormula.courseId === 'nla' ? lNlaTitle : lOptTitle}
+                    {selectedFormula.courseId === 'prob' ? lProbTitle : lStatsTitle}
                   </span>
                   
                   <span style={{

@@ -27,16 +27,16 @@ export default function ChapterPage() {
   const prevChapter = chapterIdx > 0 ? chapters[chapterIdx - 1] : null;
   const nextChapter = chapterIdx < chapters.length - 1 ? chapters[chapterIdx + 1] : null;
 
-  const accentColor = courseId === 'nla' ? 'var(--primary-color)' : 'var(--secondary-color)';
+  const accentColor = courseId === 'prob' ? 'var(--primary-color)' : 'var(--secondary-color)';
 
   // Hebrew translations
   const title = isHe ? (chapter.titleHe || chapter.title) : chapter.title;
   const intro = isHe ? (chapter.introHe || chapter.intro) : chapter.intro;
   const motivation = isHe ? (chapter.motivationHe || chapter.motivation) : chapter.motivation;
 
-  const lCourseName = courseId === 'nla' 
-    ? (isHe ? 'אלגברה ליניארית נומרית' : 'Numerical Linear Algebra')
-    : (isHe ? 'אופטימיזציה נומרית' : 'Numerical Optimization');
+  const lCourseName = courseId === 'prob' 
+    ? (isHe ? 'הסתברות' : 'Probability Theory')
+    : (isHe ? 'סטטיסטיקה' : 'Statistical Methods');
 
   const lModule = isHe ? `יחידת לימוד ${chapter.chapterNumber}` : `Module ${chapter.chapterNumber}`;
   const lDashboardLink = isHe ? 'חזרה ללוח הבקרה' : 'Back to Dashboard';
@@ -154,10 +154,10 @@ export default function ChapterPage() {
               textDecoration: 'none',
               padding: '1rem 1.5rem',
               borderRadius: 'var(--radius-sm)',
-              background: prevChapter.courseId === 'nla' 
+              background: prevChapter.courseId === 'prob' 
                 ? 'linear-gradient(135deg, rgba(99, 102, 241, 0.12), rgba(99, 102, 241, 0.04))'
                 : 'linear-gradient(135deg, rgba(236, 72, 153, 0.12), rgba(236, 72, 153, 0.04))',
-              border: prevChapter.courseId === 'nla'
+              border: prevChapter.courseId === 'prob'
                 ? '1px solid rgba(99, 102, 241, 0.35)'
                 : '1px solid rgba(236, 72, 153, 0.35)',
               boxShadow: 'var(--shadow-sm)',

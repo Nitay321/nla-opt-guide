@@ -6,7 +6,7 @@ import { RichText } from './MathRenderer';
 import { useAppContext } from '../App';
 
 export default function TheoremBox({ definition }: { definition: Definition }) {
-  const [isOpen, setIsOpen] = useState(true); // Main container open/close
+  const [isOpen, setIsOpen] = useState(!definition.isPractice); // Collapsed by default for practice questions
   const [isFormalOpen, setIsFormalOpen] = useState(true);
   const [isSimplifiedOpen, setIsSimplifiedOpen] = useState(true);
   const [isToolboxOpen, setIsToolboxOpen] = useState(true);
@@ -34,13 +34,20 @@ export default function TheoremBox({ definition }: { definition: Definition }) {
   const lCollapse = isHe ? 'צמצם' : 'Collapse';
   const lExpand = isHe ? 'הרחב' : 'Expand';
 
+  const borderCol = definition.isPractice 
+    ? 'rgba(52, 211, 153, 0.65)' // Subtle mint/emerald border for practice
+    : 'var(--accent-color)';
+
   return (
     <div className="glass-panel" style={{ 
       marginBottom: '2.5rem', 
       overflow: 'hidden',
-      borderLeft: isHe ? 'none' : '5px solid var(--accent-color)',
-      borderRight: isHe ? '5px solid var(--accent-color)' : 'none',
-      boxShadow: 'var(--shadow-sm)'
+      borderLeft: isHe ? 'none' : `5px solid ${borderCol}`,
+      borderRight: isHe ? `5px solid ${borderCol}` : 'none',
+      boxShadow: 'var(--shadow-sm)',
+      background: definition.isPractice 
+        ? 'linear-gradient(135deg, rgba(52, 211, 153, 0.04), rgba(52, 211, 153, 0.01))' 
+        : undefined
     }}>
       {/* Interactive Expand/Collapse Bar */}
       <div 
@@ -60,13 +67,14 @@ export default function TheoremBox({ definition }: { definition: Definition }) {
           <h3 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 600 }}>{title}</h3>
         </div>
         
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0 }}>
           <span className="theorem-toggle-text" style={{ 
             fontSize: '0.75rem', 
             fontWeight: 'bold', 
             textTransform: 'uppercase', 
             letterSpacing: '1px', 
-            color: 'var(--text-muted)' 
+            color: 'var(--text-muted)',
+            whiteSpace: 'nowrap'
           }}>
             {isOpen ? lCollapse : lExpand}
           </span>
