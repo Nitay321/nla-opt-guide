@@ -861,8 +861,8 @@ export default function FormulaBoard() {
                       <tr style={{ borderBottom: '1px solid var(--surface-border)' }}>
                         <td style={{ padding: '0.75rem', fontWeight: 'bold' }}>{isHe ? 'אחידה רציפה (Uniform)' : 'Continuous Uniform'}</td>
                         <td style={{ padding: '0.75rem', textAlign: 'center' }}><span style={{ color: '#10b981' }}>{isHe ? 'רציף' : 'Continuous'}</span></td>
-                        <td style={{ padding: '0.75rem', textAlign: 'center' }}>{"$a, b \\in \\mathbb{R}$"}</td>
-                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="f_X(x) = \\frac{1}{b-a}" /> <br/><span style={{fontSize:'0.75rem', color:'var(--text-muted)'}}>{"$a \\le x \\le b$"}</span></td>
+                        <td style={{ padding: '0.75rem', textAlign: 'center' }}><MathRenderer tex="a, b \\in \mathbb{R}" /></td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="f_X(x) = \\frac{1}{b-a}" /> <br/><span style={{fontSize:'0.75rem', color:'var(--text-muted)'}}><MathRenderer tex="a \le x \le b" /></span></td>
                         <td style={{ padding: '0.75rem' }}><MathRenderer tex="\\frac{a+b}{2}" /></td>
                         <td style={{ padding: '0.75rem' }}><MathRenderer tex="\\frac{(b-a)^2}{12}" /></td>
                         <td style={{ padding: '0.75rem' }}><MathRenderer tex="\\frac{e^{bt} - e^{at}}{t(b-a)}" /></td>
@@ -870,16 +870,16 @@ export default function FormulaBoard() {
                       <tr style={{ borderBottom: '1px solid var(--surface-border)' }}>
                         <td style={{ padding: '0.75rem', fontWeight: 'bold' }}>{isHe ? 'מעריכית (Exponential)' : 'Exponential'}</td>
                         <td style={{ padding: '0.75rem', textAlign: 'center' }}><span style={{ color: '#10b981' }}>{isHe ? 'רציף' : 'Continuous'}</span></td>
-                        <td style={{ padding: '0.75rem', textAlign: 'center' }}>{"$\\lambda > 0$"}</td>
-                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="f_X(x) = \\lambda e^{-\\lambda x}" /> <br/><span style={{fontSize:'0.75rem', color:'var(--text-muted)'}}>{"$x \\ge 0$"}</span></td>
+                        <td style={{ padding: '0.75rem', textAlign: 'center' }}><MathRenderer tex="\lambda > 0" /></td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="f_X(x) = \\lambda e^{-\\lambda x}" /> <br/><span style={{fontSize:'0.75rem', color:'var(--text-muted)'}}><MathRenderer tex="x \ge 0" /></span></td>
                         <td style={{ padding: '0.75rem' }}><MathRenderer tex="\\frac{1}{\\lambda}" /></td>
                         <td style={{ padding: '0.75rem' }}><MathRenderer tex="\\frac{1}{\\lambda^2}" /></td>
-                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="\\frac{\\lambda}{\\lambda - t}" /><br/><span style={{fontSize:'0.75rem', color:'var(--text-muted)'}}>{"$t < \\lambda$"}</span></td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="\\frac{\\lambda}{\\lambda - t}" /><br/><span style={{fontSize:'0.75rem', color:'var(--text-muted)'}}><MathRenderer tex="t < \lambda" /></span></td>
                       </tr>
                       <tr style={{ borderBottom: '1px solid var(--surface-border)' }}>
                         <td style={{ padding: '0.75rem', fontWeight: 'bold' }}>{isHe ? 'נורמלית (Normal)' : 'Normal'}</td>
                         <td style={{ padding: '0.75rem', textAlign: 'center' }}><span style={{ color: '#10b981' }}>{isHe ? 'רציף' : 'Continuous'}</span></td>
-                        <td style={{ padding: '0.75rem', textAlign: 'center' }}>{"$\\mu \\in \\mathbb{R}, \\sigma^2 > 0$"}</td>
+                        <td style={{ padding: '0.75rem', textAlign: 'center' }}><MathRenderer tex="\mu \in \mathbb{R}, \sigma^2 > 0" /></td>
                         <td style={{ padding: '0.75rem' }}><MathRenderer tex="f_X(x) = \\frac{1}{\\sigma\\sqrt{2\\pi}} e^{-\\frac{(x-\\mu)^2}{2\\sigma^2}}" /></td>
                         <td style={{ padding: '0.75rem' }}><MathRenderer tex="\\mu" /></td>
                         <td style={{ padding: '0.75rem' }}><MathRenderer tex="\\sigma^2" /></td>
@@ -888,26 +888,26 @@ export default function FormulaBoard() {
                       <tr style={{ borderBottom: '1px solid var(--surface-border)' }}>
                         <td style={{ padding: '0.75rem', fontWeight: 'bold' }}>{isHe ? 'חי בריבוע (Chi-Square)' : 'Chi-Square'}</td>
                         <td style={{ padding: '0.75rem', textAlign: 'center' }}><span style={{ color: '#10b981' }}>{isHe ? 'רציף' : 'Continuous'}</span></td>
-                        <td style={{ padding: '0.75rem', textAlign: 'center' }}>{"$k \\in \\mathbb{N}$"}</td>
-                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="f_X(x) = \\frac{x^{k/2-1} e^{-x/2}}{2^{k/2}\\Gamma(k/2)}" /> <br/><span style={{fontSize:'0.75rem', color:'var(--text-muted)'}}>{"$x > 0$"}</span></td>
+                        <td style={{ padding: '0.75rem', textAlign: 'center' }}><MathRenderer tex="k \in \mathbb{N}" /></td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="f_X(x) = \\frac{x^{k/2-1} e^{-x/2}}{2^{k/2}\\Gamma(k/2)}" /> <br/><span style={{fontSize:'0.75rem', color:'var(--text-muted)'}}><MathRenderer tex="x > 0" /></span></td>
                         <td style={{ padding: '0.75rem' }}><MathRenderer tex="k" /></td>
                         <td style={{ padding: '0.75rem' }}><MathRenderer tex="2k" /></td>
-                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="(1 - 2t)^{-k/2}" /><br/><span style={{fontSize:'0.75rem', color:'var(--text-muted)'}}>{"$t < 1/2$"}</span></td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="(1 - 2t)^{-k/2}" /><br/><span style={{fontSize:'0.75rem', color:'var(--text-muted)'}}><MathRenderer tex="t < 1/2" /></span></td>
                       </tr>
                       <tr style={{ borderBottom: '1px solid var(--surface-border)' }}>
                         <td style={{ padding: '0.75rem', fontWeight: 'bold' }}>{isHe ? "סטודנט t (Student's t)" : "Student's t"}</td>
                         <td style={{ padding: '0.75rem', textAlign: 'center' }}><span style={{ color: '#10b981' }}>{isHe ? 'רציף' : 'Continuous'}</span></td>
-                        <td style={{ padding: '0.75rem', textAlign: 'center' }}>{"$\\nu \\in \\mathbb{N}$"}</td>
+                        <td style={{ padding: '0.75rem', textAlign: 'center' }}><MathRenderer tex="\nu \in \mathbb{N}" /></td>
                         <td style={{ padding: '0.75rem', color: 'var(--text-muted)' }}>{isHe ? 'עקומה פעמונית סימטרית' : 'Symmetric bell shape'}</td>
-                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="0" /><br/><span style={{fontSize:'0.75rem', color:'var(--text-muted)'}}>{"($\\nu > 1$)"}</span></td>
-                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="\\frac{\\nu}{\\nu - 2}" /><br/><span style={{fontSize:'0.75rem', color:'var(--text-muted)'}}>{"($\\nu > 2$)"}</span></td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="0" /><br/><span style={{fontSize:'0.75rem', color:'var(--text-muted)'}}>(<MathRenderer tex="\nu > 1" />)</span></td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="\\frac{\\nu}{\\nu - 2}" /><br/><span style={{fontSize:'0.75rem', color:'var(--text-muted)'}}>(<MathRenderer tex="\nu > 2" />)</span></td>
                         <td style={{ padding: '0.75rem', color: 'var(--text-muted)' }}>{isHe ? 'לא קיים' : 'None'}</td>
                       </tr>
                       <tr style={{ borderBottom: '1px solid var(--surface-border)' }}>
                         <td style={{ padding: '0.75rem', fontWeight: 'bold' }}>{isHe ? 'ריילי (Rayleigh)' : 'Rayleigh'}</td>
                         <td style={{ padding: '0.75rem', textAlign: 'center' }}><span style={{ color: '#10b981' }}>{isHe ? 'רציף' : 'Continuous'}</span></td>
-                        <td style={{ padding: '0.75rem', textAlign: 'center' }}>{"$\\sigma > 0$"}</td>
-                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="f_X(x) = \\frac{x}{\\sigma^2} e^{-x^2/(2\\sigma^2)}" /> <br/><span style={{fontSize:'0.75rem', color:'var(--text-muted)'}}>{"$x \\ge 0$"}</span></td>
+                        <td style={{ padding: '0.75rem', textAlign: 'center' }}><MathRenderer tex="\sigma > 0" /></td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="f_X(x) = \\frac{x}{\\sigma^2} e^{-x^2/(2\\sigma^2)}" /> <br/><span style={{fontSize:'0.75rem', color:'var(--text-muted)'}}><MathRenderer tex="x \ge 0" /></span></td>
                         <td style={{ padding: '0.75rem' }}><MathRenderer tex="\\sigma \\sqrt{\\frac{\\pi}{2}}" /></td>
                         <td style={{ padding: '0.75rem' }}><MathRenderer tex="\\sigma^2 \\frac{4 - \\pi}{2}" /></td>
                         <td style={{ padding: '0.75rem', color:'var(--text-muted)' }}>{isHe ? 'פתרון אינטגרלי מורכב' : 'Complex integral'}</td>
@@ -915,11 +915,11 @@ export default function FormulaBoard() {
                       <tr>
                         <td style={{ padding: '0.75rem', fontWeight: 'bold' }}>{isHe ? 'גאמה / ארלנג (Gamma)' : 'Gamma / Erlang'}</td>
                         <td style={{ padding: '0.75rem', textAlign: 'center' }}><span style={{ color: '#10b981' }}>{isHe ? 'רציף' : 'Continuous'}</span></td>
-                        <td style={{ padding: '0.75rem', textAlign: 'center' }}>{"$\\alpha, \\beta > 0$"}</td>
-                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="f_X(x) = \\frac{\\beta^\\alpha x^{\\alpha-1} e^{-\\beta x}}{\\Gamma(\\alpha)}" /> <br/><span style={{fontSize:'0.75rem', color:'var(--text-muted)'}}>{"$x \\ge 0$"}</span></td>
+                        <td style={{ padding: '0.75rem', textAlign: 'center' }}><MathRenderer tex="\alpha, \beta > 0" /></td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="f_X(x) = \\frac{\\beta^\\alpha x^{\\alpha-1} e^{-\\beta x}}{\\Gamma(\\alpha)}" /> <br/><span style={{fontSize:'0.75rem', color:'var(--text-muted)'}}><MathRenderer tex="x \ge 0" /></span></td>
                         <td style={{ padding: '0.75rem' }}><MathRenderer tex="\\frac{\\alpha}{\\beta}" /></td>
                         <td style={{ padding: '0.75rem' }}><MathRenderer tex="\\frac{\\alpha}{\\beta^2}" /></td>
-                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="(1 - t/\\beta)^{-\\alpha}" /><br/><span style={{fontSize:'0.75rem', color:'var(--text-muted)'}}>{"$t < \\beta$"}</span></td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="(1 - t/\\beta)^{-\\alpha}" /><br/><span style={{fontSize:'0.75rem', color:'var(--text-muted)'}}><MathRenderer tex="t < \beta" /></span></td>
                       </tr>
                     </tbody>
                   </table>
@@ -946,8 +946,8 @@ export default function FormulaBoard() {
                       <tr style={{ borderBottom: '1px solid var(--surface-border)' }}>
                         <td style={{ padding: '0.75rem', fontWeight: 'bold' }}>{isHe ? 'ברנולי (Bernoulli)' : 'Bernoulli'}</td>
                         <td style={{ padding: '0.75rem', textAlign: 'center' }}><span style={{ color: '#f59e0b' }}>{isHe ? 'בדיד' : 'Discrete'}</span></td>
-                        <td style={{ padding: '0.75rem', textAlign: 'center' }}>{"$p \\in [0,1]$"}</td>
-                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="p_X(x) = p^x (1-p)^{1-x}" /> <br/><span style={{fontSize:'0.75rem', color:'var(--text-muted)'}}>{"$x \\in \\{0, 1\\}$"}</span></td>
+                        <td style={{ padding: '0.75rem', textAlign: 'center' }}><MathRenderer tex="p \in [0,1]" /></td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="p_X(x) = p^x (1-p)^{1-x}" /> <br/><span style={{fontSize:'0.75rem', color:'var(--text-muted)'}}><MathRenderer tex="x \in \{0, 1\}" /></span></td>
                         <td style={{ padding: '0.75rem' }}><MathRenderer tex="p" /></td>
                         <td style={{ padding: '0.75rem' }}><MathRenderer tex="p(1-p)" /></td>
                         <td style={{ padding: '0.75rem' }}><MathRenderer tex="(1-p) + pe^t" /></td>
@@ -955,8 +955,8 @@ export default function FormulaBoard() {
                       <tr style={{ borderBottom: '1px solid var(--surface-border)' }}>
                         <td style={{ padding: '0.75rem', fontWeight: 'bold' }}>{isHe ? 'בינומית (Binomial)' : 'Binomial'}</td>
                         <td style={{ padding: '0.75rem', textAlign: 'center' }}><span style={{ color: '#f59e0b' }}>{isHe ? 'בדיד' : 'Discrete'}</span></td>
-                        <td style={{ padding: '0.75rem', textAlign: 'center' }}>{"$n \\in \\mathbb{N}, p \\in [0,1]$"}</td>
-                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="P(X=k) = \\binom{n}{k}p^k(1-p)^{n-k}" /> <br/><span style={{fontSize:'0.75rem', color:'var(--text-muted)'}}>{"$k \\in \\{0,..,n\\}$"}</span></td>
+                        <td style={{ padding: '0.75rem', textAlign: 'center' }}><MathRenderer tex="n \in \mathbb{N}, p \in [0,1]" /></td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="P(X=k) = \\binom{n}{k}p^k(1-p)^{n-k}" /> <br/><span style={{fontSize:'0.75rem', color:'var(--text-muted)'}}><MathRenderer tex="k \in \{0,..,n\}" /></span></td>
                         <td style={{ padding: '0.75rem' }}><MathRenderer tex="np" /></td>
                         <td style={{ padding: '0.75rem' }}><MathRenderer tex="np(1-p)" /></td>
                         <td style={{ padding: '0.75rem' }}><MathRenderer tex="((1-p) + pe^t)^n" /></td>
@@ -964,8 +964,8 @@ export default function FormulaBoard() {
                       <tr style={{ borderBottom: '1px solid var(--surface-border)' }}>
                         <td style={{ padding: '0.75rem', fontWeight: 'bold' }}>{isHe ? 'פואסון (Poisson)' : 'Poisson'}</td>
                         <td style={{ padding: '0.75rem', textAlign: 'center' }}><span style={{ color: '#f59e0b' }}>{isHe ? 'בדיד' : 'Discrete'}</span></td>
-                        <td style={{ padding: '0.75rem', textAlign: 'center' }}>{"$\\lambda > 0$"}</td>
-                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="P(X=k) = \\frac{e^{-\\lambda}\\lambda^k}{k!}" /> <br/><span style={{fontSize:'0.75rem', color:'var(--text-muted)'}}>{"$k \\in \\{0, 1, ..\\}$"}</span></td>
+                        <td style={{ padding: '0.75rem', textAlign: 'center' }}><MathRenderer tex="\lambda > 0" /></td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="P(X=k) = \\frac{e^{-\\lambda}\\lambda^k}{k!}" /> <br/><span style={{fontSize:'0.75rem', color:'var(--text-muted)'}}><MathRenderer tex="k \in \{0, 1, ..\}" /></span></td>
                         <td style={{ padding: '0.75rem' }}><MathRenderer tex="\\lambda" /></td>
                         <td style={{ padding: '0.75rem' }}><MathRenderer tex="\\lambda" /></td>
                         <td style={{ padding: '0.75rem' }}><MathRenderer tex="e^{\\lambda(e^t - 1)}" /></td>
@@ -973,8 +973,8 @@ export default function FormulaBoard() {
                       <tr style={{ borderBottom: '1px solid var(--surface-border)' }}>
                         <td style={{ padding: '0.75rem', fontWeight: 'bold' }}>{isHe ? 'גיאומטרית (Geometric)' : 'Geometric'}</td>
                         <td style={{ padding: '0.75rem', textAlign: 'center' }}><span style={{ color: '#f59e0b' }}>{isHe ? 'בדיד' : 'Discrete'}</span></td>
-                        <td style={{ padding: '0.75rem', textAlign: 'center' }}>{"$p \\in (0,1]$"}</td>
-                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="P(X=k) = (1-p)^{k-1}p" /> <br/><span style={{fontSize:'0.75rem', color:'var(--text-muted)'}}>{"$k \\in \\{1, 2, ..\\}$"}</span></td>
+                        <td style={{ padding: '0.75rem', textAlign: 'center' }}><MathRenderer tex="p \in (0,1]" /></td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="P(X=k) = (1-p)^{k-1}p" /> <br/><span style={{fontSize:'0.75rem', color:'var(--text-muted)'}}><MathRenderer tex="k \in \{1, 2, ..\}" /></span></td>
                         <td style={{ padding: '0.75rem' }}><MathRenderer tex="\\frac{1}{p}" /></td>
                         <td style={{ padding: '0.75rem' }}><MathRenderer tex="\\frac{1-p}{p^2}" /></td>
                         <td style={{ padding: '0.75rem' }}><MathRenderer tex="\\frac{pe^t}{1 - (1-p)e^t}" /></td>
@@ -982,7 +982,7 @@ export default function FormulaBoard() {
                       <tr>
                         <td style={{ padding: '0.75rem', fontWeight: 'bold' }}>{isHe ? 'היפרגיאומטרית (Hypergeom.)' : 'Hypergeometric'}</td>
                         <td style={{ padding: '0.75rem', textAlign: 'center' }}><span style={{ color: '#f59e0b' }}>{isHe ? 'בדיד' : 'Discrete'}</span></td>
-                        <td style={{ padding: '0.75rem', textAlign: 'center' }}>{"$N, D, n \\in \\mathbb{N}$"}</td>
+                        <td style={{ padding: '0.75rem', textAlign: 'center' }}><MathRenderer tex="N, D, n \in \mathbb{N}" /></td>
                         <td style={{ padding: '0.75rem' }}><MathRenderer tex="P(X=k) = \\frac{\\binom{D}{k}\\binom{N-D}{n-k}}{\\binom{N}{n}}" /></td>
                         <td style={{ padding: '0.75rem' }}><MathRenderer tex="n \\frac{D}{N}" /></td>
                         <td style={{ padding: '0.75rem' }}><MathRenderer tex="n \\frac{D}{N}(1-\\frac{D}{N})\\frac{N-n}{N-1}" /></td>
@@ -1058,8 +1058,8 @@ export default function FormulaBoard() {
                       </tr>
                       <tr style={{ borderBottom: '1px solid var(--surface-border)' }}>
                         <td style={{ padding: '0.85rem', fontWeight: 'bold' }}>{isHe ? 'התוחלת' : 'Expected Value'}</td>
-                        <td style={{ padding: '0.85rem' }}><MathRenderer tex="\\text{Var}(X) = \\sum_{x \\in S} (x-\\mu)^2 p_X(x)" /></td>
-                        <td style={{ padding: '0.85rem' }}><MathRenderer tex="\\text{Var}(X) = \\int_{-\\infty}^{\\infty} (x-\\mu)^2 f_X(x)dx" /></td>
+                        <td style={{ padding: '0.85rem' }}><MathRenderer tex="\\mathbb{E}[X] = \\sum_{x \\in S} x \\cdot p_X(x)" /></td>
+                        <td style={{ padding: '0.85rem' }}><MathRenderer tex="\\mathbb{E}[X] = \\int_{-\\infty}^{\\infty} x \\cdot f_X(x)dx" /></td>
                       </tr>
                       <tr style={{ borderBottom: '1px solid var(--surface-border)' }}>
                         <td style={{ padding: '0.85rem', fontWeight: 'bold' }}>{isHe ? 'משפט הסטטיסטיקאי ההמום (LOTUS)' : 'LOTUS'}</td>
