@@ -1308,7 +1308,7 @@ export default function FormulaBoard() {
                             : 'Bounds the distance of a variable from its mean using variance, regardless of shape. Example: at most 11.1% of any distribution lies beyond 3 standard deviations.'}
                         </td>
                       </tr>
-                      <tr>
+                      <tr style={{ borderBottom: '1px solid var(--surface-border)' }}>
                         <td style={{ padding: '0.85rem', fontWeight: 'bold' }}>
                           {isHe ? 'הופדינג (Hoeffding)' : "Hoeffding's Inequality"}
                         </td>
@@ -1333,6 +1333,72 @@ export default function FormulaBoard() {
                               ? "חיסכון עצום בגודל המדגם (מעל 60% לעומת צ'בישב) בסקרים, מערכות תוכנה וניסויים קליניים בזכות דעיכה מעריכית." 
                               : 'Massive sample size savings (over 60% compared to Chebyshev) in clinical trials and software testing due to exponential decay.'}
                           </span>
+                        </td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid var(--surface-border)' }}>
+                        <td style={{ padding: '0.85rem', fontWeight: 'bold' }}>
+                          {isHe ? 'מיל (Mill)' : "Mill's Inequality"}
+                        </td>
+                        <td style={{ padding: '0.85rem' }}>
+                          {isHe ? 'משתנה מקרי נורמלי סטנדרטי:' : 'Standard normal random variable:'}<br/>
+                          <MathRenderer tex="Z \sim N(0, 1)" /><br/>
+                          {isHe ? 'קבוע חיובי:' : 'Positive constant:'} <MathRenderer tex="x > 0" />
+                        </td>
+                        <td style={{ padding: '0.85rem' }}>
+                          <MathRenderer tex="P(Z > x) \le \frac{1}{x} \phi(x) = \frac{1}{x\sqrt{2\pi}} e^{-x^2/2}" />
+                        </td>
+                        <td style={{ padding: '0.85rem', fontWeight: 600, color: '#10b981' }}>
+                          {isHe ? 'מעריכי מהיר (תת-גאוסי)' : 'Sub-Gaussian Exponential'}<br/>
+                          <MathRenderer tex="O(e^{-x^2/2}/x)" />
+                        </td>
+                        <td style={{ padding: '0.85rem' }}>
+                          {isHe 
+                            ? 'נותן חסם הדוק במיוחד לזנב של התפלגות נורמלית ללא צורך בחישוב אינטגרל נומרי קשה של פונקציית ה-CDF.' 
+                            : 'Provides an extremely tight analytical bound for the tail of a standard normal distribution, avoiding complex CDF integration.'}
+                        </td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid var(--surface-border)' }}>
+                        <td style={{ padding: '0.85rem', fontWeight: 'bold' }}>
+                          {isHe ? 'קושי-שוורץ (Cauchy-Schwarz)' : "Cauchy-Schwarz Inequality"}
+                        </td>
+                        <td style={{ padding: '0.85rem' }}>
+                          {isHe ? 'שני משתנים מקריים בעלי מומנט שני סופי:' : 'Any two random variables with finite second moments:'}<br/>
+                          <MathRenderer tex="\mathbb{E}[X^2] < \infty, \ \mathbb{E}[Y^2] < \infty" />
+                        </td>
+                        <td style={{ padding: '0.85rem' }}>
+                          <MathRenderer tex="(\mathbb{E}[XY])^2 \le \mathbb{E}[X^2]\mathbb{E}[Y^2]" />
+                        </td>
+                        <td style={{ padding: '0.85rem', fontWeight: 600, color: '#f59e0b' }}>
+                          {isHe ? 'חסם אלגברי דטרמיניסטי' : 'Deterministic Algebraic'}<br/>
+                          <MathRenderer tex="-" />
+                        </td>
+                        <td style={{ padding: '0.85rem' }}>
+                          {isHe 
+                            ? 'שימושי להוכחת חסמים על שונות משותפת (קובריאנס). מבטיח מתמטית שמקדם המתאם של פירסון תמיד חסום בין 1- ל-1.' 
+                            : 'Crucial for bounding covariance and proving that Pearson\'s correlation coefficient always lies between -1 and 1.'}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style={{ padding: '0.85rem', fontWeight: 'bold' }}>
+                          {isHe ? 'ינסן (Jensen)' : "Jensen's Inequality"}
+                        </td>
+                        <td style={{ padding: '0.85rem' }}>
+                          {isHe ? 'פונקציה קמורה g (כלומר g\'\'(x) >= 0) ומשתנה מקרי X בעל תוחלת סופית:' : 'Convex function g (g\'\'(x) >= 0) and random variable X with finite expectation:'}<br/>
+                          <MathRenderer tex="\text{g is convex}" />
+                        </td>
+                        <td style={{ padding: '0.85rem' }}>
+                          <MathRenderer tex="\mathbb{E}[g(X)] \ge g(\mathbb{E}[X])" /><br/><br/>
+                          <strong>{isHe ? 'עבור פונקציה קעורה:' : 'For a concave function:'}</strong><br/>
+                          <MathRenderer tex="\mathbb{E}[g(X)] \le g(\mathbb{E}[X])" />
+                        </td>
+                        <td style={{ padding: '0.85rem', fontWeight: 600, color: '#f59e0b' }}>
+                          {isHe ? 'חסם גיאומטרי/פונקציונלי' : 'Geometric/Functional'}<br/>
+                          <MathRenderer tex="-" />
+                        </td>
+                        <td style={{ padding: '0.85rem' }}>
+                          {isHe 
+                            ? 'מאפשר להשוות בין תוחלת של טרנספורמציה לטרנספורמציה של התוחלת. לדוגמה, מוכיח ש- E[X^2] >= (E[X])^2 כי פונקציית הריבוע היא קמורה.' 
+                            : 'Compares the expectation of a function of X to the function of the expectation. Proves that E[X^2] >= (E[X])^2 because x^2 is convex.'}
                         </td>
                       </tr>
                     </tbody>

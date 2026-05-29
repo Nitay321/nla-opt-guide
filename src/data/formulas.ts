@@ -486,6 +486,39 @@ export const formulas: Formula[] = [
     description: 'Exponential concentration bound for the sample mean of independent Bernoulli trials around their true probability parameter.',
     descriptionHe: 'חסם ריכוזיות מעריכי הדוק עבור ממוצע מדגם של ניסויי ברנולי עצמאיים סביב פרמטר ההסתברות האמיתי שלהם.'
   },
+  {
+    id: 'mills-inequality',
+    courseId: 'prob',
+    category: 'Probability Inequalities',
+    categoryHe: 'אי-שוויונות',
+    name: "Mill's Inequality",
+    nameHe: 'אי-שוויון מיל',
+    equation: 'P(Z > x) \\le \\frac{1}{x} \\phi(x) = \\frac{1}{x\\sqrt{2\\pi}} e^{-x^2/2}, \\quad Z \\sim N(0,1), \\quad x > 0',
+    description: 'Provides a highly accurate tail bound for a standard normal distribution without requiring numerical CDF integration.',
+    descriptionHe: 'חוסם את הסתברות הזנב של משתנה נורמלי סטנדרטי Z ללא צורך בחישוב נומרי מורכב של פונקציית ההתפלגות המצטברת.'
+  },
+  {
+    id: 'cauchy-schwarz-inequality',
+    courseId: 'prob',
+    category: 'Probability Inequalities',
+    categoryHe: 'אי-שוויונות',
+    name: 'Cauchy-Schwarz Inequality',
+    nameHe: 'אי-שוויון קושי-שוורץ',
+    equation: '(\\mathbb{E}[XY])^2 \\le \\mathbb{E}[X^2]\\mathbb{E}[Y^2]',
+    description: 'Fundamental algebraic bound for the expectation of a product of two random variables with finite second moments.',
+    descriptionHe: 'אי-שוויון אלגברי יסודי עבור התוחלת של מכפלת שני משתנים מקריים בעלי מומנט שני סופי.'
+  },
+  {
+    id: 'jensen-inequality',
+    courseId: 'prob',
+    category: 'Probability Inequalities',
+    categoryHe: 'אי-שוויונות',
+    name: "Jensen's Inequality",
+    nameHe: 'אי-שוויון ינסן',
+    equation: '\\mathbb{E}[g(X)] \\ge g(\\mathbb{E}[X]) \\quad (g \\text{ is convex})',
+    description: 'Relates the expectation of a transformed variable to the transformation of its expected value using convexity.',
+    descriptionHe: 'מקשר בין התוחלת של פונקציה המופעלת על משתנה מקרי לבין הפעלת הפונקציה על התוחלת שלו, תוך שימוש בקמירות.'
+  },
 
   // ==========================================
   // CHAPTER 5: MOMENT GENERATING FUNCTIONS
