@@ -1346,11 +1346,17 @@ export default function FormulaBoard() {
                         </td>
                         <td style={{ padding: '0.85rem' }}>
                           <strong>{isHe ? 'חד-צדדי (One-sided):' : 'One-sided:'}</strong><br/>
-                          <MathRenderer tex="P(Z \ge x) \le \frac{\phi(x)}{x} = \frac{e^{-x^2/2}}{x\sqrt{2\pi}}" /><br/><br/>
+                          <div style={{ whiteSpace: 'nowrap', overflowX: 'auto', padding: '0.2rem 0' }}>
+                            <MathRenderer tex="P(Z \ge x) \le \frac{\phi(x)}{x} = \frac{e^{-x^2/2}}{x\sqrt{2\pi}}" />
+                          </div><br/>
                           <strong>{isHe ? 'דו-צדדי (Two-sided):' : 'Two-sided:'}</strong><br/>
-                          <MathRenderer tex="P(|Z| \ge x) \le \sqrt{\frac{2}{\pi}} \frac{e^{-x^2/2}}{x} = \frac{2\phi(x)}{x}" /><br/><br/>
+                          <div style={{ whiteSpace: 'nowrap', overflowX: 'auto', padding: '0.2rem 0' }}>
+                            <MathRenderer tex="P(|Z| \ge x) \le \sqrt{\frac{2}{\pi}} \frac{e^{-x^2/2}}{x} = \frac{2\phi(x)}{x}" />
+                          </div><br/>
                           <strong>{isHe ? 'חסם דו-כיווני (Upper & Lower Bounds):' : 'Upper & Lower Bounds:'}</strong><br/>
-                          <MathRenderer tex="\left(\frac{1}{x} - \frac{1}{x^3}\right)\phi(x) \le P(Z \ge x) \le \frac{\phi(x)}{x}" />
+                          <div style={{ whiteSpace: 'nowrap', overflowX: 'auto', padding: '0.2rem 0' }}>
+                            <MathRenderer tex="\left(\frac{1}{x} - \frac{1}{x^3}\right)\phi(x) \le P(Z \ge x) \le \frac{\phi(x)}{x}" />
+                          </div>
                         </td>
                         <td style={{ padding: '0.85rem', fontWeight: 600, color: '#10b981' }}>
                           {isHe ? 'מעריכי מהיר (תת-גאוסי)' : 'Sub-Gaussian Exponential'}<br/>
