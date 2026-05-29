@@ -953,57 +953,57 @@ function Navigation({ theme, toggleTheme }: { theme: 'dark' | 'light'; toggleThe
   return (
     <>
       <nav className="glass-panel" style={{ 
-        padding: '1rem 1.5rem', 
+        padding: '0.6rem 1rem', 
         margin: '2rem auto', 
         maxWidth: '900px', 
         display: 'flex', 
         justifyContent: 'space-between', 
         alignItems: 'center',
-        gap: '1rem',
-        flexWrap: 'wrap',
+        gap: '0.5rem',
+        flexWrap: 'nowrap',
         position: 'relative'
       }}>
-        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-          <Link to="/" className={`btn ${location.pathname === '/' ? 'btn-primary' : 'btn-secondary'}`}>
-            <HomeIcon size={18} /> {tDashboard}
+        <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'center', flexShrink: 0 }}>
+          <Link to="/" className={`btn ${location.pathname === '/' ? 'btn-primary' : 'btn-secondary'}`} style={{ padding: '0.5rem 0.75rem', fontSize: '0.85rem', height: '38px' }}>
+            <HomeIcon size={16} /> {tDashboard}
           </Link>
-          <Link to="/formulas" className={`btn ${location.pathname === '/formulas' ? 'btn-accent' : 'btn-secondary'}`}>
-            <FunctionSquare size={18} /> {tFormulas}
+          <Link to="/formulas" className={`btn ${location.pathname === '/formulas' ? 'btn-accent' : 'btn-secondary'}`} style={{ padding: '0.5rem 0.75rem', fontSize: '0.85rem', height: '38px' }}>
+            <FunctionSquare size={16} /> {tFormulas}
           </Link>
           <a 
             href="https://nla-opt-portal.surge.sh/" 
             target="_blank" 
             rel="noopener noreferrer" 
-            className="btn btn-secondary text-gradient"
-            style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 600 }}
+            className="btn btn-secondary"
+            style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.5rem 0.75rem', fontSize: '0.85rem', fontWeight: 600, height: '38px' }}
             title={isHe ? 'עבור לפורטל אופטימיזציה ואלגברה נומרית' : 'Switch to NLA & Optimization Portal'}
           >
-            <span style={{ fontSize: '1.1rem', display: 'flex', alignItems: 'center' }}>🧮</span>
+            <span style={{ fontSize: '1rem', display: 'flex', alignItems: 'center' }}>🧮</span>
             <span>{isHe ? 'אלגברה ואופטימיזציה' : 'NLA & Optimization'}</span>
           </a>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexShrink: 0 }}>
           {/* Zoom Controls */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', background: 'rgba(255,255,255,0.05)', padding: '0.25rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--surface-border)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.15rem', background: 'rgba(255,255,255,0.05)', padding: '0.15rem 0.35rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--surface-border)', height: '38px' }}>
             <button 
               onClick={zoomOut}
               className="btn btn-secondary"
-              style={{ padding: '0.4rem', border: 'none', background: 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              style={{ padding: '0.2rem', border: 'none', background: 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
               title={isHe ? 'הקטן גופן' : 'Zoom Out'}
             >
-              <ZoomOut size={16} />
+              <ZoomOut size={14} />
             </button>
-            <span style={{ fontSize: '0.8rem', fontWeight: 'bold', width: '3rem', textAlign: 'center', color: 'var(--text-secondary)' }}>
+            <span style={{ fontSize: '0.75rem', fontWeight: 'bold', width: '2.5rem', textAlign: 'center', color: 'var(--text-secondary)' }}>
               {zoom}%
             </span>
             <button 
               onClick={zoomIn}
               className="btn btn-secondary"
-              style={{ padding: '0.4rem', border: 'none', background: 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              style={{ padding: '0.2rem', border: 'none', background: 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
               title={isHe ? 'הגדל גופן' : 'Zoom In'}
             >
-              <ZoomIn size={16} />
+              <ZoomIn size={14} />
             </button>
           </div>
 
@@ -1012,19 +1012,21 @@ function Navigation({ theme, toggleTheme }: { theme: 'dark' | 'light'; toggleThe
             onClick={toggleLanguage}
             className="btn btn-secondary"
             style={{ 
-              padding: '0.75rem 1rem', 
+              padding: '0.5rem 0.75rem', 
               borderRadius: 'var(--radius-sm)', 
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
-              gap: '0.5rem',
+              gap: '0.35rem',
               borderColor: 'var(--surface-border)',
-              fontWeight: 600
+              fontWeight: 600,
+              fontSize: '0.85rem',
+              height: '38px'
             }}
             title={isHe ? 'עבור לאנגלית' : 'עבור לעברית'}
           >
-            <Languages size={18} />
-            <span style={{ fontSize: '0.9rem' }}>{isHe ? 'English' : 'עברית'}</span>
+            <Languages size={16} />
+            <span>{isHe ? 'English' : 'עברית'}</span>
           </button>
 
           {/* Share Button */}
@@ -1032,17 +1034,19 @@ function Navigation({ theme, toggleTheme }: { theme: 'dark' | 'light'; toggleThe
             onClick={() => setShareOpen(true)}
             className="btn btn-secondary"
             style={{ 
-              padding: '0.75rem', 
+              padding: '0.5rem', 
               borderRadius: 'var(--radius-sm)', 
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              borderColor: 'var(--surface-border)'
+              borderColor: 'var(--surface-border)',
+              height: '38px',
+              width: '38px'
             }}
             title={isHe ? 'שתף אתר' : 'Share Website'}
           >
-            <Share2 size={18} color="var(--accent-color)" />
+            <Share2 size={16} color="var(--accent-color)" />
           </button>
 
           {/* Theme Toggle */}
@@ -1050,41 +1054,44 @@ function Navigation({ theme, toggleTheme }: { theme: 'dark' | 'light'; toggleThe
             onClick={toggleTheme}
             className="btn btn-secondary"
             style={{ 
-              padding: '0.75rem', 
+              padding: '0.5rem', 
               borderRadius: 'var(--radius-sm)', 
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              borderColor: 'var(--surface-border)'
+              borderColor: 'var(--surface-border)',
+              height: '38px',
+              width: '38px'
             }}
             title={tThemeTitle}
           >
-            {theme === 'dark' ? <Sun size={20} color="var(--warning)" /> : <Moon size={20} color="var(--primary-color)" />}
+            {theme === 'dark' ? <Sun size={18} color="var(--warning)" /> : <Moon size={18} color="var(--primary-color)" />}
           </button>
 
           {/* User Profile Avatar / Google Sign-In Corner Button */}
-          <div style={{ position: 'relative' }}>
+          <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
             {user ? (
               <button
                 onClick={() => setProfileOpen(!profileOpen)}
                 className="profile-avatar-btn"
                 style={{
                   background: 'transparent', border: 'none', cursor: 'pointer', padding: 0, display: 'flex',
-                  alignItems: 'center', justifyContent: 'center', transition: 'transform 0.2s ease'
+                  alignItems: 'center', justifyContent: 'center', transition: 'transform 0.2s ease',
+                  width: '38px', height: '38px'
                 }}
                 title={user.name}
                 onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
                 onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
               >
-                {renderAvatar(user.avatarUrl, '2.5rem', '1.3rem')}
+                {renderAvatar(user.avatarUrl, '38px', '1.1rem')}
               </button>
             ) : (
               <button
                 onClick={signInWithGoogle}
                 className="profile-avatar-btn"
                 style={{
-                  width: '2.5rem', height: '2.5rem', borderRadius: '50%',
+                  width: '38px', height: '38px', borderRadius: '50%',
                   cursor: 'pointer', padding: 0, overflow: 'hidden',
                   background: 'rgba(99, 102, 241, 0.06)', display: 'flex', alignItems: 'center',
                   justifyContent: 'center', transition: 'transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease',
