@@ -203,6 +203,60 @@ export default function Home() {
         </div>
 
       </div>
+
+      {/* Companion Portal Re-routing */}
+      <motion.div 
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.15 }}
+        className="glass-card" 
+        style={{ 
+          borderColor: 'var(--primary-color)',
+          boxShadow: '0 10px 30px rgba(99, 102, 241, 0.03)',
+          padding: '2rem',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          gap: '1.5rem',
+          flexWrap: 'wrap',
+          marginTop: '2rem'
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', flexWrap: 'wrap' }}>
+          <div style={{ 
+            padding: '0.85rem', 
+            background: 'rgba(99, 102, 241, 0.1)', 
+            borderRadius: 'var(--radius-md)', 
+            color: 'var(--primary-color)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '1.8rem'
+          }}>
+            🧮
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
+            <h3 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-primary)' }}>
+              {isHe ? 'מדריך לימוד מקביל: אלגברה ואופטימיזציה' : 'Companion Portal: NLA & Optimization'}
+            </h3>
+            <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
+              {isHe 
+                ? 'עבור למדריך האינטראקטיבי המקביל לתרגול אלגברה ליניארית נומרית ושיטות אופטימיזציה.'
+                : 'Switch over to the companion portal to study Numerical Linear Algebra and Mathematical Optimization.'}
+            </p>
+          </div>
+        </div>
+        <a 
+          href="https://nla-opt-portal.surge.sh/" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="btn btn-primary"
+          style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', whiteSpace: 'nowrap' }}
+        >
+          <span>{isHe ? 'פתח פורטל' : 'Open Portal'}</span>
+          <ArrowIcon size={16} />
+        </a>
+      </motion.div>
     </motion.div>
   );
 }

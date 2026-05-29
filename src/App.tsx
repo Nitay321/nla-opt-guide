@@ -42,7 +42,7 @@ export function useAppContext() {
 
 function ShareModal({ onClose, language }: { onClose: () => void; language: 'en' | 'he' }) {
   const isHe = language === 'he';
-  const publicUrl = 'https://nitay321.github.io/prob-stats-guide/';
+  const publicUrl = 'https://prob-stats-portal.surge.sh/';
   
   // Local network state (collapsible)
   const [showLocalOptions, setShowLocalOptions] = useState(false);
@@ -970,6 +970,17 @@ function Navigation({ theme, toggleTheme }: { theme: 'dark' | 'light'; toggleThe
           <Link to="/formulas" className={`btn ${location.pathname === '/formulas' ? 'btn-accent' : 'btn-secondary'}`}>
             <FunctionSquare size={18} /> {tFormulas}
           </Link>
+          <a 
+            href="https://nla-opt-portal.surge.sh/" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="btn btn-secondary text-gradient"
+            style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 600 }}
+            title={isHe ? 'עבור לפורטל אופטימיזציה ואלגברה נומרית' : 'Switch to NLA & Optimization Portal'}
+          >
+            <span style={{ fontSize: '1.1rem', display: 'flex', alignItems: 'center' }}>🧮</span>
+            <span>{isHe ? 'אלגברה ואופטימיזציה' : 'NLA & Optimization'}</span>
+          </a>
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>

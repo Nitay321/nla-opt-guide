@@ -55,67 +55,109 @@ export const chapters: Chapter[] = [
     courseId: 'prob',
     chapterNumber: '0',
     title: 'Chapter 0: Preliminary Background - Probability Spaces & Axioms',
+    titleHe: 'פרק 0: הקדמה — מבוא למרחבי הסתברות ואקסיומות',
     intro: 'Probability is the formal mathematical language of uncertainty. This chapter establishes the fundamental discrete definitions: sample spaces, events, Kolmogorov\'s axioms, basic properties, and the transition to conditional probability and Bayes\' theorem.',
+    introHe: 'תורת ההסתברות היא השפה המתמטית הפורמלית למידול וניתוח תופעות של אי-ודאות. פרק מבוא זה מציב את הגדרות היסוד הדיסקרטיות (הבדידות) של התחום: נלמד להגדיר מרחבי מדגם, נכיר את תפקידם של המאורעות כתת-קבוצות, נחקור את שלוש אקסיומות היסוד של קולמוגורוב ותכונותיהן, ונבצע מעבר חלק אל עולם ההסתברות המותנית ומשפט בייס.',
     motivation: 'To model real-world randomness (like noise in data, clinical trials, or communications), we need a rigorous axiomatic framework. Without Kolmogorov\'s foundation, intuitive reasoning about uncertainty leads to paradoxes, and we cannot build reliable data-driven algorithms.',
+    motivationHe: 'כדי למדל בצורה מדעית אקראיות בעולם האמיתי (כמו רעש סטטיסטי במערכות נתונים, תוצאות של ניסויים קליניים, או שיבושים בערוצי תקשורת), אנו זקוקים למערכת אקסיומטית קשיחה וריגורוזית. ללא התשתית המתמטית שהציב אנדריי קולמוגורוב, חשיבה אינטואיטיבית שטחית על אי-ודאות מובילה לפספוסים ופרדוקסים לוגיים, ולא מאפשרת לבנות אלגוריתמים אמינים מבוססי נתונים.',
     definitions: [
       {
         id: 'def-prob-0-1',
         title: 'Sample Spaces & Events',
+        titleHe: 'מרחב מדגם ומאורעות בדידים',
         content: 'A random experiment has a sample space $\\Omega$ of all possible outcomes. An individual outcome is $\\omega \\in \\Omega$. An event $A$ is a subset of the sample space:\n$$A \\subseteq \\Omega$$\nA simple event consists of a single outcome:\n$$A = \\{\\omega\\}$$\nThe certain event is $\\Omega$, and the impossible event is the empty set $\\emptyset$. Two events $A$ and $B$ are mutually exclusive (disjoint) if:\n$$A \\cap B = \\emptyset$$',
+        contentHe: 'לכל ניסוי מקרי קיים מרחב מדגם, המסומן באות $\\Omega$, המכיל את אוסף כל התוצאות האפשריות של הניסוי. תוצאה יסודית בודדת מיוצגת על ידי האות $\\omega$. \n\nמאורע, המיוצג באות $A$, הוא תת-קבוצה של מרחב המדגם:\n$$A \\subseteq \\Omega$$\n\nמאורע פשוט מוגדר כמאורע המכיל תוצאה יסודית אחת בלבד:\n$$A = \\{\\omega\\}$$\n\nהמאורע הוודאי הוא מרחב המדגם כולו $\\Omega$, בעוד שהמאורע הבלתי אפשרי מיוצג על ידי הקבוצה הריקה $\\emptyset$.  \nשני מאורעות $A$ ו-$B$ נקראים **מאורעות זרים** (או מוציאים זה את זה / Disjoint) אם אין ביניהם אף תוצאה משותפת, כלומר החיתוך שלכם ריק:\n$$A \\cap B = \\emptyset$$',
         simplifiedLogic: 'Think of the sample space $\\Omega$ as the universal set containing all possible futures. An event $A$ is just choosing a specific subset of those futures. Mutual exclusivity means those two groups of futures have absolutely no overlap.',
+        simplifiedLogicHe: 'חשבו על מרחב המדגם $\\Omega$ כעל "יקום אוניברסלי" המכיל בתוכו את כל תרחישי העתיד האפשריים. מאורע $A$ הוא פשוט בחירה של תת-קבוצה ספציפית מתוך אותם עתידים. מאורעות זרים פירושם ששתי קבוצות העתידים הללו אינן חופפות בשום נקודה—הן לא יכולות להתרחש יחד.',
         toolboxConnection: 'Understanding subsets and set operations is essential. It provides the discrete foundations for representing events in databases and building boolean logic filters in search engines.',
-        keyTakeaway: 'Sample space represents all possible outcomes; events are subsets representing specific conditions.'
+        toolboxConnectionHe: 'הבנה עמוקה של קבוצות ופעולות בין קבוצות היא תנאי הכרחי לבניית יסודות ההסתברות. היא מספקת את הכלים הדיסקרטיים לייצוג מאורעות במסדי נתונים ובניית מסנני לוגיקה בוליאנית במנועי חיפוש.',
+        keyTakeaway: 'Sample space represents all possible outcomes; events are subsets representing specific conditions.',
+        keyTakeawayHe: 'מרחב מדגם מייצג את כל התוצאות האפשריות; מאורעות הם תת-קבוצות המייצגות תנאים ספציפיים.'
       },
       {
         id: 'def-prob-0-2',
         title: 'Kolmogorov Axioms',
+        titleHe: 'אקסיומות קולמוגורוב',
         content: 'A probability measure $P$ is a real-valued function on events satisfying:\n1. Non-negativity: For any event $A$:\n$$P(A) \\ge 0$$\n2. Normalization: For the certain event $\\Omega$:\n$$P(\\Omega) = 1$$\n3. $\\sigma$-Additivity: For any sequence of mutually disjoint events $A_1, A_2, \\dots$:\n$$P\\left(\\bigcup_{i=1}^{\\infty} A_i\\right) = \\sum_{i=1}^{\\infty} P(A_i)$$',
+        contentHe: 'פונקציית הסתברות $P$ היא פונקציה המקבלת מאורע ומחזירה מספר ממשי, המקיימת את שלוש האקסיומות הבאות:\n\n1. **אי-שליליות**: לכל מאורע $A$, ערך ההסתברות הוא לעולם אינו שלילי:\n$$P(A) \\ge 0$$\n\n2. **נרמול**: ההסתברות של המאורע הוודאי (מרחב המדגם כולו) שווה בדיוק ל-1:\n$$P(\\Omega) = 1$$\n\n3. **$\\sigma$-אדיטיביות (אדיטיביות למנייה)**: לכל סדרה של מאורעות זרים בזוגות $A_1, A_2, \\dots$ מתקיים שההסתברות של איחודם שווה לסכום הסתברויותיהם:\n$$P\\left(\\bigcup_{i=1}^{\\infty} A_i\\right) = \\sum_{i=1}^{\\infty} P(A_i)$$',
         simplifiedLogic: 'Probability is a measure of "mass" or "weight" distributed over the sample space. The total weight of all possible futures is exactly 1 (Normalization), no future can have negative weight (Non-negativity), and if you have non-overlapping groups of futures, their combined weight is just the sum of their individual weights (Additivity).',
+        simplifiedLogicHe: 'הסתברות היא למעשה מדד של "מסה" או "משקל" המפוזרים מעל מרחב המדגם. המשקל הכולל של כל העתידים האפשריים יחד הוא בדיוק 1 (נרמול), אף תרחיש עתידי אינו יכול לקבל משקל שלילי (אי-שליליות), ואם יש לכם קבוצות של תרחישים שאין ביניהן שום חפיפה, המשקל המשולב שלהן הוא פשוט סכום המשקלים האינדיבידואליים שלהן (אדיטיביות).',
         toolboxConnection: 'These three simple axioms are the absolute bedrock of all probability theory. Everything else, from simple coin tosses to advanced machine learning loss functions, is derived from these rules.',
-        keyTakeaway: 'Kolmogorov axioms mathematically define probability using measure theory properties.'
+        toolboxConnectionHe: 'שלוש האקסיומות הפשוטות הללו הן אבני היסוד והסלע האיתן של כל תורת ההסתברות. כל חוק מתמטי מתקדם, החל מהטלות מטבע פשוטות ועד לפונקציות הפסד מורכבות ברשתות נוירונים בלמידת מכונה, נגזר ישירות מתוך שלושת הכללים הללו.',
+        keyTakeaway: 'Kolmogorov axioms mathematically define probability using measure theory properties.',
+        keyTakeawayHe: 'אקסיומות קולמוגורוב מגדירות מתמטית את מושג ההסתברות בעזרת תכונות של תורת המידה.'
       },
       {
         id: 'def-prob-0-3',
         title: 'Basic Properties & Inclusion-Exclusion',
+        titleHe: 'תכונות יסוד הנגזרות מתוך האקסיומות',
         content: 'From the axioms, we derive key properties for events $A, B, C$:\n- Empty Set: \n$$P(\\emptyset) = 0$$\n- Complement:\n$$P(A^c) = 1 - P(A)$$\n- Difference:\n$$P(A \\setminus B) = P(A) - P(A \\cap B)$$\n- Monotonicity: If \n$$A \\subseteq B$$\nthen \n$$P(A) \\le P(B)$$\n- Boundedness: \n$$0 \\le P(A) \\le 1$$\n- Inclusion-Exclusion for two events:\n$$P(A \\cup B) = P(A) + P(B) - P(A \\cap B)$$\n- Inclusion-Exclusion for three events:\n$$P(A \\cup B \\cup C) = P(A) + P(B) + P(C) - P(A \\cap B) - P(A \\cap C) - P(B \\cap C) + P(A \\cap B \\cap C)$$\nIn a Symmetric Probability Space with finite $\\Omega$, all outcomes are equally likely, giving:\n$$P(A) = \\frac{|A|}{|\\Omega|}$$',
+        contentHe: 'מתוך האקסיומות בלבד, אנו מוכיחים בצורה ריגורוזית את התכונות הבאות לכל מאורעות $A, B, C$:\n\n* **הקבוצה הריקה**:\n$$P(\\emptyset) = 0$$\n\n* **מאורע המשלים**:\n$$P(A^c) = 1 - P(A)$$\n\n* **הפרש מאורעות**:\n$$P(A \\setminus B) = P(A) - P(A \\cap B)$$\n\n* **מונוטוניות (שימור סדר)**: אם מתקיים הכלה בין קבוצות:\n$$A \\subseteq B$$\nאז מתקיים בהכרח שימור סדר בהסתברות:\n$$P(A) \\le P(B)$$\n\n* **חסימות ההסתברות**: ערך הפלט של כל מאורע חסום תמיד בריבוע הסגור בין 0 ל-1:\n$$0 \\le P(A) \\le 1$$\n\n* **נוסחת ההכלה וההפרדה לשני מאורעות**:\n$$P(A \\cup B) = P(A) + P(B) - P(A \\cap B)$$\n\n* **נוסחת ההכלה וההפרדה לשלושה מאורעות**:\n$$P(A \\cup B \\cup C) = P(A) + P(B) + P(C) - P(A \\cap B) - P(A \\cap C) - P(B \\cap C) + P(A \\cap B \\cap C)$$\n\n### 🎲 מרחב הסתברות סימטרי (אחיד)\nכאשר מרחב המדגם $\\Omega$ הוא סופי, וקיימת סימטריה מלאה שבה לכל התוצאות היסודיות יש סיכוי שווה לחלוטין להתרחש, ההסתברות של מאורע $A$ מחושבת על פי יחס הגדלים של הקבוצות (ההגדרה הקלאסית):\n$$P(A) = \\frac{|A|}{|\\Omega|}$$',
         simplifiedLogic: 'If you want to find the size of the union of two overlapping groups, you cannot just add their sizes together because you would be double-counting their intersection. You must subtract the overlap once. For symmetric spaces, probability is simply a ratio of sizes.',
+        simplifiedLogicHe: 'אם אתם רוצים למצוא את הגודל של איחוד בין שתי קבוצות שיש ביניהן חפיפה, אתם לא יכולים פשוט לחבר את הגדלים שלהן, כי אז תספרו את אזור החפיפה (החיתוך) פעמיים. עליכם להחסיר את האזור המשותף פעם אחת כדי לתקן את הספירה. במרחבים סימטריים, הסתברות היא פשוט יחס פשוט בין כמות האפשרויות הרצויות לכמות האפשרויות הכוללת במרחב.',
         toolboxConnection: 'The Inclusion-Exclusion principle is a massive tool in computer science combinatorics, database query optimizations, and networking routing safety analysis.',
+        toolboxConnectionHe: 'עקרון ההכלה וההפרדה (Inclusion-Exclusion) הוא כלי עצמתי ביותר בקומבינטוריקה של מדעי המחשב, אופטימיזציית שאילתות במסדי נתונים, וניתוח בטיחות של נתיבים ברשתות תקשורת.',
         keyTakeaway: 'The inclusion-exclusion formula prevents double-counting of overlapping events.',
-        proof: 'Proof of Monotonicity:\nExpress $B$ as a union of disjoint events:\n$$B = A \\cup (B \\setminus A)$$\nSince $A$ and $B \\setminus A$ are disjoint:\n$$P(B) = P(A) + P(B \\setminus A)$$\nBy Axiom 1:\n$$P(B \\setminus A) \\ge 0$$\nThus:\n$$P(B) \\ge P(A)$$\nOr written equivalent:\n$$P(A) \\le P(B)$$'
+        keyTakeawayHe: 'נוסחת ההכלה וההפרדה מונעת ספירה כפולה של מאורעות חופפים.',
+        proof: 'Proof of Monotonicity:\nExpress $B$ as a union of disjoint events:\n$$B = A \\cup (B \\setminus A)$$\nSince $A$ and $B \\setminus A$ are disjoint:\n$$P(B) = P(A) + P(B \\setminus A)$$\nBy Axiom 1:\n$$P(B \\setminus A) \\ge 0$$\nThus:\n$$P(B) \\ge P(A)$$\nOr written equivalent:\n$$P(A) \\le P(B)$$',
+        proofHe: 'הוכחת מונוטוניות:\nנציג את $B$ כאיחוד של שני מאורעות זרים:\n$$B = A \\cup (B \\setminus A)$$\nמכיוון ש-$A$ ו-$B \\setminus A$ הם זרים:\n$$P(B) = P(A) + P(B \\setminus A)$$\nלפי אקסיומה 1:\n$$P(B \\setminus A) \\ge 0$$\nלכן:\n$$P(B) \\ge P(A)$$\nאו ברישום שקול:\n$$P(A) \\le P(B)$$'
       },
       {
         id: 'def-prob-0-4',
         title: 'Conditional Probability & Bayes\' Theorem',
+        titleHe: 'הסתברות מותנית ומשפט בייס',
         content: 'The conditional probability of $A$ given $B$ is:\n$$P(A \\mid B) = \\frac{P(A \\cap B)}{P(B)}$$\n(where $P(B) > 0$).\n\nLaw of Total Probability: If $B_1, \\dots, B_n$ partition $\\Omega$, then for any event $A$:\n$$P(A) = \\sum_{i=1}^n P(A \\mid B_i) \\cdot P(B_i)$$\n\nBayes\' Theorem:\n$$P(B_j \\mid A) = \\frac{P(A \\mid B_j) \\cdot P(B_j)}{\\sum_{i=1}^n P(A \\mid B_i) \\cdot P(B_i)}$$',
+        contentHe: 'הסתברות מותנית מודדת את הסיכוי להתרחשות מאורע $A$, בהינתן שכבר יש בידינו מידע ודאי כי מאורע אחר $B$ התרחש:\n$$P(A \\mid B) = \\frac{P(A \\cap B)}{P(B)}$$\n(כאשר תנאי הקצה המחייב הוא $P(B) > 0$).\n\n### 📜 נוסחת ההסתברות השלמה:\nאם אוסף המאורעות $B_1, \\dots, B_n$ מהווה חלוקה (Partition) של מרחב המדגם $\\Omega$ (כלומר הם זרים בזוגות ואיחודם נותן את המרחב כולו), אז לכל מאורע $A$ מתקיים:\n$$P(A) = \\sum_{i=1}^{n} P(A \\mid B_i) \\cdot P(B_i)$$\n\n### 📜 משפט בייס (Bayes\' Theorem):\nנוסחת בייס מאפשרת להפוך את כיוון ההתניה ומנוסחת כך לכל מאורע $B_j$ מתוך החלוקה:\n$$P(B_j \\mid A) = \\frac{P(A \\mid B_j) \\cdot P(B_j)}{\\sum_{i=1}^{n} P(A \\mid B_i) \\cdot P(B_i)}$$',
         simplifiedLogic: 'Conditional probability scales our universe down to the event $B$. Any outcome outside $B$ is discarded. Bayes\' theorem acts as an evidence-updating machine: it takes our prior belief $P(B_j)$ and updates it to a posterior belief $P(B_j \\mid A)$ after observing new evidence $A$.',
+        simplifiedLogicHe: 'הסתברות מותנית למעשה מצמצמת ומכווצת את היקום המקורי שלנו אך ורק לתוך גבולות המאורע $B$. כל עתיד אפשרי שנמצא מחוץ ל-$B$ נזרק מיד לפח. משפט בייס פועל כ"מכונה לעדכון ראיות": הוא לוקח את האמונה הראשונית שלנו לגבי הסיכוי של התרחיש ($P(B_j)$ - Prior) ומעדכן אותה לאמונה מעודכנת ומבוססת ($P(B_j \\mid A)$ - Posterior) מיד לאחר שצפינו בראיה החדשה $A$.',
         toolboxConnection: 'Conditional probability and Bayes\' Theorem are the core components behind Naive Bayes classifiers in machine learning, spam filters, medical diagnostic software, and robotic localization (Bayesian tracking).',
+        toolboxConnectionHe: 'הסתברות מותנית ומשפט בייס הם רכיבי הליבה העומדים מאחורי מסווגי תוכנה אקראיים (Naive Bayes) בלמידת מכונה, מסנני דואר זבל (Spam Filters), מערכות לדיאגנוזה רפואית, ואלגוריתמי ניווט ומיקום של רובוטים (Bayesian tracking).',
         keyTakeaway: 'Bayes\' theorem updates prior probabilities using newly observed evidence.',
+        keyTakeawayHe: 'משפט בייס מעדכן הסתברויות אפריוריות באמצעות ראיות חדשות שנצפו.',
         proof: 'Proof of Bayes\' Theorem:\nBy definition of conditional probability:\n$$P(B_j \\mid A) = \\frac{P(B_j \\cap A)}{P(A)}$$\nUsing the identity:\n$$P(B_j \\cap A) = P(A \\mid B_j) \\cdot P(B_j)$$\nWe substitute the numerator:\n$$P(B_j \\mid A) = \\frac{P(A \\mid B_j) \\cdot P(B_j)}{P(A)}$$\nApplying the Law of Total Probability to the denominator $P(A)$ yields:\n$$P(B_j \\mid A) = \\frac{P(A \\mid B_j) \\cdot P(B_j)}{\\sum_{i=1}^n P(A \\mid B_i) \\cdot P(B_i)}$$',
-        example: 'Three Cards Paradox Example:\nThree cards sit in a box:\n1. Card A: Red on both sides.\n2. Card B: Black on both sides.\n3. Card C: Red on one side, black on the other.\nWe draw a card at random and place it on the table. The visible side is Red. What is the probability that the hidden side is also Red?\nLet $C_1, C_2, C_3$ be drawing Card A, B, C respectively. $P(C_1)=P(C_2)=P(C_3)=1/3$.\nLet $R$ be the event that the visible side is Red.\n$$P(R \\mid C_1) = 1, \\quad P(R \\mid C_2) = 0, \\quad P(R \\mid C_3) = 0.5$$\nBy total probability:\n$$P(R) = 1(1/3) + 0 + 0.5(1/3) = 0.5$$\nBy Bayes\' theorem, the probability that the hidden side is Red is the probability that we got Card A given $R$:\n$$P(C_1 \\mid R) = \\frac{P(R \\mid C_1)P(C_1)}{P(R)} = \\frac{1(1/3)}{0.5} = \\frac{2}{3}$$'
+        proofHe: 'הוכחת משפט בייס:\nלפי הגדרת ההסתברות המותנית:\n$$P(B_j \\mid A) = \\frac{P(B_j \\cap A)}{P(A)}$$\nבאמצעות שימוש בזהות:\n$$P(B_j \\cap A) = P(A \\mid B_j) \\cdot P(B_j)$$\nנציב במונה:\n$$P(B_j \\mid A) = \\frac{P(A \\mid B_j) \\cdot P(B_j)}{P(A)}$$\nהפעלת נוסחת ההסתברות השלמה על המכנה $P(A)$ מניבה:\n$$P(B_j \\mid A) = \\frac{P(A \\mid B_j) \\cdot P(B_j)}{\\sum_{i=1}^n P(A \\mid B_i) \\cdot P(B_i)}$$',
+        example: 'Three Cards Paradox Example:\nThree cards sit in a box:\n1. Card A: Red on both sides.\n2. Card B: Black on both sides.\n3. Card C: Red on one side, black on the other.\nWe draw a card at random and place it on the table. The visible side is Red. What is the probability that the hidden side is also Red?\nLet $C_1, C_2, C_3$ be drawing Card A, B, C respectively. $P(C_1)=P(C_2)=P(C_3)=1/3$.\nLet $R$ be the event that the visible side is Red.\n$$P(R \\mid C_1) = 1, \\quad P(R \\mid C_2) = 0, \\quad P(R \\mid C_3) = 0.5$$\nBy total probability:\n$$P(R) = 1(1/3) + 0 + 0.5(1/3) = 0.5$$\nBy Bayes\' theorem, the probability that the hidden side is Red is the probability that we got Card A given $R$:\n$$P(C_1 \\mid R) = \\frac{P(R \\mid C_1)P(C_1)}{P(R)} = \\frac{1(1/3)}{0.5} = \\frac{2}{3}$$',
+        exampleHe: 'תרגיל שוקולד מודרך: פרדוקס שלושת הקלפים (Three Cards Paradox)\nבתוך קופסה מונחים שלושה קלפים מיוחדים:\n1. קלף א\': צבוע באדום משני צדדיו.\n2. קלף ב\': צבוע בשחור משני צדדיו.\n3. קלף ג\': צבוע באדום מצד אחד ובשחור מצדו השני.\n\nשולפים קלף אחד באקראי ומניחים אותו על השולחן. הצד הגלוי לעין שפונה כלפי מעלה הוא אדום. מהי ההסתברות המדויקת שגם צדו השני (הנסתר) של הקלף הוא אדום?\n\n### ✍️ פתרון ריגורוזית צעד-אחר-צעד:\n\nנרשם את המאורעות לבחירת הקלפים: נסמן ב-$C_1, C_2, C_3$ את בחירת קלף א\', ב\' ו-ג\' בהתאמה. מכיוון שהשליפה היא באקראי:\n$$P(C_1) = P(C_2) = P(C_3) = \\frac{1}{3}$$\n\nנסמן ב-$R$ את המאורע: "הצד הגלוי לעין הוא אדום". נרשם את ההסתברויות המותנות לקבלת צד אדום מכל קלף:\n$$P(R \\mid C_1) = 1 \\quad, \\quad P(R \\mid C_2) = 0 \\quad, \\quad P(R \\mid C_3) = 0.5$$\n\nנחשב את ההסתברות הכוללת שהצד הגלוי הוא אדום בעזרת נוסחת ההסתברות השלמה:\n$$P(R) = P(R \\mid C_1)P(C_1) + P(R \\mid C_2)P(C_2) + P(R \\mid C_3)P(C_3)$$\n$$P(R) = 1 \\cdot \\left(\\frac{1}{3}\\right) + 0 \\cdot \\left(\\frac{1}{3}\\right) + 0.5 \\cdot \\left(\\frac{1}{3}\\right) = \\frac{1}{3} + 0 + \\frac{1}{6} = \\frac{1}{2}$$\n\nאנו מעוניינים למצוא את הסיכוי שהצד הנסתר הוא אדום. דבר זה ייתכן אך ורק אם הקלף שבידנו הוא קלף א\' הדו-צדדי ($C_1$). לכן, אנו מחפשים את ההסתברות המותנית $P(C_1 \\mid R)$. נפעיל את משפט בייס:\n$$P(C_1 \\mid R) = \\frac{P(R \\mid C_1)P(C_1)}{P(R)} = \\frac{1 \\cdot \\frac{1}{3}}{\\frac{1}{2}} = \\frac{2}{3}$$\n\n**תשובה סופית:** ההסתברות שהצד השני הוא אדום היא בדיוק $\\frac{2}{3}$ (או $66.6\\%$).  \n*(אינטואיציה פשוטה: בקופסה יש 6 צדדים סך הכל, מתוכם 3 צדדים צבועים באדום. ברגע שראינו צד אדום, אנחנו בוודאות נמצאים על אחד מתוך 3 הצדדים האדומים האלו. מתוך 3 האפשרויות האלו, 2 צדדים שייכים לקלף א\' הדו-צדדי, ולכן הסיכוי שהקלף הוא אדום-אדום הוא 2 מתוך 3).*'
       }
     ],
     quiz: [
       {
         question: 'Two events A and B have probabilities P(A) = 0.8 and P(B) = 0.7. What is the Frechet-Bonferroni lower bound for their intersection P(A ∩ B)?',
+        questionHe: 'יהיו $A$ ו-$B$ שני מאורעות במרחב הסתברות כלשהו, בעלי הסתברויות ידועות $P(A) = 0.8$ ו-$P(B) = 0.7$. מהו חסם פרשה-בונפרוני התחתון (Frechet-Bonferroni Bound) עבור הסתברות החיתוך שלהם $P(A \\cap B)$?',
         options: [
           '0.5',
           '0.0',
           '0.7',
           '0.1'
         ],
+        optionsHe: [
+          '0.5',
+          '0.0',
+          '0.7',
+          '0.1'
+        ],
         correctAnswerIndex: 0,
-        explanation: 'By the Inclusion-Exclusion formula, P(A ∪ B) = P(A) + P(B) - P(A ∩ B). Since the probability of the union cannot exceed 1, we get P(A ∩ B) >= P(A) + P(B) - 1. Substituting the values: P(A ∩ B) >= 0.8 + 0.7 - 1 = 0.5.'
+        explanation: 'By the Inclusion-Exclusion formula, P(A ∪ B) = P(A) + P(B) - P(A ∩ B). Since the probability of the union cannot exceed 1, we get P(A ∩ B) >= P(A) + P(B) - 1. Substituting the values: P(A ∩ B) >= 0.8 + 0.7 - 1 = 0.5.',
+        explanationHe: 'על פי נוסחת ההכלה וההפרדה הבסיסית: $P(A \\cup B) = P(A) + P(B) - P(A \\cap B)$. \nנבודד אלגברית את איבר החיתוך: $P(A \\cap B) = P(A) + P(B) - P(A \\cup B)$. \nמכיוון שערך פונקציית הסתברות חסום מלעיל על ידי 1, ההסתברות המקסימלית האפשרית של האיחוד היא לכל היותר 1 ($P(A \\cup B) \\le 1$). כדי למזער את החיתוך, עלינו למקסם את איבר האיחוד ולהציב 1: \n$$P(A \\cap B) \\ge 0.8 + 0.7 - 1 = 0.5$$\nלכן, החסם התחתון המחייב לחיתוך הוא בדיוק 0.5.'
       },
       {
         question: 'Suppose a rare disease affects 0.1% of the population. A test has a 99% sensitivity (true positive) and a 5% false positive rate. If a person tests positive, what is the approximate probability that they actually have the disease?',
+        questionHe: 'נניח כי מחלה נדירה תוקפת 0.1% מהאוכלוסייה. לבדיקה רפואית יש רגישות (Sensitivity) של 99% (חיובי אמיתי) ושיעור חיוביים כוזבים (False positive) של 5%. אם אדם קיבל תוצאה חיובית בבדיקה, מהי ההסתברות המקורבת שהוא אכן חולה במחלה?',
         options: [
           '99%',
           '2%',
           '50%',
           '8%'
         ],
+        optionsHe: [
+          '99%',
+          '2%',
+          '50%',
+          '8%'
+        ],
         correctAnswerIndex: 1,
-        explanation: 'Using Bayes\' theorem: P(D | T+) = P(T+ | D)*P(D) / [P(T+ | D)*P(D) + P(T+ | D^c)*P(D^c)]. Numerator = 0.99 * 0.001 = 0.00099. Denominator = 0.00099 + 0.05 * 0.999 = 0.05094. P(D | T+) = 0.00099 / 0.05094 = 0.0194 (about 2%).'
+        explanation: 'Using Bayes\' theorem: P(D | T+) = P(T+ | D)*P(D) / [P(T+ | D)*P(D) + P(T+ | D^c)*P(D^c)]. Numerator = 0.99 * 0.001 = 0.00099. Denominator = 0.00099 + 0.05 * 0.999 = 0.05094. P(D | T+) = 0.00099 / 0.05094 = 0.0194 (about 2%).',
+        explanationHe: 'על פי משפט בייס: $P(D \\mid T^+) = \\frac{P(T^+ \\mid D) \\cdot P(D)}{P(T^+ \\mid D) \\cdot P(D) + P(T^+ \\mid D^c) \\cdot P(D^c)}$. \nהמונה: $0.99 \\cdot 0.001 = 0.00099$. \nהמכנה: $0.00099 + 0.05 \\cdot 0.999 = 0.05094$. \nנקבל: $P(D \\mid T^+) = \\frac{0.00099}{0.05094} \\approx 0.0194$ (בערך 2%).'
       }
     ]
   },
