@@ -17,7 +17,7 @@ function getLocalIP() {
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: process.env.NODE_ENV === 'production' ? '/prob-stats-guide/' : '/',
+  base: '/',
   define: {
     __LOCAL_IP__: JSON.stringify(getLocalIP())
   }
