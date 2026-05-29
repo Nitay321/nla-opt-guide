@@ -763,4 +763,74 @@ export const formulas: Formula[] = [
     description: 'The probability of failing to reject a false null hypothesis, and its complement representing the power of the test.',
     descriptionHe: 'ההסתברות שלא לדחות השערת אפס שקרית, והמשלים שלה המייצג את עוצמת המבחן.'
   }
+,
+  // ==========================================
+  // CHAPTER 11: ADVANCED STATISTICAL METHODS (PROPERTIES & REGRESSION)
+  // ==========================================
+  {
+    id: 'estimator-bias',
+    courseId: 'stats',
+    category: 'Direct Solvers',
+    categoryHe: 'תכונות אומדים',
+    name: 'Estimator Bias',
+    nameHe: 'הטיית האומד',
+    equation: '\\text{Bias}(\\hat{\\theta}) = \\mathbb{E}[\\hat{\\theta}] - \\theta',
+    description: 'Measures the difference between the expected value of an estimator and the true parameter value.',
+    descriptionHe: 'מודד את ההפרש בין התוחלת של האומד לבין ערכו האמיתי של הפרמטר.'
+  },
+  {
+    id: 'estimator-mse',
+    courseId: 'stats',
+    category: 'Direct Solvers',
+    categoryHe: 'תכונות אומדים',
+    name: 'Mean Square Error (MSE)',
+    nameHe: 'טעות ריבועית ממוצעת (MSE)',
+    equation: '\\text{MSE}(\\hat{\\theta}) = \\text{Var}(\\hat{\\theta}) + [\\text{Bias}(\\hat{\\theta})]^2',
+    description: 'Decomposes the overall squared error of an estimator into its variance and squared bias.',
+    descriptionHe: 'מפרק את הטעות הריבועית הכוללת של אומד לשונות שלו ועוד ריבוע ההטיה שלו.'
+  },
+  {
+    id: 'fisher-information',
+    courseId: 'stats',
+    category: 'Eigenvalue Solvers',
+    categoryHe: 'מידע פישר וחסם קרמר-ראו',
+    name: 'Fisher Information',
+    nameHe: 'מידע פישר',
+    equation: 'I(\\theta) = -n \\mathbb{E}\\left[ \\frac{\\partial^2}{\\partial \\theta^2} \\ln f(X; \\theta) \\right]',
+    description: 'Measures the amount of information that an observable random variable X carries about an unknown parameter.',
+    descriptionHe: 'מודד את כמות המידע שמשתנה מקרי תצפיתי X נושא אודות הפרמטר הלא ידוע.'
+  },
+  {
+    id: 'cramer-rao-bound',
+    courseId: 'stats',
+    category: 'Least Squares Minimization',
+    categoryHe: 'מידע פישר וחסם קרמר-ראו',
+    name: 'Cramer-Rao Lower Bound',
+    nameHe: 'חסם קרמר-ראו',
+    equation: '\\text{Var}(\\hat{\\theta}) \\ge \\frac{1}{I(\\theta)}',
+    description: 'States that the variance of any unbiased estimator is bounded from below by the reciprocal of the Fisher Information.',
+    descriptionHe: 'קובע כי השונות של כל אומד בלתי מוטה חסומה מלמטה על ידי ההופכי של מידע פישר.'
+  },
+  {
+    id: 'regression-slope',
+    courseId: 'stats',
+    category: 'Constrained Optimization',
+    categoryHe: 'רגרסיה ליניארית',
+    name: 'Least Squares Slope',
+    nameHe: 'שיפוע בריבועים פחותים',
+    equation: '\\hat{\\beta}_1 = \\frac{\\sum_{i=1}^n (X_i - \\bar{X})(Y_i - \\bar{Y})}{\\sum_{i=1}^n (X_i - \\bar{X})^2} = \\frac{\\text{Cov}(X, Y)}{\\text{Var}(X)}',
+    description: 'The formula for estimating the slope of the simple linear regression line.',
+    descriptionHe: 'הנוסחה לאמידת השיפוע של קו הרגרסיה הליניארית הפשוטה.'
+  },
+  {
+    id: 'regression-intercept',
+    courseId: 'stats',
+    category: 'Constrained Optimization',
+    categoryHe: 'רגרסיה ליניארית',
+    name: 'Least Squares Intercept',
+    nameHe: 'חותך בריבועים פחותים',
+    equation: '\\hat{\\beta}_0 = \\bar{Y} - \\hat{\\beta}_1 \\bar{X}',
+    description: 'The formula for estimating the y-intercept of the simple linear regression line.',
+    descriptionHe: 'הנוסחה לאמידת החותך של קו הרגרסיה הליניארית הפשוטה.'
+  }
 ];

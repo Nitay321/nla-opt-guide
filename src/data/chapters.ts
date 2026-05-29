@@ -1792,4 +1792,422 @@ export const chapters: Chapter[] = [
       }
     ]
   }
+,
+  {
+    id: 'stats-11',
+    courseId: 'stats',
+    chapterNumber: '11',
+    title: 'Chapter 11: Advanced Statistical Methods - Properties of Estimators & Linear Regression',
+    titleHe: 'פרק 11: שיטות סטטיסטיות מתקדמות - תכונות אומדים ורגרסיה ליניארית',
+    intro: `This final chapter covers advanced statistical topics: Point Estimator Properties (Bias, Mean Square Error, Consistency, and Efficiency), the Cramer-Rao Lower Bound, and the fundamentals of Simple Linear Regression.`,
+    introHe: `פרק סיום זה עוסק בנושאים סטטיסטיים מתקדמים: תכונות אומדים נקודתיים (הטיה, טעות ריבועית ממוצעת, עקביות ויעילות), חסם קרמר-ראו, ויסודות הרגרסיה הליניארית הפשוטה.`,
+    motivation: `Point estimation requires comparing different estimators to find the "best" one. Linear regression is the foundation of machine learning, allowing us to model relationships and predict continuous outcomes.`,
+    motivationHe: `אמידה נקודתית דורשת השוואה בין אומדים שונים כדי למצוא את האומד "הטוב ביותר". רגרסיה ליניארית היא אבן היסוד של למידת מכונה (Machine Learning), ומאפשרת לנו למדל קשרים ולחזות ערכים רציפים.`,
+    definitions: [
+      {
+        id: 'def-stats-11-1',
+        title: 'Bias, Mean Square Error (MSE), & Consistency',
+        titleHe: 'הטיה, טעות ריבועית ממוצעת (MSE) ועקביות',
+        content: `We study how to evaluate the performance of point estimators:
+
+* **Bias**: The difference between the expected value of the estimator $\\hat{\\theta}$ and the true parameter $\\theta$:
+$$\\text{Bias}(\\hat{\\theta}) = \\mathbb{E}[\\hat{\\theta}] - \\theta$$
+If $\\text{Bias}(\\hat{\\theta}) = 0$, the estimator is **unbiased**.
+
+* **Mean Square Error (MSE)**: The expected squared deviation of the estimator from the parameter, decomposing into variance and squared bias:
+$$\\text{MSE}(\\hat{\\theta}) = \\mathbb{E}[(\\hat{\\theta} - \\theta)^2] = \\text{Var}(\\hat{\\theta}) + [\\text{Bias}(\\hat{\\theta})]^2$$
+
+* **Consistency**: An estimator $\\hat{\\theta}_n$ is consistent if it converges in probability to the true parameter $\\theta$ as $n \\to \\infty$:
+$$\\lim_{n \\to \\infty} P(|\\hat{\\theta}_n - \\theta| \\ge \\epsilon) = 0, \\quad \\forall \\epsilon > 0$$
+*Sufficient Condition*: An estimator is consistent if both its bias and variance vanish as $n \\to \\infty$.`,
+        contentHe: `אנו לומדים כיצד להעריך את ביצועיהם של אומדים נקודתיים:
+
+* **הטיה (Bias)**: ההפרש בין התוחלת של האומד $\\hat{\\theta}$ לבין ערכו האמיתי של הפרמטר $\\theta$:
+$$\\text{Bias}(\\hat{\\theta}) = \\mathbb{E}[\\hat{\\theta}] - \\theta$$
+אם $\\text{Bias}(\\hat{\\theta}) = 0$, האומד נקרא **בלתי מוטה**.
+
+* **טעות ריבועית ממוצעת (MSE)**: תוחלת הסטייה הריבועית של האומד מהפרמטר, המתפרקת לשונות האומד ועוד ריבוע ההטיה שלו:
+$$\\text{MSE}(\\hat{\\theta}) = \\mathbb{E}[(\\hat{\\theta} - \\theta)^2] = \\text{Var}(\\hat{\\theta}) + [\\text{Bias}(\\hat{\\theta})]^2$$
+
+* **עקביות (Consistency)**: אומד $\\hat{\\theta}_n$ נקרא עקבי אם הוא מתכנס בהסתברות אל הפרמטר האמיתי $\\theta$ כאשר גודל המדגם $n$ שואף לאינסוף:
+$$\\lim_{n \\to \\infty} P(|\\hat{\\theta}_n - \\theta| \\ge \\epsilon) = 0, \\quad \\forall \\epsilon > 0$$
+*תנאי מספיק*: אומד הוא עקבי אם ההטיה שלו והשונות שלו שואפות לאפס כאשר $n \\to \\infty$.`,
+        simplifiedLogic: `Unbiasedness means that "on average" we hit the target. MSE measures the total error (both accuracy/bias and precision/variance). Consistency means that with infinite data, our error drops to zero.`,
+        simplifiedLogicHe: `אי-הטיה אומרת ש"בממוצע" אנו פוגעים במטרה. MSE מודד את סך כל השגיאה (הן דיוק/הטיה והן יציבות/שונות). עקביות אומרת שעם כמות אינסופית של נתונים, השגיאה שלנו שואפת לאפס.`,
+        toolboxConnection: `Crucial for optimizing machine learning loss functions where bias-variance tradeoff dictates model generalization.`,
+        toolboxConnectionHe: `קריטי לאופטימיזציה של פונקציות הפסד בלמידת מכונה, שבהן טרייד-אוף של הטיה ושונות (bias-variance tradeoff) מכתיב את יכולת ההכללה של המודל.`,
+        keyTakeaway: `MSE is the sum of variance and squared bias.`,
+        keyTakeawayHe: `הטעות הריבועית הממוצעת (MSE) שווה לשונות האומד ועוד ריבוע ההטיה שלו.`
+      },
+      {
+        id: 'def-stats-11-2',
+        title: 'Fisher Information & Cramer-Rao Lower Bound',
+        titleHe: 'מידע פישר וחסם קרמר-ראו',
+        content: `We define the mathematical limits of estimation precision:
+
+* **Fisher Information $I(\\theta)$**: Measures the amount of information that a sample carries about an unknown parameter $\\theta$. For a sample of size $n$:
+$$I(\\theta) = -n \\mathbb{E}\\left[ \\frac{\\partial^2}{\\partial \\theta^2} \\ln f(X; \\theta) \\right]$$
+
+* **Cramer-Rao Lower Bound (CRLB)**: States that the variance of any unbiased estimator $\\hat{\\theta}$ is bounded from below by the reciprocal of the Fisher Information:
+$$\\text{Var}(\\hat{\\theta}) \\ge \\frac{1}{I(\\theta)}$$
+An unbiased estimator that achieves this lower bound is called **efficient** (or UMVUE).`,
+        contentHe: `אנו מגדירים את הגבולות המתמטיים של דיוק האמידה:
+
+* **מידע פישר (Fisher Information) $I(\\theta)$**: מודד את כמות המידע שמדגם נושא אודות הפרמטר הלא ידוע $\\theta$. עבור מדגם בגודל $n$:
+$$I(\\theta) = -n \\mathbb{E}\\left[ \\frac{\\partial^2}{\\partial \\theta^2} \\ln f(X; \\theta) \\right]$$
+
+* **חסם קרמר-ראו (Cramer-Rao Lower Bound - CRLB)**: קובע כי השונות של כל אומד בלתי מוטה $\\hat{\\theta}$ חסומה מלמטה על ידי ההופכי של מידע פישר:
+$$\\text{Var}(\\hat{\\theta}) \\ge \\frac{1}{I(\\theta)}$$
+אומד בלתי מוטה שמשיג את החסם המינימלי הזה נקרא אומד **יעיל**.`,
+        simplifiedLogic: `Fisher Information measures how "steep" the likelihood curve is around the true value. The steeper it is, the easier it is to estimate the parameter, which lowers the minimum possible variance bound.`,
+        simplifiedLogicHe: `מידע פישר מודד כמה "תלולה" עקומת הנראות סביב הערך האמיתי. ככל שהיא תלולה יותר, כך קל יותר לאמוד את הפרמטר, מה שמקטין את חסם השונות המינימלי האפשרי.`,
+        toolboxConnection: `Used by radar and telecommunication systems engineers to determine the absolute physical limits of signal-to-noise estimation accuracy.`,
+        toolboxConnectionHe: `משמש מהנדסי מערכות מכ"ם ותקשורת לקביעת הגבולות הפיזיקליים המוחלטים של דיוק אמידת אות לרעש.`,
+        keyTakeaway: `The variance of any unbiased estimator cannot be lower than 1/I(theta).`,
+        keyTakeawayHe: `השונות של כל אומד בלתי מוטה אינה יכולה להיות נמוכה מההופכי של מידע פישר (חסם קרמר-ראו).`
+      },
+      {
+        id: 'def-stats-11-3',
+        title: 'Simple Linear Regression & Least Squares',
+        titleHe: 'רגרסיה ליניארית פשוטה וריבועים פחותים',
+        content: `We model the linear relationship between an independent variable $X$ and a dependent variable $Y$:
+
+* **The Linear Model**: 
+$$Y = \\beta_0 + \\beta_1 X + \\epsilon, \\quad \\epsilon \\sim N(0, \\sigma^2)$$
+where $\\beta_1$ is the slope, $\\beta_0$ is the intercept, and $\\epsilon$ represents independent normal noise.
+
+* **Ordinary Least Squares (OLS) Estimators**: We find parameter values $\\hat{\\beta}_0, \\hat{\\beta}_1$ that minimize the Sum of Squared Residuals (SSE) $\\sum (Y_i - \\hat{Y}_i)^2$:
+$$\\hat{\\beta}_1 = \\frac{\\sum_{i=1}^n (X_i - \\bar{X})(Y_i - \\bar{Y})}{\\sum_{i=1}^n (X_i - \\bar{X})^2} = \\frac{\\text{Cov}(X, Y)}{\\text{Var}(X)}$$
+$$\\hat{\\beta}_0 = \\bar{Y} - \\hat{\\beta}_1 \\bar{X}$$`,
+        contentHe: `אנו ממדלים את הקשר הליניארי בין משתנה מסביר (בלתי תלוי) $X$ לבין משתנה מוסבר (תלוי) $Y$:
+
+* **המודל הליניארי**: 
+$$Y = \\beta_0 + \\beta_1 X + \\epsilon, \\quad \\epsilon \\sim N(0, \\sigma^2)$$
+כאשר $\\beta_1$ הוא השיפוע, $\\beta_0$ הוא החותך, ו-$\\epsilon$ הוא רעש נורמלי בלתי תלוי.
+
+* **אומדי הריבועים הפחותים (OLS)**: אנו מוצאים את ערכי הפרמטרים $\\hat{\\beta}_0, \\hat{\\beta}_1$ שמביאים למינימום את סכום ריבועי השאריות (SSE) $\\sum (Y_i - \\hat{Y}_i)^2$:
+$$\\hat{\\beta}_1 = \\frac{\\sum_{i=1}^n (X_i - \\bar{X})(Y_i - \\bar{Y})}{\\sum_{i=1}^n (X_i - \\bar{X})^2} = \\frac{\\text{Cov}(X, Y)}{\\text{Var}(X)}$$
+$$\\hat{\\beta}_0 = \\bar{Y} - \\hat{\\beta}_1 \\bar{X}$$`,
+        simplifiedLogic: `We draw a straight line through our data points such that the sum of the squared vertical distances from the points to the line is as small as possible.`,
+        simplifiedLogicHe: `אנו מעבירים קו ישר דרך נקודות הנתונים שלנו כך שסכום מרחקי הריבוע האנכיים מהנקודות לקו יהיה הקטן ביותר האפשרי.`,
+        toolboxConnection: `The foundational base of linear regression models in Machine Learning, predictive analytics, and trend forecasting.`,
+        toolboxConnectionHe: `בסיס היסוד של מודלים של רגרסיה ליניארית בלמידת מכונה (ML), אנליטיקה חזויה וחיזוי מגמות.`,
+        keyTakeaway: `OLS minimizes the sum of squared vertical residuals.`,
+        keyTakeawayHe: `שיטת הריבועים הפחותים ממזערת את סכום ריבועי השאריות האנכיים.`
+      },
+      {
+        id: 'prac-stats-11-1',
+        title: 'Practice 1: Bias & MSE Comparison',
+        titleHe: 'תרגול 1: השוואת הטיה ו-MSE של אומדים',
+        isPractice: true,
+        content: `Let $X_1, X_2$ be i.i.d. random variables with mean $\\mu$ and variance $\\sigma^2$. Compare the bias and MSE of two estimators for $\\mu$: $\\hat{\\mu}_1 = \\frac{X_1 + X_2}{2}$ and $\\hat{\\mu}_2 = \\frac{X_1 + 2X_2}{3}$.`,
+        contentHe: `יהיו $X_1, X_2$ משתנים מקריים בלתי תלויים ובעלי התפלגות זהה עם תוחלת $\\mu$ ושונות $\\sigma^2$. השוו את ההטיה וה-MSE של שני אומדים עבור $\\mu$: $\\hat{\\mu}_1 = \\frac{X_1 + X_2}{2}$ ו-$\\hat{\\mu}_2 = \\frac{X_1 + 2X_2}{3}$.`,
+        proof: `We compute the expectation and variance of both estimators:
+
+1. **For Estimator 1 ($\\hat{\\mu}_1 = \\frac{X_1+X_2}{2}$)**:
+* Expectation:
+$$\\mathbb{E}[\\hat{\\mu}_1] = \\mathbb{E}\\left[\\frac{X_1+X_2}{2}\\right] = \\frac{\\mu+\\mu}{2} = \\mu \\implies \\text{Unbiased (Bias = 0)}$$
+* Variance:
+$$\\text{Var}(\\hat{\\mu}_1) = \\text{Var}\\left\\(\\frac{X_1+X_2}{2}\\right\\) = \\frac{1}{4}(\\text{Var}(X_1) + \\text{Var}(X_2)) = \\frac{2\\sigma^2}{4} = \\frac{\\sigma^2}{2}$$
+* Mean Square Error:
+$$\\text{MSE}(\\hat{\\mu}_1) = \\text{Var}(\\hat{\\mu}_1) + [\\text{Bias}(\\hat{\\mu}_1)]^2 = \\frac{\\sigma^2}{2} + 0^2 = \\frac{\\sigma^2}{2}$$
+
+2. **For Estimator 2 ($\\hat{\\mu}_2 = \\frac{X_1+2X_2}{3}$)**:
+* Expectation:
+$$\\mathbb{E}[\\hat{\\mu}_2] = \\mathbb{E}\\left[\\frac{X_1+2X_2}{3}\\right] = \\frac{\\mu+2\\mu}{3} = \\mu \\implies \\text{Unbiased (Bias = 0)}$$
+* Variance:
+$$\\text{Var}(\\hat{\\mu}_2) = \\text{Var}\\left\\(\\frac{X_1+2X_2}{3}\\right\\) = \\frac{1}{9}(\\text{Var}(X_1) + 4\\text{Var}(X_2)) = \\frac{\\sigma^2 + 4\\sigma^2}{9} = \\frac{5\\sigma^2}{9}$$
+* Mean Square Error:
+$$\\text{MSE}(\\hat{\\mu}_2) = \\text{Var}(\\hat{\\mu}_2) + [\\text{Bias}(\\hat{\\mu}_2)]^2 = \\frac{5\\sigma^2}{9} + 0^2 = \\frac{5\\sigma^2}{9}$$
+
+**Comparison**:
+Since both estimators are unbiased, we compare their variances directly. Because $\\frac{1}{2} = 0.5 < \\frac{5}{9} \\approx 0.556$, the estimator $\\hat{\\mu}_1$ has a lower MSE and is more efficient than $\\hat{\\mu}_2$.`,
+        proofHe: `נחשב את התוחלת והשונות של שני האומדים:
+
+1. **עבור האומד הראשון ($\\hat{\\mu}_1 = \\frac{X_1+X_2}{2}$)**:
+* תוחלת:
+$$\\mathbb{E}[\\hat{\\mu}_1] = \\mathbb{E}\\left[\\frac{X_1+X_2}{2}\\right] = \\frac{\\mu+\\mu}{2} = \\mu \\implies \\text{בלתי מוטה (הטיה = 0)}$$
+* שונות:
+$$\\text{Var}(\\hat{\\mu}_1) = \\text{Var}\\left\\(\\frac{X_1+X_2}{2}\\right\\) = \\frac{1}{4}(\\text{Var}(X_1) + \\text{Var}(X_2)) = \\frac{2\\sigma^2}{4} = \\frac{\\sigma^2}{2}$$
+* טעות ריבועית ממוצעת:
+$$\\text{MSE}(\\hat{\\mu}_1) = \\text{Var}(\\hat{\\mu}_1) + [\\text{Bias}(\\hat{\\mu}_1)]^2 = \\frac{\\sigma^2}{2} + 0^2 = \\frac{\\sigma^2}{2}$$
+
+2. **עבור האומד השני ($\\hat{\\mu}_2 = \\frac{X_1+2X_2}{3}$)**:
+* תוחלת:
+$$\\mathbb{E}[\\hat{\\mu}_2] = \\mathbb{E}\\left[\\frac{X_1+2X_2}{3}\\right] = \\frac{\\mu+2\\mu}{3} = \\mu \\implies \\text{בלתי מוטה (הטיה = 0)}$$
+* שונות:
+$$\\text{Var}(\\hat{\\mu}_2) = \\text{Var}\\left\\(\\frac{X_1+2X_2}{3}\\right\\) = \\frac{1}{9}(\\text{Var}(X_1) + 4\\text{Var}(X_2)) = \\frac{\\sigma^2 + 4\\sigma^2}{9} = \\frac{5\\sigma^2}{9}$$
+* טעות ריבועית ממוצעת:
+$$\\text{MSE}(\\hat{\\mu}_2) = \\text{Var}(\\hat{\\mu}_2) + [\\text{Bias}(\\hat{\\mu}_2)]^2 = \\frac{5\\sigma^2}{9} + 0^2 = \\frac{5\\sigma^2}{9}$$
+
+**השוואה**:
+מכיוון ששני האומדים בלתי מוטים, נשווה את השונויות שלהם ישירות. כיוון ש-$\\frac{1}{2} = 0.5 < \\frac{5}{9} \\approx 0.556$, לאומד $\\hat{\\mu}_1$ יש טעות ריבועית ממוצעת (MSE) נמוכה יותר, ולכן הוא יעיל יותר ומיועד להעדפה.`
+      },
+      {
+        id: 'prac-stats-11-2',
+        title: 'Practice 2: Cramer-Rao Lower Bound for Poisson',
+        titleHe: 'תרגול 2: חסם קרמר-ראו להתפלגות פואסון',
+        isPractice: true,
+        content: `Let $X_1, \\dots, X_n \\sim \\text{Poisson}(\\lambda)$ be i.i.d. samples. Find the Cramer-Rao Lower Bound for unbiased estimators of $\\lambda$, and check if the sample mean $\\bar{X}$ achieves this bound.`,
+        contentHe: 'יהי מדגם מקרי $X_1, \\dots, X_n \\sim \\text{Poisson}(\\lambda)$ בלתי תלויים ובעלי התפלגות זהה. מצאו את חסם קרמר-ראו עבור אומדים בלתי מוטים ל-$\\lambda$, ובדקו האם ממוצע המדגם $\\bar{X}$ משיג חסם זה.',
+        proof: `First, write the PMF of a Poisson variable:
+$$f(x; \\lambda) = \\frac{e^{-\\lambda} \\lambda^x}{x!}$$
+
+Take the natural log:
+$$\\ln f(x; \\lambda) = -\\lambda + x \\ln \\lambda - \\ln(x!)$$
+
+Compute the first derivative with respect to $\\lambda$:
+$$\\frac{\\partial}{\\partial \\lambda} \\ln f(x; \\lambda) = -1 + \\frac{x}{\\lambda}$$
+
+Compute the second derivative:
+$$\\frac{\\partial^2}{\\partial \\lambda^2} \\ln f(x; \\lambda) = -\\frac{x}{\\lambda^2}$$
+
+Now, calculate the Fisher Information $I(\\lambda)$ for a sample of size $n$:
+$$I(\\lambda) = -n \\mathbb{E}\\left[ \\frac{\\partial^2}{\\partial \\lambda^2} \\ln f(X; \\lambda) \\right] = -n \\mathbb{E}\\left[ -\\frac{X}{\\lambda^2} \\right] = \\frac{n}{\\lambda^2} \\mathbb{E}[X]$$
+
+Since $\\mathbb{E}[X] = \\lambda$ for $X \\sim \\text{Poisson}(\\lambda)$:
+$$I(\\lambda) = \\frac{n}{\\lambda^2} (\\lambda) = \\frac{n}{\\lambda}$$
+
+The Cramer-Rao Lower Bound for unbiased estimators of $\\lambda$ is:
+$$\\text{CRLB} = \\frac{1}{I(\\lambda)} = \\frac{\\lambda}{n}$$
+
+Now, check the sample mean $\\bar{X}$:
+* It is unbiased: $\\mathbb{E}[\\bar{X}] = \\lambda$
+* Its variance is: $\\text{Var}(\\bar{X}) = \\frac{\\text{Var}(X)}{n} = \\frac{\\lambda}{n}$
+
+Since $\\text{Var}(\\bar{X}) = \\text{CRLB} = \\frac{\\lambda}{n}$, the sample mean exactly achieves the Cramer-Rao Lower Bound. Thus, $\\bar{X}$ is an **efficient** and **UMVUE** (Uniformly Minimum-Variance Unbiased Estimator) estimator.`,
+        proofHe: `ראשית, נרשום את פונקציית ההסתברות (PMF) של התפלגות פואסון:
+$$f(x; \\lambda) = \\frac{e^{-\\lambda} \\lambda^x}{x!}$$
+
+נפעיל לוגריתם טבעי:
+$$\\ln f(x; \\lambda) = -\\lambda + x \\ln \\lambda - \\ln(x!)$$
+
+נגזור פעם ראשונה לפי למדא:
+$$\\frac{\\partial}{\\partial \\lambda} \\ln f(x; \\lambda) = -1 + \\frac{x}{\\lambda}$$
+
+נגזור פעם שנייה לפי למדא:
+$$\\frac{\\partial^2}{\\partial \\lambda^2} \\ln f(x; \\lambda) = -\\frac{x}{\\lambda^2}$$
+
+כעת, נחשב את מידע פישר $I(\\lambda)$ עבור מדגם בגודל $n$:
+$$I(\\lambda) = -n \\mathbb{E}\\left[ \\frac{\\partial^2}{\\partial \\lambda^2} \\ln f(X; \\lambda) \\right] = -n \\mathbb{E}\\left[ -\\frac{X}{\\lambda^2} \\right] = \\frac{n}{\\lambda^2} \\mathbb{E}[X]$$
+
+מכיוון ש-$X \\sim \\text{Poisson}(\\lambda)$, מתקיים $\\mathbb{E}[X] = \\lambda$:
+$$I(\\lambda) = \\frac{n}{\\lambda^2} (\\lambda) = \\frac{n}{\\lambda}$$\n\nחסם קרמר-ראו (CRLB) עבור אומדים בלתי מוטים ל-$\\lambda$ הוא:\n$$\\text{CRLB} = \\frac{1}{I(\\lambda)} = \\frac{\\lambda}{n}$$\n\nכעת נבחן את ממוצע המדגם $\\bar{X}$:\n* הוא בלתי מוטה: $\\mathbb{E}[\\bar{X}] = \\lambda$\n* השונות שלו היא: $\\text{Var}(\\bar{X}) = \\frac{\\text{Var}(X)}{n} = \\frac{\\lambda}{n}$\n\nכיוון ש-$Var(\\bar{X}) = CRLB = \\frac{\\lambda}{n}$, ממוצע המדגם משיג בדיוק את חסם קרמר-ראו. לכן $\\bar{X}$ הוא אומד **יעיל** ו-**UMVUE** (אומד בלתי מוטה בעל שונות מינימלית במידה שווה).`
+      },
+      {
+        id: 'prac-stats-11-3',
+        title: 'Practice 3: Least Squares Regression Line',
+        titleHe: 'תרגול 3: התאמת קו רגרסיה בריבועים פחותים',
+        isPractice: true,
+        content: `Given a small dataset of $(X, Y)$ pairs: $(1, 2), (2, 3), (3, 7)$. Find the least squares regression line $Y = \\beta_0 + \\beta_1 X$.`,
+        contentHe: 'בהינתן אוסף נתונים קטן של זוגות $(X, Y)$: $(1, 2), (2, 3), (3, 7)$. מצאו את קו הרגרסיה בריבועים פחותים $Y = \\beta_0 + \\beta_1 X$.',
+        proof: `We compile the sums and averages for the data points:
+* $n = 3$
+* $\\bar{X} = \\frac{1+2+3}{3} = 2$
+* $\\bar{Y} = \\frac{2+3+7}{3} = 4$
+
+We construct the components for the slope $\\beta_1$:
+* $X_1 - \\bar{X} = 1 - 2 = -1 \\implies (X_1 - \\bar{X})^2 = 1$
+* $X_2 - \\bar{X} = 2 - 2 = 0 \\implies (X_2 - \\bar{X})^2 = 0$
+* $X_3 - \\bar{X} = 3 - 2 = 1 \\implies (X_3 - \\bar{X})^2 = 1$
+* Sum of Squared Deviations of $X$:
+$$\\sum_{i=1}^3 (X_i - \\bar{X})^2 = 1 + 0 + 1 = 2$$
+
+Now, calculate the sum of cross-products:
+* $(X_1 - \\bar{X})(Y_1 - \\bar{Y}) = (-1) \\cdot (2 - 4) = 2$
+* $(X_2 - \\bar{X})(Y_2 - \\bar{Y}) = 0 \\cdot (3 - 4) = 0$
+* $(X_3 - \\bar{X})(Y_3 - \\bar{Y}) = 1 \\cdot (7 - 4) = 3$
+* Sum of Cross-Products:
+$$\\sum_{i=1}^3 (X_i - \\bar{X})(Y_i - \\bar{Y}) = 2 + 0 + 3 = 5$$
+
+Calculate the Slope $\\hat{\\beta}_1$:
+$$\\hat{\\beta}_1 = \\frac{\\sum (X_i - \\bar{X})(Y_i - \\bar{Y})}{\\sum (X_i - \\bar{X})^2} = \\frac{5}{2} = 2.5$$
+
+Calculate the Intercept $\\hat{\\beta}_0$:
+$$\\hat{\\beta}_0 = \\bar{Y} - \\hat{\\beta}_1 \\bar{X} = 4 - 2.5(2) = 4 - 5 = -1$$
+
+Thus, the least squares regression line is:
+$$Y = -1 + 2.5 X$$`,
+        proofHe: `נחשב את הסכומים והממוצעים עבור נקודות הנתונים המדגמיות:
+* $n = 3$
+* ממוצע $X$: $\\bar{X} = \\frac{1+2+3}{3} = 2$
+* ממוצע $Y$: $\\bar{Y} = \\frac{2+3+7}{3} = 4$
+
+נכין את הרכיבים עבור חישוב השיפוע $\\beta_1$:
+* $X_1 - \\bar{X} = 1 - 2 = -1 \\implies (X_1 - \\bar{X})^2 = 1$
+* $X_2 - \\bar{X} = 2 - 2 = 0 \\implies (X_2 - \\bar{X})^2 = 0$
+* $X_3 - \\bar{X} = 3 - 2 = 1 \\implies (X_3 - \\bar{X})^2 = 1$
+* סכום הסטטיות הריבועיות של $X$:
+$$\\sum_{i=1}^3 (X_i - \\bar{X})^2 = 1 + 0 + 1 = 2$$
+
+כעת נחשב את סכום מכפלות הסטיות המשותפות:
+* $(X_1 - \\bar{X})(Y_1 - \\bar{Y}) = (-1) \\cdot (2 - 4) = 2$
+* $(X_2 - \\bar{X})(Y_2 - \\bar{Y}) = 0 \\cdot (3 - 4) = 0$
+* $(X_3 - \\bar{X})(Y_3 - \\bar{Y}) = 1 \\cdot (7 - 4) = 3$
+* סכום המכפלות:
+$$\\sum_{i=1}^3 (X_i - \\bar{X})(Y_i - \\bar{Y}) = 2 + 0 + 3 = 5$$
+
+נחשב את השיפוע $\\hat{\\beta}_1$:
+$$\\hat{\\beta}_1 = \\frac{\\sum (X_i - \\bar{X})(Y_i - \\bar{Y})}{\\sum (X_i - \\bar{X})^2} = \\frac{5}{2} = 2.5$$
+
+נחשב את החותך $\\hat{\\beta}_0$:
+$$\\hat{\\beta}_0 = \\bar{Y} - \\hat{\\beta}_1 \\bar{X} = 4 - 2.5(2) = 4 - 5 = -1$$
+
+לכן קו הרגרסיה בריבועים פחותים הוא:
+$$Y = -1 + 2.5 X$$`
+      },
+      {
+        id: 'prac-stats-11-4',
+        title: 'Practice 4: Residuals and Noise Variance',
+        titleHe: 'תרגול 4: שאריות ואומדן שונות הרעש',
+        isPractice: true,
+        content: `Using the regression line from Practice 3 ($Y = -1 + 2.5 X$), calculate the residuals $e_i = Y_i - \\hat{Y}_i$ for each point and estimate the noise variance $\\sigma^2$ using the unbiased estimator $S^2 = \\frac{\\sum e_i^2}{n-2}$.`,
+        contentHe: 'בהתבסס על קו הרגרסיה מתרגול 3 ($Y = -1 + 2.5 X$), חשבו את השאריות $e_i = Y_i - \\hat{Y}_i$ עבור כל נקודה ואמדו את שונות הרעש $\\sigma^2$ באמצעות האומד הבלתי מוטה $S^2 = \\frac{\\sum e_i^2}{n-2}$.',
+        proof: `We calculate predicted values $\\hat{Y}_i$ and residuals $e_i = Y_i - \\hat{Y}_i$:
+
+1. **For $X_1 = 1, Y_1 = 2$**:
+* $\\hat{Y}_1 = -1 + 2.5(1) = 1.5$
+* $e_1 = 2 - 1.5 = 0.5 \\implies e_1^2 = 0.25$
+
+2. **For $X_2 = 2, Y_2 = 3$**:
+* $\\hat{Y}_2 = -1 + 2.5(2) = 4$
+* $e_2 = 3 - 4 = -1 \\implies e_2^2 = 1.0$
+
+3. **For $X_3 = 3, Y_3 = 7$**:
+* $\\hat{Y}_3 = -1 + 2.5(3) = 6.5$
+* $e_3 = 7 - 6.5 = 0.5 \\implies e_3^2 = 0.25$
+
+Sum of Squared Residuals (SSE):
+$$\\sum_{i=1}^3 e_i^2 = 0.25 + 1.0 + 0.25 = 1.5$$
+
+Estimating noise variance $S^2$ (with $n-2 = 1$ degree of freedom):
+$$S^2 = \\frac{\\sum e_i^2}{n-2} = \\frac{1.5}{3-2} = \\frac{1.5}{1} = 1.5$$
+
+Thus, our unbiased estimate for the noise variance $\\sigma^2$ is:
+$$S^2 = 1.5$$`,
+        proofHe: `נחשב את הערכים המנובאים $\\hat{Y}_i$ ואת השאריות $e_i = Y_i - \\hat{Y}_i$:
+
+1. **עבור $X_1 = 1, Y_1 = 2$**:
+* $\\hat{Y}_1 = -1 + 2.5(1) = 1.5$
+* $e_1 = 2 - 1.5 = 0.5 \\implies e_1^2 = 0.25$
+
+2. **עבור $X_2 = 2, Y_2 = 3$**:
+* $\\hat{Y}_2 = -1 + 2.5(2) = 4$
+* $e_2 = 3 - 4 = -1 \\implies e_2^2 = 1.0$
+
+3. **עבור $X_3 = 3, Y_3 = 7$**:
+* $\\hat{Y}_3 = -1 + 2.5(3) = 6.5$
+* $e_3 = 7 - 6.5 = 0.5 \\implies e_3^2 = 0.25$
+
+סכום ריבועי השאריות (SSE):
+$$\\sum_{i=1}^3 e_i^2 = 0.25 + 1.0 + 0.25 = 1.5$$
+
+נאמוד את שונות הרעש $S^2$ (עם $n-2 = 1$ דרגת חופש):
+$$S^2 = \\frac{\\sum e_i^2}{n-2} = \\frac{1.5}{3-2} = \\frac{1.5}{1} = 1.5$$
+
+לכן, האומד הבלתי מוטה לשונות הרעש $\\sigma^2$ הוא:
+$$S^2 = 1.5$$`
+      },
+      {
+        id: 'prac-stats-11-5',
+        title: 'Practice 5: Consistency Proof',
+        titleHe: 'תרגול 5: הוכחת עקביות של אומד',
+        isPractice: true,
+        content: `Let $X_1, \\dots, X_n$ be i.i.d. samples from $U(0, \\theta)$. Show that the estimator $\\hat{\\theta}_n = \\frac{n+1}{n} X_{(n)}$ (where $X_{(n)} = \\max(X_1, \\dots, X_n)$) is consistent for $\\theta$.`,
+        contentHe: 'יהי מדגם מקרי $X_1, \\dots, X_n$ בלתי תלויים ובעלי התפלגות זהה מהתפלגות אחידה $U(0, \\theta)$. הוכיחו כי האומד $\\hat{\\theta}_n = \\frac{n+1}{n} X_{(n)}$ (כאשר $X_{(n)} = \\max(X_1, \\dots, X_n)$) הוא אומד עקבי עבור $\\theta$.',
+        proof: `We analyze the maximum order statistic $X_{(n)}$:
+* Its CDF: $F_{X_{(n)}}(t) = P(X_{(n)} \\le t) = [P(X_i \\le t)]^n = \\left(\\frac{t}{\\theta}\\right)^n$ for $0 \\le t \\le \\theta$.
+* Its PDF: $f_{X_{(n)}}(t) = \\frac{d}{dt} F_{X_{(n)}}(t) = \\frac{n t^{n-1}}{\\theta^n}$.
+
+Calculate the expectation:
+$$\\mathbb{E}[X_{(n)}] = \\int_0^{\\theta} t \\cdot \\frac{n t^{n-1}}{\\theta^n} \\, dt = \\frac{n}{\\theta^n} \\int_0^{\\theta} t^n \\, dt = \\frac{n}{\\theta^n} \\left[ \\frac{t^{n+1}}{n+1} \\right]_0^{\\theta} = \\frac{n}{n+1} \\theta$$
+
+Thus, $\\hat{\\theta}_n = \\frac{n+1}{n} X_{(n)}$ is exactly unbiased:
+$$\\mathbb{E}[\\hat{\\theta}_n] = \\frac{n+1}{n} \\mathbb{E}[X_{(n)}] = \\theta \\implies \\text{Bias}(\\hat{\\theta}_n) = 0$$
+
+Calculate the second moment:
+$$\\mathbb{E}[X_{(n)}^2] = \\int_0^{\\theta} t^2 \\cdot \\frac{n t^{n-1}}{\\theta^n} \\, dt = \\frac{n}{\\theta^n} \\int_0^{\\theta} t^{n+1} \\, dt = \\frac{n}{\\theta^n} \\left[ \\frac{t^{n+2}}{n+2} \\right]_0^{\\theta} = \\frac{n}{n+2} \\theta^2$$
+
+Find the variance of $X_{(n)}$:
+$$\\text{Var}(X_{(n)}) = \\mathbb{E}[X_{(n)}^2] - (\\mathbb{E}[X_{(n)}])^2 = \\frac{n}{n+2}\\theta^2 - \\left(\\frac{n}{n+1}\\right)^2\\theta^2 = \\frac{n}{(n+2)(n+1)^2} \\theta^2$$
+
+Now, find the variance of $\\hat{\\theta}_n$:
+$$\\text{Var}(\\hat{\\theta}_n) = \\left( \\frac{n+1}{n} \\right)^2 \\text{Var}(X_{(n)}) = \\frac{(n+1)^2}{n^2} \\cdot \\frac{n}{(n+2)(n+1)^2} \\theta^2 = \\frac{\\theta^2}{n(n+2)}$$
+
+**Consistency Check**:
+* As $n \\to \\infty$, the bias is zero:
+$$\\lim_{n \\to \\infty} \\text{Bias}(\\hat{\\theta}_n) = 0$$
+* As $n \\to \\infty$, the variance vanishes:
+$$\\lim_{n \\to \\infty} \\text{Var}(\\hat{\\theta}_n) = \\lim_{n \\to \\infty} \\frac{\\theta^2}{n(n+2)} = 0$$
+
+Since both the bias and variance approach zero as $n \\to \\infty$, the estimator $\\hat{\\theta}_n$ converges in probability to $\\theta$ (by Chebyshev's Inequality), proving that it is a **consistent** estimator.`,
+        proofHe: `ננתח את סטטיסטי הסדר המקסימלי $X_{(n)}$:
+* פונקציית ההתפלגות המצטברת (CDF) שלו: $F_{X_{(n)}}(t) = P(X_{(n)} \\le t) = [P(X_i \\le t)]^n = \\left(\\frac{t}{\\theta}\\right)^n$ עבור $0 \\le t \\le \\theta$.
+* פונקציית הצפיפות (PDF) שלו: $f_{X_{(n)}}(t) = \\frac{d}{dt} F_{X_{(n)}}(t) = \\frac{n t^{n-1}}{\\theta^n}$.
+
+נחשב את התוחלת:
+$$\\mathbb{E}[X_{(n)}] = \\int_0^{\\theta} t \\cdot \\frac{n t^{n-1}}{\\theta^n} \\, dt = \\frac{n}{\\theta^n} \\int_0^{\\theta} t^n \\, dt = \\frac{n}{\\theta^n} \\left[ \\frac{t^{n+1}}{n+1} \\right]_0^{\\theta} = \\frac{n}{n+1} \\theta$$
+
+לכן האומד $\\hat{\\theta}_n = \\frac{n+1}{n} X_{(n)}$ הוא בלתי מוטה לחלוטין:
+$$\\mathbb{E}[\\hat{\\theta}_n] = \\frac{n+1}{n} \\mathbb{E}[X_{(n)}] = \\theta \\implies \\text{הטיה} = 0$$
+
+נחשב את המומנט השני של $X_{(n)}$:
+$$\\mathbb{E}[X_{(n)}^2] = \\int_0^{\\theta} t^2 \\cdot \\frac{n t^{n-1}}{\\theta^n} \\, dt = \\frac{n}{\\theta^n} \\int_0^{\\theta} t^{n+1} \\, dt = \\frac{n}{\\theta^n} \\left[ \\frac{t^{n+2}}{n+2} \\right]_0^{\\theta} = \\frac{n}{n+2} \\theta^2$$
+
+נחשב את השונות של $X_{(n)}$:
+$$\\text{Var}(X_{(n)}) = \\mathbb{E}[X_{(n)}^2] - (\\mathbb{E}[X_{(n)}])^2 = \\frac{n}{n+2}\\theta^2 - \\left(\\frac{n}{n+1}\\right)^2\\theta^2 = \\frac{n}{(n+2)(n+1)^2} \\theta^2$$
+
+כעת נחשב את השונות של האומד $\\hat{\\theta}_n$ (על ידי הכפלה במקדם בריבוע):
+$$\\text{Var}(\\hat{\\theta}_n) = \\left( \\frac{n+1}{n} \\right)^2 \\text{Var}(X_{(n)}) = \\frac{(n+1)^2}{n^2} \\cdot \\frac{n}{(n+2)(n+1)^2} \\theta^2 = \\frac{\\theta^2}{n(n+2)}$$
+
+**בדיקת עקביות**:
+* כאשר $n \\to \\infty$, ההטיה נשארת אפס:
+$$\\lim_{n \\to \\infty} \\text{Bias}(\\hat{\\theta}_n) = 0$$
+* כאשר $n \\to \\infty$, השונות שואפת לאפס:
+$$\\lim_{n \\to \\infty} \\text{Var}(\\hat{\\theta}_n) = \\lim_{n \\to \\infty} \\frac{\\theta^2}{n(n+2)} = 0$$
+
+מכיוון שגם ההטיה וגם השונות שואפות לאפס ככל ש-$n$ גדל, האומד $\\hat{\\theta}_n$ מתכנס בהסתברות אל $\\theta$ (לפי אי-שוויון צ'בישב), מה שמוכיח שהוא אומד **עקבי**.`
+      }
+    ],
+    quiz: [
+      {
+        question: `What is the relationship between the Bias, Variance, and Mean Square Error (MSE) of an estimator?`,
+        questionHe: `מהי מערכת היחסים בין ההטיה, השונות והטעות הריבועית הממוצעת (MSE) של אומד?`,
+        options: [
+          `MSE(\\hat{\\theta}) = Var(\\hat{\\theta}) + [Bias(\\hat{\\theta})]^2`,
+          `Var(\\hat{\\theta}) = MSE(\\hat{\\theta}) + [Bias(\\hat{\\theta})]^2`,
+          `MSE(\\hat{\\theta}) = Var(\\hat{\\theta}) - [Bias(\\hat{\\theta})]^2`,
+          `Bias(\\hat{\\theta}) = Var(\\hat{\\theta}) + MSE(\\hat{\\theta})`
+        ],
+        optionsHe: [
+          `MSE(\\hat{\\theta}) = Var(\\hat{\\theta}) + [Bias(\\hat{\\theta})]^2`,
+          `Var(\\hat{\\theta}) = MSE(\\hat{\\theta}) + [Bias(\\hat{\\theta})]^2`,
+          `MSE(\\hat{\\theta}) = Var(\\hat{\\theta}) - [Bias(\\hat{\\theta})]^2`,
+          `Bias(\\hat{\\theta}) = Var(\\hat{\\theta}) + MSE(\\hat{\\theta})`
+        ],
+        correctAnswerIndex: 0,
+        explanation: `The Mean Square Error is mathematically decomposed into the variance of the estimator plus its squared bias: $MSE(\\hat{\\theta}) = \\mathbb{E}[(\\hat{\\theta}-\\theta)^2] = Var(\\hat{\\theta}) + [\\mathbb{E}[\\hat{\\theta}]-\\theta]^2$.`,
+        explanationHe: `הטעות הריבועית הממוצעת מפורקת מתמטית לשונות של האומד ועוד ריבוע ההטיה שלו: $MSE(\\hat{\\theta}) = \\mathbb{E}[(\\hat{\\theta}-\\theta)^2] = Var(\\hat{\\theta}) + [\\mathbb{E}[\\hat{\\theta}]-\\theta]^2$.`
+      },
+      {
+        question: `In Simple Linear Regression, what does the least squares method minimize?`,
+        questionHe: `ברגרסיה ליניארית פשוטה, מה מביאה למינימום שיטת הריבועים הפחותים?`,
+        options: [
+          `The sum of squared residuals`,
+          `The sum of absolute errors`,
+          `The variance of independent variables`,
+          `The product of standard deviations`
+        ],
+        optionsHe: [
+          `סכום ריבועי השאריות (SSE)`,
+          `סכום השגיאות המוחלטות`,
+          `שונות המשתנים הבלתי תלויים`,
+          `מכפלת סטיות התקן`
+        ],
+        correctAnswerIndex: 0,
+        explanation: `The least squares estimator minimizes the Sum of Squared Residuals (SSE) $\\sum (Y_i - \\hat{Y}_i)^2$, which represents the vertical distances squared from the data points to the fitted line.`,
+        explanationHe: `אומד הריבועים הפחותים ממזער את סכום ריבועי השאריות (SSE) $\\sum (Y_i - \\hat{Y}_i)^2$, המייצג את סכומי ריבועי המרחקים האנכיים של נקודות הנתונים מהקו המותאם.`
+      }
+    ]
+  }
 ];
