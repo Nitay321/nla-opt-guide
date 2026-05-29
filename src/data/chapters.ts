@@ -991,4 +991,805 @@ export const chapters: Chapter[] = [
       }
     ]
   }
+,
+  {
+    id: 'prob-6',
+    courseId: 'prob',
+    chapterNumber: '6',
+    title: 'Chapter 6: Limit Theorems & Convergence',
+    titleHe: 'פרק 6: משפטי גבול והתכנסות משתנים מקריים',
+    intro: 'This chapter covers the foundations of asymptotic probability theory: convergence in probability, convergence in distribution, and mean-square convergence. We study the Laws of Large Numbers (WLLN & SLLN) which guarantee that sample averages converge to their true expectations, the Central Limit Theorem (CLT) which describes the universal normal shape of sums of random variables, and the Delta Method for transforming asymptotic normal variables.',
+    introHe: 'פרק זה עוסק ביסודות של תורת ההסתברות האסימפטוטית: התכנסות בהסתברות, התכנסות בהתפלגות והתכנסות בממוצע ריבועי. נלמד על חוקי המספרים הגדולים (החלש והחזק) המבטיחים כי ממוצעי מדגם מתכנסים לתוחלת האמיתית שלכם, משפט הגבול המרכזי (CLT) המתאר את הצורה הנורמלית האוניברסלית של סכומי משתנים מקריים, ושיטת הדלתא לצורך מציאת התפלגות אסימפטוטית של טרנספורמציות לא-ליניאריות.',
+    motivation: 'In data science and statistics, we almost never have infinite data. Asymptotic theory tells us how our statistical estimators behave as the sample size $n$ grows. Without limit theorems, we could not construct confidence intervals, perform hypothesis tests, or guarantee that machine learning models will generalize to new data as we collect more samples.',
+    motivationHe: 'במדע הנתונים ובסטטיסטיקה, כמעט לעולם אין לנו כמות אינסופית של נתונים. התורה האסימפטוטית מסבירה לנו כיצד האומדים הסטטיסטיים שלנו מתנהגים ככל שגודל המדגם $n$ גדל. ללא משפטי גבול, לא היינו יכולים לבנות מרווחי סמך, לבצע מבחני השערות, או להבטיח שמודלים של למידת מכונה יכללו היטב לנתונים חדשים ככל שנאסוף דגימות נוספות.',
+    definitions: [
+      {
+        id: 'def-prob-6-1',
+        title: 'Types of Convergence & Hierarchy',
+        titleHe: 'סוגי התכנסות של משתנים מקריים והיררכיה',
+        content: 'Let $X_1, X_2, \\dots$ be a sequence of random variables defined on the same probability space, and let $X$ be a random variable.\n\n* **Convergence in Probability**: $X_n \\xrightarrow{P} X$ if for every $\\epsilon > 0$:\n$$\\lim_{n \\to \\infty} \\mathbb{P}(|X_n - X| > \\epsilon) = 0$$\n\n* **Convergence in Distribution (Weak)**: $X_n \\xrightarrow{d} X$ if:\n$$\\lim_{n \\to \\infty} F_{X_n}(x) = F_X(x)$$\nfor all $x \\in \\mathbb{R}$ at which $F_X(x)$ is continuous.\n\n* **Convergence in Mean Square ($L_2$)**: $X_n \\xrightarrow{L_2} X$ if:\n$$\\lim_{n \\to \\infty} \\mathbb{E}[(X_n - X)^2] = 0$$\n\n* **Convergence Almost Surely (a.s.)**: $X_n \\xrightarrow{a.s.} X$ if:\n$$\\mathbb{P}(\\lim_{n \\to \\infty} X_n = X) = 1$$\n\n**The Asymptotic Hierarchy**:\n$$X_n \\xrightarrow{L_2} X \\implies X_n \\xrightarrow{P} X \\implies X_n \\xrightarrow{d} X$$\n$$X_n \\xrightarrow{a.s.} X \\implies X_n \\xrightarrow{P} X \\implies X_n \\xrightarrow{d} X$$',
+        contentHe: 'תהא $X_1, X_2, \\dots$ סדרה של משתנים מקריים המוגדרים על אותו מרחב הסתברות, ויהי $X$ משתנה מקרי.\n\n* **התכנסות בהסתברות**: $X_n \\xrightarrow{P} X$ אם לכל $\\epsilon > 0$ מתקיים:\n$$\\lim_{n \\to \\infty} \\mathbb{P}(|X_n - X| > \\epsilon) = 0$$\n\n* **התכנסות בהתפלגות (התכנסות חלשה)**: $X_n \\xrightarrow{d} X$ אם מתקיים:\n$$\\lim_{n \\to \\infty} F_{X_n}(x) = F_X(x)$$\nלכל נקודה $x \\in \\mathbb{R}$ שבה פונקציית ההתפלגות $F_X(x)$ רציפה.\n\n* **התכנסות בממוצע ריבועי ($L_2$)**: $X_n \\xrightarrow{L_2} X$ אם מתקיים:\n$$\\lim_{n \\to \\infty} \\mathbb{E}[(X_n - X)^2] = 0$$\n\n* **התכנסות כמעט תמיד (כמעט בוודאות)**: $X_n \\xrightarrow{a.s.} X$ אם מתקיים:\n$$\\mathbb{P}(\\lim_{n \\to \\infty} X_n = X) = 1$$\n\n**היררכיית ההתכנסויות**:\n$$X_n \\xrightarrow{L_2} X \\implies X_n \\xrightarrow{P} X \\implies X_n \\xrightarrow{d} X$$\n$$X_n \\xrightarrow{a.s.} X \\implies X_n \\xrightarrow{P} X \\implies X_n \\xrightarrow{d} X$$',
+        simplifiedLogic: 'L2 convergence is the strongest form in standard practice, followed by Almost Sure and Probability. Convergence in Distribution is the weakest because it only requires the CDF shape to match, not the actual values of the variables themselves.',
+        simplifiedLogicHe: 'התכנסות בממוצע ריבועי ($L_2$) והתכנסות כמעט תמיד הן צורות חזקות מאוד של התכנסות, הגוררות התכנסות בהסתברות. התכנסות בהתפלגות היא החלשה ביותר מכיוון שהיא דורשת רק שצורת ה-CDF תתכנס, ללא קשר לערכים המשותפים של המשתנים עצמם (המשתנים אפילו לא חייבים להיות מוגדרים על אותו מרחב מדגם).',
+        toolboxConnection: 'Statistical models use convergence in probability to prove that estimators converge to the true population parameters (consistency).',
+        toolboxConnectionHe: 'מודלים סטטיסטיים משתמשים בהתכנסות בהסתברות כדי להוכיח שאומדים מתכנסים לפרמטרים האמיתיים של האוכלוסייה (תכונת העקביות).',
+        keyTakeaway: 'L2 and Almost Sure imply Probability, which in turn implies Distribution.',
+        keyTakeawayHe: 'התכנסות ב-$L_2$ וכמעט תמיד גוררות התכנסות בהסתברות, אשר גוררת התכנסות בהתפלגות.'
+      },
+      {
+        id: 'def-prob-6-2',
+        title: 'Laws of Large Numbers (WLLN & SLLN)',
+        titleHe: 'חוקי המספרים הגדולים (החלש והחזק)',
+        content: 'Let $X_1, X_2, \\dots$ be a sequence of independent and identically distributed (i.i.d.) random variables with finite expectation $\\mathbb{E}[X_i] = \\mu$. Let $\\bar{X}_n = \\frac{1}{n} \\sum_{i=1}^n X_i$ be the sample average.\n\n* **Weak Law of Large Numbers (WLLN)**: The sample average converges in probability to $\mu$:\n$$\\bar{X}_n \\xrightarrow{P} \\mu \\quad \\text{as } n \\to \\infty$$\nMeaning, for any $\\epsilon > 0$:\n$$\\lim_{n \\to \\infty} \\mathbb{P}(|\\bar{X}_n - \\mu| > \\epsilon) = 0$$\n\n* **Strong Law of Large Numbers (SLLN)**: The sample average converges almost surely to $\mu$:\n$$\\bar{X}_n \\xrightarrow{a.s.} \\mu \\quad \\text{as } n \\to \\infty$$\nMeaning:\n$$\\mathbb{P}\\left(\\lim_{n \\to \\infty} \\bar{X}_n = \\mu\\right) = 1$$',
+        contentHe: 'יהיו $X_1, X_2, \\dots$ סדרה של משתנים מקריים בלתי תלויים ובעלי התפלגות זהה (i.i.d.) עם תוחלת סופית $\\mathbb{E}[X_i] = \\mu$. נסמן את ממוצע המדגם ב-$\\bar{X}_n = \\frac{1}{n} \\sum_{i=1}^n X_i$.\n\n* **החוק החלש של המספרים הגדולים (WLLN)**: ממוצע המדגם מתכנס בהסתברות לתוחלת $\\mu$:\n$$\\bar{X}_n \\xrightarrow{P} \\mu \\quad \\text{כאשר } n \\to \\infty$$\nכלומר, לכל $\\epsilon > 0$ מתקיים:\n$$\\lim_{n \\to \\infty} \\mathbb{P}(|\\bar{X}_n - \\mu| > \\epsilon) = 0$$\n\n* **החוק החזק של המספרים הגדולים (SLLN)**: ממוצע המדגם מתכנס כמעט תמיד לתוחלת $\\mu$:\n$$\\bar{X}_n \\xrightarrow{a.s.} \\mu \\quad \\text{כאשר } n \\to \\infty$$\nכלומר:\n$$\\mathbb{P}\\left(\\lim_{n \\to \\infty} \\bar{X}_n = \\mu\\right) = 1$$',
+        simplifiedLogic: 'WLLN states that for a huge sample, it is highly unlikely for the average to differ from the true mean by more than a tiny epsilon. SLLN is a stronger topological guarantee: the path of the sample averages will converge to the true mean with probability 1.',
+        simplifiedLogicHe: 'החוק החלש אומר שעבור מדגם ענק, ההסתברות שממוצע המדגם יהיה רחוק מהתוחלת האמיתית שואפת לאפס. החוק החזק נותן ערבות חזקה יותר: כמעט כל מסלול בודד של ממוצעי מדגם יתכנס לתוחלת האמיתית בסופו של דבר.',
+        toolboxConnection: 'Monte Carlo simulations rely on the LLN to approximate complex integrals by averaging random samples.',
+        toolboxConnectionHe: 'סימולציות מונטה קרלו מסתמכות על חוק המספרים הגדולים כדי לקרב אינטגרלים מורכבים על ידי מיצוע של דגימות אקראיות.',
+        keyTakeaway: 'The average of many i.i.d. trials converges to the expected value.',
+        keyTakeawayHe: 'הממוצע של ניסויי i.i.d. רבים מתכנס לתוחלת התיאורטית.'
+      },
+      {
+        id: 'def-prob-6-3',
+        title: 'The Central Limit Theorem (CLT)',
+        titleHe: 'משפט הגבול המרכזי (CLT)',
+        content: 'Let $X_1, X_2, \\dots$ be a sequence of i.i.d. random variables with finite mean $\\mathbb{E}[X_i] = \\mu$ and finite variance $\\text{Var}(X_i) = \\sigma^2 > 0$.\nLet $S_n = \\sum_{i=1}^n X_i$ be the sum, and $\\bar{X}_n = \\frac{1}{n} S_n$ be the sample average.\n\nAs $n \\to \\infty$, the standardized average converges in distribution to a standard normal variable:\n$$\\frac{\\bar{X}_n - \\mu}{\\sigma / \\sqrt{n}} = \\frac{S_n - n\\mu}{\\sigma \\sqrt{n}} \\xrightarrow{d} Z \\sim N(0, 1)$$\n\nConsequently, for any $z \\in \\mathbb{R}$:\n$$\\lim_{n \\to \\infty} \\mathbb{P}\\left(\\frac{\\bar{X}_n - \\mu}{\\sigma / \\sqrt{n}} \\le z\\right) = \\Phi(z)$$\nwhere $\\Phi(z)$ is the standard normal cumulative distribution function (CDF).',
+        contentHe: 'יהיו $X_1, X_2, \\dots$ סדרה של משתנים מקריים בלתי תלויים ובעלי התפלגות זהה (i.i.d.) עם תוחלת סופית $\\mathbb{E}[X_i] = \\mu$ ושונות סופית וחיובית $\\text{Var}(X_i) = \\sigma^2 > 0$.\nנסמן ב-$S_n = \\sum_{i=1}^n X_i$ את סכום המשתנים, וב-$\\bar{X}_n = \\frac{1}{n} S_n$ את ממוצע המדגם.\n\nכאשר $n \\to \\infty$, הממוצע הממוקנן והמתוקנן מתכנס בהתפלגות למשתנה נורמלי סטנדרטי:\n$$\\frac{\\bar{X}_n - \\mu}{\\sigma / \\sqrt{n}} = \\frac{S_n - n\\mu}{\\sigma \\sqrt{n}} \\xrightarrow{d} Z \\sim N(0, 1)$$\n\nכתוצאה מכך, לכל $z \\in \\mathbb{R}$ מתקיים:\n$$\\lim_{n \\to \\infty} \\mathbb{P}\\left(\\frac{\\bar{X}_n - \\mu}{\\sigma / \\sqrt{n}} \\le z\\right) = \\Phi(z)$$\nכאשר $\\Phi(z)$ היא פונקציית ההתפלגות המצטברת (CDF) של משתנה נורמלי סטנדרטי.',
+        simplifiedLogic: 'No matter what distribution the original variables have (as long as they have finite variance), the sum or average of a large number of them will look like a normal bell curve. This is why the normal distribution is so ubiquitous in nature.',
+        simplifiedLogicHe: 'לא משנה מהי ההתפלגות המקורית של המשתנים (כל עוד יש להם שונות סופית), הסכום או הממוצע של מספר רב של משתנים כאלו תמיד יראה כמו עקומת פעמון נורמלית. זו הסיבה שההתפלגות הנורמלית נפוצה כל כך בטבע ובמדע.',
+        toolboxConnection: 'The CLT allows engineers and scientists to compute probabilities for averages of measurements (e.g. noise levels, sample surveys) without knowing the underlying distribution.',
+        toolboxConnectionHe: 'משפט הגבול המרכזי מאפשר למהנדסים ומדענים לחשב הסתברויות עבור ממוצעי מדידות (למשל רמות רעש, סקרי מדגם) מבלי לדעת את ההתפלגות המקורית של האוכלוסייה.',
+        keyTakeaway: 'Sums of many i.i.d. variables are approximately normally distributed.',
+        keyTakeawayHe: 'סכומים של משתני i.i.d. רבים מתפלגים בקירוב נורמלית.'
+      },
+      {
+        id: 'def-prob-6-4',
+        title: 'The Delta Method',
+        titleHe: 'שיטת הדלתא',
+        content: 'The **Delta Method** is a result for finding the asymptotic distribution of a function of a sequence of asymptotically normal random variables.\n\nLet $Y_1, Y_2, \\dots$ be a sequence of random variables such that:\n$$\\sqrt{n}(Y_n - \\theta) \\xrightarrow{d} N(0, \\sigma^2)$$\n\nLet $g: \\mathbb{R} \\to \\mathbb{R}$ be a function that is continuously differentiable at $\\theta$, with $g\'(\\theta) \\ne 0$.\nThen:\n$$\\sqrt{n}(g(Y_n) - g(\\theta)) \\xrightarrow{d} N(0, \\sigma^2 [g\'(\\theta)]^2)$$\n\nIn other words, $g(Y_n)$ is asymptotically normal:\n$$g(Y_n) \\approx N\\left(g(\\theta), \\frac{\\sigma^2 [g\'(\\theta)]^2}{n}\\right)$$',
+        contentHe: '**שיטת הדלתא** היא כלי מתמטי למציאת ההתפלגות האסימפטוטית של פונקציה של סדרת משתנים מקריים המתפלגים אסימפטוטית נורמלית.\n\nתהא $Y_1, Y_2, \\dots$ סדרת משתנים מקריים שעבורה מתקיים:\n$$\\sqrt{n}(Y_n - \\theta) \\xrightarrow{d} N(0, \\sigma^2)$$\n\nתהא $g: \\mathbb{R} \\to \\mathbb{R}$ פונקציה רציפה וגזירה בנקודה $\\theta$, כך ש-$g\'(\\theta) \\ne 0$.\n\nאזי מתקיים:\n$$\\sqrt{n}(g(Y_n) - g(\\theta)) \\xrightarrow{d} N(0, \\sigma^2 [g\'(\\theta)]^2)$$\n\nבמילים אחרות, המשתנה המותמר $g(Y_n)$ מתפלג אסימפטוטית נורמלית:\n$$g(Y_n) \\approx N\\left(g(\\theta), \\frac{\\sigma^2 [g\'(\\theta)]^2}{n}\\right)$$',
+        simplifiedLogic: 'The Delta method uses a first-order Taylor expansion to approximate a non-linear function $g(Y_n)$ around $\\theta$. The variance of the transformation is scaled by the squared slope of the function at that point.',
+        simplifiedLogicHe: 'שיטת הדלתא משתמשת בפיתוח טיילור מסדר ראשון כדי לקרב פונקציה לא-ליניארית $g(Y_n)$ סביב הנקודה $\\theta$. השונות של המשתנה המותמר מוגדלת או מוקטנת בהתאם לריבוע השיפוע של הפונקציה באותה נקודה.',
+        toolboxConnection: 'Used to derive the standard errors and confidence intervals for non-linear parameters, such as odds ratios, logarithms of estimators, or ratios of variances.',
+        toolboxConnectionHe: 'משמשת לגזירת שגיאות תקן ומרווחי סמך עבור פרמטרים לא-ליניאריים, כגון יחסי סיכויים, לוגריתמים של אומדים, או יחסי שונויות.',
+        keyTakeaway: 'Smooth transformations of asymptotically normal estimators remain asymptotically normal.',
+        keyTakeawayHe: 'טרנספורמציות חלקות של אומדים נורמליים אסימפטוטית נותרות נורמליות אסימפטוטית.'
+      },
+      {
+        id: 'prac-prob-6-1',
+        title: 'Practice 1: Convergence in Probability of the Maximum of Uniform Variables',
+        titleHe: 'תרגול 1: התכנסות בהסתברות של מקסימום משתנים אחידים',
+        isPractice: true,
+        content: 'Let $X_1, X_2, \\dots, X_n$ be independent and identically distributed random variables with $X_i \\sim U(0, \\theta)$ for some unknown parameter $\\theta > 0$. Let $X_{(n)} = \\max(X_1, \\dots, X_n)$ be the sample maximum.\n\n1. Derive the CDF of $X_{(n)}$.\n2. Show that $X_{(n)} \\xrightarrow{P} \\theta$ as $n \\to \\infty$.',
+        contentHe: 'יהיו $X_1, X_2, \\dots, X_n$ משתנים מקריים בלתי תלויים ובעלי התפלגות זהה עם $X_i \\sim U(0, \\theta)$ עבור פרמטר לא ידוע $\\theta > 0$. נסמן ב-$X_{(n)} = \\max(X_1, \\dots, X_n)$ את מקסימום המדגם.\n\n1. פתחו את פונקציית ההתפלגות המצטברת (CDF) של $X_{(n)}$.\n2. הוכיחו כי $X_{(n)} \\xrightarrow{P} \\theta$ כאשר $n \\to \\infty$.',
+        simplifiedLogic: 'The sample maximum $X_{(n)}$ will always be smaller than or equal to the upper bound $\\theta$. As we draw more samples ($n \\to \\infty$), the probability of landing extremely close to $\\theta$ approaches 1, meaning the maximum \"squeezes\" towards the parameter.',
+        simplifiedLogicHe: 'מקסימום המדגם $X_{(n)}$ תמיד יהיה קטן או שווה לחסם העליון $\\theta$. ככל שאנו דוגמים יותר ערכים ($n \\to \\infty$), ההסתברות שמישהו מהם יפול קרוב מאוד לחסם שואפת ל-1, ולכן המקסימום "נדחף" לכיוון הפרמטר.',
+        toolboxConnection: 'The sample maximum is the standard estimator for the boundary of a uniform process, such as the maximum serial number of tanks in wartime tracking.',
+        toolboxConnectionHe: 'מקסימום המדגם הוא האומד הטבעי לחסם העליון של תהליך אחיד, למשל בבעיית מספרי הסדרה של טנקים לצורך אומדן ייצור צבאי.',
+        keyTakeaway: 'The maximum of i.i.d. $U(0, \\theta)$ converges in probability to $\\theta$.',
+        keyTakeawayHe: 'מקסימום המדגם של משתני $U(0, \\theta)$ מתכנס בהסתברות ל-$\\theta$.',
+        proof: '**Step-by-Step Proof:**\n\n**Part 1: Deriving the CDF**\nThe PDF of an individual variable $X_i \\sim U(0, \\theta)$ is:\n$$F_X(x) = \\mathbb{P}(X_i \\le x) = \\frac{x}{\\theta} \\quad \\text{for } 0 \\le x \\le \\theta$$\n\nFor the maximum to be less than or equal to $x$, all individual variables must be less than or equal to $x$. Since they are independent:\n$$F_{X_{(n)}}(x) = \\mathbb{P}(X_{(n)} \\le x) = \\mathbb{P}(\\max(X_1, \\dots, X_n) \\le x) = \\mathbb{P}(X_1 \\le x, \\dots, X_n \\le x)$$\n$$F_{X_{(n)}}(x) = \\prod_{i=1}^n \\mathbb{P}(X_i \\le x) = [F_X(x)]^n = \\left(\\frac{x}{\\theta}\\right)^n \\quad \\text{for } 0 \\le x \\le \\theta$$\n\n**Part 2: Proving Convergence in Probability**\nTo show that $X_{(n)} \\xrightarrow{P} \\theta$, we must prove that for any $\\epsilon > 0$:\n$$\\lim_{n \\to \\infty} \\mathbb{P}(|X_{(n)} - \\theta| > \\epsilon) = 0$$\n\nSince $X_{(n)} \\le \\theta$ almost surely, $|X_{(n)} - \\theta| = \\theta - X_{(n)}$. Thus:\n$$\\mathbb{P}(|X_{(n)} - \\theta| > \\epsilon) = \\mathbb{P}(\\theta - X_{(n)} > \\epsilon) = \\mathbb{P}(X_{(n)} < \\theta - \\epsilon)$$\n\nUsing the CDF derived in Part 1 (for $0 < \\epsilon < \\theta$):\n$$\\mathbb{P}(X_{(n)} < \\theta - \\epsilon) = F_{X_{(n)}}(\\theta - \\epsilon) = \\left(\\frac{\\theta - \\epsilon}{\\theta}\\right)^n = \\left(1 - \\frac{\\epsilon}{\\theta}\\right)^n$$\n\nSince $\\theta > 0$ and $\\epsilon > 0$, we have $0 < 1 - \\frac{\\epsilon}{\\theta} < 1$. Taking the limit as $n \\to \\infty$:\n$$\\lim_{n \\to \\infty} \\mathbb{P}(|X_{(n)} - \\theta| > \\epsilon) = \\lim_{n \\to \\infty} \\left(1 - \\frac{\\epsilon}{\\theta}\\right)^n = 0$$\nFor $\\epsilon \\ge \\theta$, the probability is exactly 0. This completes the rigorous proof that **$X_{(n)} \\xrightarrow{P} \\theta$**.'
+      },
+      {
+        id: 'prac-prob-6-2',
+        title: 'Practice 2: Convergence in Distribution of Rescaled Maximum to Exponential',
+        titleHe: 'תרגול 2: התכנסות בהתפלגות של מקסימום מנורמל להתפלגות מעריכית',
+        isPractice: true,
+        content: 'Let $X_1, X_2, \\dots, X_n \\sim U(0, 1)$ be i.i.d. random variables, and let $X_{(n)} = \\max(X_1, \\dots, X_n)$. Define the rescaled sequence $Y_n = n(1 - X_{(n)})$.\n\n1. Find the CDF of $Y_n$ for a fixed $n$.\n2. Compute the limit of the CDF as $n \\to \\infty$ and identify the limiting distribution.',
+        contentHe: 'יהיו $X_1, X_2, \\dots, X_n \\sim U(0, 1)$ משתנים מקריים בלתי תלויים ובעלי התפלגות זהה, ויהי $X_{(n)} = \\max(X_1, \\dots, X_n)$. נגדיר את הסדרה המנורמלת $Y_n = n(1 - X_{(n)})$.\n\n1. מצאו את פונקציית ההתפלגות המצטברת (CDF) של $Y_n$ עבור $n$ קבוע.\n2. חשבו את גבול ה-CDF כאשר $n \\to \\infty$ וזהו את התפלגות הגבול.',
+        simplifiedLogic: 'The variable $1 - X_{(n)}$ is the distance between the maximum and the upper bound 1, which shrinks at rate $1/n$. By scaling this distance by $n$, we keep the variable from collapsing to zero, revealing an Exponential limiting shape.',
+        simplifiedLogicHe: 'המשתנה $1 - X_{(n)}$ מייצג את המרחק בין המקסימום לגבול העליון 1, אשר מתכווץ בקצב של $1/n$. על ידי הכפלת המרחק הזה ב-$n$, אנו מונעים מהמשתנה לקרוס לאפס ומקבלים התפלגות גבול מעריכית יציבה.',
+        toolboxConnection: 'This rescaling is a core component of Extreme Value Theory (EVT), which is used to model rare disaster events like floods, stock market crashes, or network failures.',
+        toolboxConnectionHe: 'פעולה זו היא מרכיב מרכזי בתורת הערכים הקיצוניים (EVT), המשמשת למידול אירועי אסון נדירים כגון שיטפונות, קריסות בורסה או כשלים ברשת.',
+        keyTakeaway: 'The rescaled distance $n(1 - X_{(n)})$ converges in distribution to $Exp(1)$.',
+        keyTakeawayHe: 'המרחק המנורמל $n(1 - X_{(n)})$ מתכנס בהתפלגות להתפלגות מעריכית $Exp(1)$.',
+        proof: '**Step-by-Step Derivation:**\n\n**Part 1: Finding the CDF of $Y_n$**\nLet\'s write the CDF of $Y_n$ for $y \\ge 0$:\n$$F_{Y_n}(y) = \\mathbb{P}(Y_n \\le y) = \\mathbb{P}(n(1 - X_{(n)}) \\le y) = \\mathbb{P}\\left(1 - X_{(n)} \\le \\frac{y}{n}\\right)$$\n$$F_{Y_n}(y) = \\mathbb{P}\\left(X_{(n)} \\ge 1 - \\frac{y}{n}\\right) = 1 - \\mathbb{P}\\left(X_{(n)} < 1 - \\frac{y}{n}\\right) = 1 - F_{X_{(n)}}\\left(1 - \\frac{y}{n}\\right)$$\n\nUsing the CDF of $X_{(n)}$ for $U(0, 1)$ variables: $F_{X_{(n)}}(x) = x^n$ for $0 \\le x \\le 1$. Therefore, for $0 \\le y \\le n$:\n$$F_{Y_n}(y) = 1 - \\left(1 - \\frac{y}{n}\right)^n$$\n\n**Part 2: Computing the Limit as $n \\to \\infty$**\nWe evaluate the limit of the CDF for any fixed $y \\ge 0$:\n$$\\lim_{n \\to \\infty} F_{Y_n}(y) = \\lim_{n \\to \\infty} \\left[ 1 - \\left(1 - \\frac{y}{n}\right)^n \\right]$$\n\nRecall the standard calculus limit:\n$$\\lim_{n \\to \\infty} \\left(1 - \\frac{y}{n}\right)^n = e^{-y}$$\n\nTherefore, we have:\n$$\\lim_{n \\to \\infty} F_{Y_n}(y) = 1 - e^{-y} \\quad \\text{for } y \\ge 0$$\n\nThis limit $F_Y(y) = 1 - e^{-y}$ for $y \\ge 0$ is precisely the CDF of the **Exponential distribution with parameter $\\lambda = 1$**. Thus, by definition, **$Y_n \\xrightarrow{d} \\text{Exp}(1)$**.'
+      },
+      {
+        id: 'prac-prob-6-3',
+        title: 'Practice 3: Central Limit Theorem Application to Lifetimes of Components',
+        titleHe: 'תרגול 3: יישום משפט הגבול המרכזי על אורך חיים של רכיבים',
+        isPractice: true,
+        content: 'A facility uses 100 independent lightbulbs, where the lifetime of each bulb is exponentially distributed with a mean of 10 hours: $X_i \\sim \\text{Exp}(\\lambda = 0.1)$.\n\n1. Identify the expectation and variance of an individual bulb\'s lifetime.\n2. Use the Central Limit Theorem to calculate the approximate probability that the sum of the lifetimes of the 100 bulbs exceeds 1050 hours.',
+        contentHe: 'מפעל משתמש ב-100 נורות תאורה עצמאיות, כאשר אורך החיים של כל נורה מתפלג מעריכית עם ממוצע של 10 שעות: $X_i \\sim \\text{Exp}(\\lambda = 0.1)$.\n\n1. הגדירו את התוחלת והשונות של אורך החיים של נורה בודדת.\n2. השתמשו במשפט הגבול המרכזי כדי לחשב את ההסתברות המקורבת שסכום אורכי החיים של 100 הנורות יעלה על 1050 שעות.',
+        simplifiedLogic: 'Instead of computing the exact distribution of the sum (which is a complex Erlang distribution), the CLT lets us approximate the sum as a simple Normal distribution because the number of independent variables ($n=100$) is large.',
+        simplifiedLogicHe: 'במקום לחשב את ההתפלגות המדויקת של הסכום (שהיא התפלגות ארלנג מורכבת), משפט הגבול המרכזי מאפשר לנו לקרב את הסכום באמצעות התפלגות נורמלית פשוטה כיוון שמספר הרכיבים הבלתי תלויים ($n=100$) הוא גדול.',
+        toolboxConnection: 'Operations research and reliability engineering use CLT approximations to schedule hardware replacement cycles and manage inventory buffer sizes.',
+        toolboxConnectionHe: 'חקר ביצועים והנדסת אמינות משתמשים בקירובי CLT כדי לתזמן מחזורי החלפת חומרה ולנהל מלאי רכיבים רזרביים.',
+        keyTakeaway: 'CLT converts complex sums of independent variables into straightforward normal calculations.',
+        keyTakeawayHe: 'משפט הגבול המרכזי הופך סכומים מורכבים של משתנים עצמאיים לחישובים נורמליים פשוטים.',
+        proof: '**Step-by-Step Solution:**\n\n**Part 1: Expectation and Variance of a Bulb**\nFor an exponentially distributed random variable $X_i \\sim \\text{Exp}(\\lambda)$ with rate $\\lambda = 0.1$:\n* **Expectation**:\n$$\\mu = \\mathbb{E}[X_i] = \\frac{1}{\\lambda} = \\frac{1}{0.1} = 10 \\text{ hours}$$\n* **Variance**:\n$$\\sigma^2 = \\text{Var}(X_i) = \\frac{1}{\\lambda^2} = \\frac{1}{0.01} = 100$$\n\n**Part 2: Applying the CLT to the Sum**\nLet $S_{100} = \\sum_{i=1}^{100} X_i$ be the sum of the lifetimes. The sample size is $n = 100$. By the Central Limit Theorem, the sum $S_n$ is approximately normally distributed:\n$$S_n \\approx N(n\\mu, n\\sigma^2) = N(100 \\cdot 10, 100 \\cdot 100) = N(1000, 10000)$$\n\nThe expectation of the sum is $\\mathbb{E}[S_{100}] = 1000$ and the standard deviation is:\n$$\\text{SD}(S_{100}) = \\sqrt{10000} = 100$$\n\nWe wish to approximate the probability $\\mathbb{P}(S_{100} > 1050)$:\n$$\\mathbb{P}(S_{100} > 1050) = \\mathbb{P}\\left( \\frac{S_{100} - \\mathbb{E}[S_{100}]}{\\text{SD}(S_{100})} > \\frac{1050 - 1000}{100} \\right)$$\n$$\\mathbb{P}(S_{100} > 1050) \\approx \\mathbb{P}(Z > 0.5) = 1 - \\Phi(0.5)$$\n\nUsing standard normal tables, we find $\\Phi(0.5) \\approx 0.6915$. Therefore:\n$$\\mathbb{P}(S_{100} > 1050) \\approx 1 - 0.6915 = 0.3085 \\quad (30.85\\%)$$\n\nThis gives a highly accurate approximation of the replacement probability.'
+      },
+      {
+        id: 'prac-prob-6-4',
+        title: 'Practice 4: Asymptotic Quantiles via the Delta Method',
+        titleHe: 'תרגול 4: חישוב קוונטילים אסימפטוטיים באמצעות שיטת הדלתא',
+        isPractice: true,
+        content: 'Let $X_1, \\dots, X_n \\sim N(1, 4)$ be i.i.d. random variables. Define the sample mean $\\bar{X}_n = \\frac{1}{n} \\sum_{i=1}^n X_i$, and the log-normal transformation $Y_n = e^{\\bar{X}_n}$.\n\n1. Find the asymptotic distribution of $\\sqrt{n}(Y_n - e)$ using the Delta Method.\n2. For $n = 16$, find the approximate $0.75$-quantile of $Y_n$.',
+        contentHe: 'יהיו $X_1, \\dots, X_n \\sim N(1, 4)$ משתנים מקריים בלתי תלויים ובעלי התפלגות זהה. נסמן את ממוצע המדגם ב-$\\bar{X}_n = \\frac{1}{n} \\sum_{i=1}^n X_i$, ואת הטרנספורמציה $Y_n = e^{\\bar{X}_n}$.\n\n1. מצאו את ההתפלגות האסימפטוטית של $\\sqrt{n}(Y_n - e)$ באמצעות שיטת הדלתא.\n2. עבור $n = 16$, מצאו את הקוונטיל (אחוזון) ה-$0.75$ המקורב של $Y_n$.',
+        simplifiedLogic: 'Since the sample average is normal, its exponent $e^{\\bar{X}_n}$ has a non-linear shape. The Delta method projects this non-linear function back into the normal space locally, giving a standard bell curve centered at the transformed mean $e$ with a variance scaled by the derivative $(e^{\\mu})^2$.',
+        simplifiedLogicHe: 'מאחר שממוצע המדגם הוא נורמלי, המעריך שלו $e^{\\bar{X}_n}$ מקבל צורה לא-ליניארית. שיטת הדלתא מציגה את הפונקציה הלא-ליניארית הזו כקירוב ליניארי מקומי, מה שמאפשר לקבל עקומת פעמון נורמלית המתורגמת לתוחלת המותמרת $e$ עם שונות המוכפלת בריבוע הנגזרת $(e^{\\mu})^2$.',
+        toolboxConnection: 'The Delta Method is critical in finance and statistics to evaluate the variance of exponential growths and rates of return.',
+        toolboxConnectionHe: 'שיטת הדלתא קריטית במימון ובסטטיסטיקה כדי להעריך את השונות של צמיחה מעריכית ושיעורי תשואה.',
+        keyTakeaway: 'The Delta Method allows us to calculate quantiles for complex non-linear estimators.',
+        keyTakeawayHe: 'שיטת הדלתא מאפשרת לנו לחשב אחוזונים (קוונטילים) עבור אומדים לא-ליניאריים מורכבים.',
+        proof: '**Step-by-Step Proof and Calculation:**\n\n**Part 1: Finding Asymptotic Distribution**\nThe individual variables have mean $\\mu = 1$ and variance $\\sigma^2 = 4$. By the CLT, the sample average is exactly (and asymptotically) normal:\n$$\\sqrt{n}(\\bar{X}_n - 1) \\sim N(0, 4)$$\n\nWe define $g(x) = e^x$. The derivative is $g\'(x) = e^x$. At the expected value $\\mu = 1$, we have $g\'(1) = e^1 = e \\ne 0$. By the Delta Method:\n$$\\sqrt{n}(g(\\bar{X}_n) - g(1)) \\xrightarrow{d} N(0, \\sigma^2 [g\'(1)]^2)$$\n$$\\sqrt{n}(e^{\\bar{X}_n} - e) \\xrightarrow{d} N(0, 4 \\cdot e^2)$$\n\nThus, the asymptotic variance of $Y_n = e^{\\bar{X}_n}$ is **$\\frac{4e^2}{n}$**.\n\n**Part 2: Quantile Calculation for $n = 16$**\nFor $n = 16$, the variance of $Y_n$ is $\\frac{4e^2}{16} = \\frac{e^2}{4}$, so the standard deviation is:\n$$\\text{SD}(Y_n) = \\sqrt{\\frac{e^2}{4}} = \\frac{e}{2}$$\n\nTherefore, we approximate the distribution of $Y_{16}$ as:\n$$Y_{16} \\approx N\\left(e, \\left(\\frac{e}{2}\\right)^2\\right)$$\n\nLet $y_{0.75}$ be the $0.75$-quantile, meaning $\\mathbb{P}(Y_{16} \\le y_{0.75}) = 0.75$. Standardizing:\n$$\\mathbb{P}\\left(\\frac{Y_{16} - e}{e/2} \\le \\frac{y_{0.75} - e}{e/2}\\right) = 0.75$$\n$$\\Phi\\left(\\frac{y_{0.75} - e}{e/2}\\right) \\approx 0.75$$\n\nFrom the standard normal table, the $0.75$-quantile of a standard normal distribution is $z_{0.75} \\approx 0.674$. Thus:\n$$\\frac{y_{0.75} - e}{e/2} \\approx 0.674 \\implies y_{0.75} \\approx e + 0.674 \\cdot \\frac{e}{2} = e(1 + 0.337) = 1.337e$$\n\nUsing $e \\approx 2.71828$, we get:\n$$y_{0.75} \\approx 1.337 \\cdot 2.71828 \\approx 3.634$$\nThis completes the step-by-step quantile calculation.'
+      },
+      {
+        id: 'prac-prob-6-5',
+        title: 'Practice 5: Central Limit Theorem for Product Variables',
+        titleHe: 'תרגול 5: משפט הגבול המרכזי עבור מכפלות משתנים מקריים',
+        isPractice: true,
+        content: 'Let $X_1, X_2, \\dots, X_n$ be i.i.d. random variables with mean $\\mathbb{E}[X_i] = \\mu_X$ and variance $\\text{Var}(X_i) = \\sigma_X^2$. Let $Y_1, Y_2, \\dots, Y_n$ be i.i.d. Rademacher variables independent of the $X_i$, where $\\mathbb{P}(Y_i = 1) = \\mathbb{P}(Y_i = -1) = 0.5$. Define the sum of products $S_n = \\sum_{i=1}^n X_i Y_i$.\n\n1. Find the mean and variance of $W_i = X_i Y_i$.\n2. Apply the Central Limit Theorem to find the asymptotic distribution of $S_n$.',
+        contentHe: 'יהיו $X_1, X_2, \\dots, X_n$ משתנים מקריים בלתי תלויים ובעלי התפלגות זהה עם תוחלת $\\mathbb{E}[X_i] = \\mu_X$ ושונות $\\text{Var}(X_i) = \\sigma_X^2$. יהיו $Y_1, Y_2, \\dots, Y_n$ משתנים מקריים בעלי התפלגות רדמאכר (Rademacher) הבלתי תלויים ב-$X_i$, כאשר $\\mathbb{P}(Y_i = 1) = \\mathbb{P}(Y_i = -1) = 0.5$. נגדיר את סכום המכפלות $S_n = \\sum_{i=1}^n X_i Y_i$.\n\n1. מצאו את התוחלת והשונות של המכפלה הבודדת $W_i = X_i Y_i$.\n2. השתמשו במשפט הגבול המרכזי כדי למצוא את ההתפלגות האסימפטוטית של $S_n$.',
+        simplifiedLogic: 'Multiplying by a Rademacher variable randomizes the sign of $X_i$ to be positive or negative with equal chance. This centers the mean of the products at exactly 0. The variance is preserved as the sum of squared components $\\sigma_X^2 + \\mu_X^2$, allowing us to use CLT standardizations.',
+        simplifiedLogicHe: 'הכפלה במשתנה רדמאכר משנה באופן אקראי את הסימן של $X_i$ לחיובי או שלילי בהסתברות שווה. הדבר ממרכז את תוחלת המכפלות בדיוק ב-0. השונות נשמרת כסכום הרכיבים הריבועיים $\\sigma_X^2 + \\mu_X^2$, מה שמאפשר להשתמש בתקנון CLT.',
+        toolboxConnection: 'Product variables of this form are common in digital communication systems (like BPSK modulation in Wi-Fi and 5G) where message bits are randomized by noise profiles.',
+        toolboxConnectionHe: 'משתני מכפלה מסוג זה נפוצים במערכות תקשורת ספרתית (כמו אפנון BPSK ב-Wi-Fi ו-5G) שבהן ביטים של מידע מוכפלים ברעש אקראי.',
+        keyTakeaway: 'CLT applies to products of independent variables by first evaluating their combined mean and variance.',
+        keyTakeawayHe: 'משפט הגבול המרכזי חל על מכפלות של משתנים בלתי תלויים על ידי חישוב מוקדם של התוחלת והשונות המשולבת שלהם.',
+        proof: '**Step-by-Step Derivation:**\n\n**Part 1: Mean and Variance of $W_i = X_i Y_i$**\n* **Mean**:\nSince $X_i$ and $Y_i$ are independent:\n$$\\mathbb{E}[W_i] = \\mathbb{E}[X_i Y_i] = \\mathbb{E}[X_i] \\cdot \\mathbb{E}[Y_i]$$\n\nFor a Rademacher variable $Y_i$:\n$$\\mathbb{E}[Y_i] = 1 \\cdot 0.5 + (-1) \\cdot 0.5 = 0$$\nTherefore, the expectation of the product is:\n$$\\mathbb{E}[W_i] = \\mu_X \\cdot 0 = 0$$\n\n* **Variance**:\nSince the expectation is 0, the variance is equal to the second moment:\n$$\\text{Var}(W_i) = \\mathbb{E}[W_i^2] - (\\mathbb{E}[W_i])^2 = \\mathbb{E}[X_i^2 Y_i^2] - 0$$\nUsing the independence of $X_i^2$ and $Y_i^2$:\n$$\\text{Var}(W_i) = \\mathbb{E}[X_i^2] \\cdot \\mathbb{E}[Y_i^2]$$\n\nRecall that:\n$$\\mathbb{E}[X_i^2] = \\text{Var}(X_i) + (\\mathbb{E}[X_i])^2 = \\sigma_X^2 + \\mu_X^2$$\n$$\\mathbb{E}[Y_i^2] = (1)^2 \\cdot 0.5 + (-1)^2 \\cdot 0.5 = 0.5 + 0.5 = 1$$\nTherefore, the variance of the product is:\n$$\\text{Var}(W_i) = (\\sigma_X^2 + \\mu_X^2) \\cdot 1 = \\sigma_X^2 + \\mu_X^2$$\n\n**Part 2: Applying the CLT to $S_n$**\nThe variables $W_i = X_i Y_i$ are i.i.d. because the pairs $(X_i, Y_i)$ are i.i.d. Their mean is $\\mu_W = 0$ and their variance is $\\sigma_W^2 = \\sigma_X^2 + \\mu_X^2 > 0$. \n\nBy the Central Limit Theorem, the sum $S_n = \\sum_{i=1}^n W_i$ standardized converges in distribution to standard normal:\n$$\\frac{S_n - n\\mu_W}{\\sigma_W \\sqrt{n}} = \\frac{S_n - 0}{\\sqrt{n(\\sigma_X^2 + \\mu_X^2)}} \\xrightarrow{d} Z \\sim N(0, 1)$$\n\nThis means that for large $n$, $S_n$ is approximately normally distributed:\n$$S_n \\approx N(0, n(\\sigma_X^2 + \\mu_X^2))$$\nThis completes the rigorous proof.'
+      }
+    ],
+    quiz: [
+      {
+        question: 'Let $X_1, X_2, \\dots$ be i.i.d. random variables with mean $\\mu = 3$ and variance $\\sigma^2 = 9$. By the Central Limit Theorem, what is the approximate distribution of the sample average $\\bar{X}_{36}$ based on a sample of size $n=36$?',
+        questionHe: 'יהיו $X_1, X_2, \\dots$ משתנים מקריים בלתי תלויים ובעלי התפלגות זהה (i.i.d.) עם תוחלת $\\mu = 3$ ושונות $\\sigma^2 = 9$. לפי משפט הגבול המרכזי, מהי ההתפלגות המקורבת של ממוצע המדגם $\\bar{X}_{36}$ המבוסס על מדגם בגודל $n=36$?',
+        options: [
+          'N(3, 9)',
+          'N(3, 0.25)',
+          'N(108, 324)',
+          'N(3, 1.5)'
+        ],
+        optionsHe: [
+          'N(3, 9)',
+          'N(3, 0.25)',
+          'N(108, 324)',
+          'N(3, 1.5)'
+        ],
+        correctAnswerIndex: 1,
+        explanation: 'By the Central Limit Theorem, the sample average $\\bar{X}_n$ is approximately normally distributed with mean $\\mu$ and variance $\\sigma^2 / n$. Here, $\\mu = 3$, $\\sigma^2 = 9$, and $n = 36$. Therefore, the variance of the average is $\\text{Var}(\\bar{X}_{36}) = 9 / 36 = 1/4 = 0.25$. Thus, $\\bar{X}_{36} \\approx N(3, 0.25)$.',
+        explanationHe: 'לפי משפט הגבול המרכזי, ממוצע המדגם $\\bar{X}_n$ מתפלג בקירוב נורמלית עם תוחלת $\\mu$ ושונות $\\sigma^2 / n$. כאן, $\\mu = 3$, $\\sigma^2 = 9$ ו-$n = 36$. לכן, שונות הממוצע היא $\\text{Var}(\\bar{X}_{36}) = 9 / 36 = 1/4 = 0.25$. מכאן ש-$\\bar{X}_{36} \\approx N(3, 0.25)$.'
+      },
+      {
+        question: 'Let $\\sqrt{n}(\\hat{\\theta}_n - \\theta) \\xrightarrow{d} N(0, 4)$. What is the asymptotic variance of $g(\\hat{\\theta}_n) = \\ln(\\hat{\\theta}_n)$ at the true parameter $\\theta = 2$ using the Delta Method?',
+        questionHe: 'יהי $\\sqrt{n}(\\hat{\\theta}_n - \\theta) \\xrightarrow{d} N(0, 4)$. מהי השונות האסימפטוטית של $g(\\hat{\\theta}_n) = \\ln(\\hat{\\theta}_n)$ בפרמטר האמיתי $\\theta = 2$ לפי שיטת הדלתא?',
+        options: [
+          '4',
+          '1',
+          '2',
+          '0.5'
+        ],
+        optionsHe: [
+          '4',
+          '1',
+          '2',
+          '0.5'
+        ],
+        correctAnswerIndex: 1,
+        explanation: 'The Delta Method states that if $\\sqrt{n}(Y_n - \\theta) \\xrightarrow{d} N(0, \\sigma^2)$, then the asymptotic variance of $g(Y_n)$ is $\\sigma^2 [g\'(\\theta)]^2$. Here, $\\sigma^2 = 4$, $g(x) = \\ln(x)$, and $g\'(x) = 1/x$. Evaluating at $\\theta = 2$ yields $g\'(2) = 1/2$. The asymptotic variance is $4 \\cdot (1/2)^2 = 4 \\cdot 1/4 = 1$.',
+        explanationHe: 'לפי שיטת הדלתא, אם $\\sqrt{n}(Y_n - \\theta) \\xrightarrow{d} N(0, \\sigma^2)$, אזי השונות האסימפטוטית של $g(Y_n)$ היא $\\sigma^2 [g\'(\\theta)]^2$. כאן, $\\sigma^2 = 4$, $g(x) = \\ln(x)$, ולכן $g\'(x) = 1/x$. הצבה בנקודה $\\theta = 2$ נותנת $g\'(2) = 1/2$. השונות האסימפטוטית היא $4 \\cdot (1/2)^2 = 4 \\cdot 1/4 = 1$.'
+      }
+    ]
+  }
+,
+  {
+    id: 'stats-7',
+    courseId: 'stats',
+    chapterNumber: '7',
+    title: 'Chapter 7: Method of Moments Estimation (MME)',
+    titleHe: 'פרק 7: אמידה בשיטת המומנטים (MME)',
+    intro: 'This chapter introduces the Method of Moments, one of the oldest and most intuitive parameter estimation techniques. We learn how to equate theoretical moments to sample moments, solve for unknown parameters, and establish the consistency of these estimators using the Law of Large Numbers and Continuous Mapping Theorem.',
+    introHe: 'פרק זה מציג את שיטת המומנטים, אחת הטכניקות הוותיקות והאינטואיטיביות ביותר לאמידת פרמטרים. נלמד כיצד להשוות מומנטים תיאורטיים למומנטים של המדגם, לפתור עבור פרמטרים לא ידועים, ולהוכיח את העקביות של אומדים אלו באמצעות חוק המספרים הגדולים ומשפט ההעתקה הרציפה.',
+    motivation: 'In empirical sciences, we must estimate parameters of physical or natural models from finite data. The Method of Moments provides a simple algebraic framework to construct estimators without requiring complex optimization algorithms. It serves as a benchmark and often provides excellent initial values for more advanced estimation procedures.',
+    motivationHe: 'במדעים אמפיריים, עלינו לאמוד פרמטרים של מודלים פיזיקליים או טבעיים מתוך נתונים סופיים. שיטת המומנטים מספקת מסגרת אלגברית פשוטה לבניית אומדים ללא צורך באלגוריתמי אופטימיזציה מורכבים. היא משמשת כנקודת ייחוס ולעתים קרובות מספקת ערכי התחלה מצוינים עבור תהליכי אמידה מתקדמים יותר.',
+    definitions: [
+      {
+        id: 'def-stats-7-1',
+        title: 'Raw & Sample Moments',
+        titleHe: 'מומנטים תיאורטיים ומומנטי מדגם',
+        content: 'Let $X$ be a random variable.\n\n* **The $k$-th Raw Moment (Theoretical)**: The expectation of the $k$-th power of $X$, denoted by $\\mu_k$:\n$$\\mu_k = \\mathbb{E}[X^k]$$\nThis is a deterministic function of the underlying parameters $\\boldsymbol{\\theta} = (\\theta_1, \\dots, \\theta_r)$.\n\n* **The $k$-th Sample Moment**: The average of the $k$-th power of a sample of size $n$, denoted by $M_k$:\n$$M_k = \\frac{1}{n} \\sum_{i=1}^n X_i^k$$\nThis is a statistic (a random variable depending on the observed sample).',
+        contentHe: 'יהי $X$ משתנה מקרי.\n\n* **המומנט התיאורטי מסדר $k$**: התוחלת של החזקה ה-$k$ של $X$, המסומנת ב-\\$\\mu_k\\$:\n$$\\mu_k = \\mathbb{E}[X^k]$$\nזהו ערך דטרמיניסטי המהווה פונקציה של הפרמטרים של ההתפלגות $\\boldsymbol{\\theta} = (\\theta_1, \\dots, \\theta_r)$.\n\n* **מומנט המדגם מסדר $k$**: הממוצע של החזקה ה-$k$ של ערכי המדגם בגודל $n$, המסומן ב-\\$M_k\\$:\n$$M_k = \\frac{1}{n} \\sum_{i=1}^n X_i^k$$\nזהו סטטיסטי (משתנה מקרי התלוי בערכי המדגם הנצפים).',
+        simplifiedLogic: 'Theoretical moments describe the geometry of the entire population probability curve. Sample moments estimate these geometric properties using our finite sample.',
+        simplifiedLogicHe: 'מומנטים תיאורטיים מתארים את התכונות הגיאומטריות של התפלגות האוכלוסייה כולה. מומנטי המדגם מעריכים תכונות גיאומטריות אלו באמצעות המדגם הסופי שברשותנו.',
+        toolboxConnection: 'The first moment is the mean, and the second moment is related to the variance through $\\text{Var}(X) = \\mathbb{E}[X^2] - (\\mathbb{E}[X])^2$. We use these two to solve for up to two parameters.',
+        toolboxConnectionHe: 'המומנט הראשון הוא התוחלת, והמומנט השני קשור לשונות באמצעות הקשר $\\text{Var}(X) = \\mathbb{E}[X^2] - (\\mathbb{E}[X])^2$. אנו משתמשים בשני מומנטים אלו כדי לפתור בעיות עם עד שני פרמטרים לא ידועים.',
+        keyTakeaway: 'Raw moments are theoretical expectations; sample moments are empirical averages.',
+        keyTakeawayHe: 'מומנטים תיאורטיים הם תוחלות מתמטיות; מומנטי מדגם הם ממוצעים אמפיריים.'
+      },
+      {
+        id: 'def-stats-7-2',
+        title: 'Method of Moments Estimation (MME)',
+        titleHe: 'אומד שיטת המומנטים (MME)',
+        content: 'To estimate $r$ unknown parameters $\\boldsymbol{\\theta} = (\\theta_1, \\dots, \\theta_r)$, we equate the first $r$ theoretical raw moments to the first $r$ sample moments:\n$$\\mu_k(\\theta_1, \\dots, \\theta_r) = M_k \\quad \\text{for } k=1, \\dots, r$$\n\nThis forms a system of $r$ equations with $r$ unknowns:\n$$\\begin{cases} \\mathbb{E}[X] = \\bar{X} \\\\\\ \\mathbb{E}[X^2] = \\frac{1}{n}\\sum_{i=1}^n X_i^2 \\\\\\ \\vdots \\\\\\ \\mathbb{E}[X^r] = \\frac{1}{n}\\sum_{i=1}^n X_i^r \\end{cases}$$\n\nSolving this system for $\\theta_j$ yields the **Method of Moments Estimator (MME)**:\n$$\\hat{\\theta}_{j, MME} = g_j(M_1, \\dots, M_r)$$',
+        contentHe: 'כדי לאמוד $r$ פרמטרים לא ידועים $\\boldsymbol{\\theta} = (\\theta_1, \\dots, \\theta_r)$, אנו משווים את $r$ המומנטים התיאורטיים הראשונים ל-$r$ מומנטי המדגם הראשונים:\n$$\\mu_k(\\theta_1, \\dots, \\theta_r) = M_k \\quad \\text{לכל } k=1, \\dots, r$$\n\nהדבר יוצר מערכת של $r$ משוואות עם $r$ נעלמים:\n$$\\begin{cases} \\mathbb{E}[X] = \\bar{X} \\\\\\ \\mathbb{E}[X^2] = \\frac{1}{n}\\sum_{i=1}^n X_i^2 \\\\\\ \\vdots \\\\\\ \\mathbb{E}[X^r] = \\frac{1}{n}\\sum_{i=1}^n X_i^r \\end{cases}$$\n\nפתרון מערכת משוואות זו עבור $\\theta_j$ מגדיר את **אומד שיטת המומנטים (MME)**:\n$$\\hat{\\theta}_{j, MME} = g_j(M_1, \\dots, M_r)$$',
+        simplifiedLogic: 'We assume the sample geometry perfectly matches the population geometry and solve for the parameters that would make this true.',
+        simplifiedLogicHe: 'אנו מניחים שגיאומטריית המדגם תואמת בדיוק לגיאומטריית האוכלוסייה ופותרים עבור ערכי הפרמטרים שיגרמו להנחה זו להתקיים.',
+        toolboxConnection: 'MME is often simple to compute algebraically, bypassing the need for calculus or optimization tools that MLE requires.',
+        toolboxConnectionHe: 'קל מאוד לחשב את אומדי המומנטים בצורה אלגברית, ללא צורך בגזירה או בכלים של אופטימיזציה נומרית הנדרשים לרוב בשיטת רב-הסיכוי (MLE).',
+        keyTakeaway: 'Equate theoretical moments to sample moments and solve for the parameters.',
+        keyTakeawayHe: 'משווים את המומנטים התיאורטיים למומנטי המדגם ופותרים עבור הפרמטרים.'
+      },
+      {
+        id: 'def-stats-7-3',
+        title: 'Consistency of MME',
+        titleHe: 'עקביות אומדי שיטת המומנטים',
+        content: 'An estimator $\\hat{\\theta}_n$ is consistent for $\\theta$ if $\\hat{\\theta}_n \\xrightarrow{P} \\theta$ as $n \\to \\infty$.\n\nBy the **Weak Law of Large Numbers (WLLN)**, each sample moment converges in probability to its theoretical counterpart:\n$$M_k = \\frac{1}{n}\\sum_{i=1}^n X_i^k \\xrightarrow{P} \\mathbb{E}[X^k] = \\mu_k$$\n\nIf the solving function $g_j(M_1, \\dots, M_r)$ is continuous at $(\\mu_1, \\dots, \\mu_r)$, then by the **Continuous Mapping Theorem (CMT)**:\n$$\\hat{\\theta}_{j, MME} = g_j(M_1, \\dots, M_r) \\xrightarrow{P} g_j(\\mu_1, \\dots, \\mu_r) = \\theta_j$$\n\nTherefore, MME estimators are consistent under very general mild continuity conditions.',
+        contentHe: 'אומד $\\hat{\\theta}_n$ נקרא עקבי עבור $\\theta$ אם מתקיים $\\hat{\\theta}_n \\xrightarrow{P} \\theta$ כאשר $n \\to \\infty$.\n\nלפי **החוק החלש של המספרים הגדולים (WLLN)**, כל מומנט מדגם מתכנס בהסתברות למומנט התיאורטי המתאים לו:\n$$M_k = \\frac{1}{n}\\sum_{i=1}^n X_i^k \\xrightarrow{P} \\mathbb{E}[X^k] = \\mu_k$$\n\nאם פונקציית הפתרון $g_j(M_1, \\dots, M_r)$ רציפה בנקודה $(\\mu_1, \\dots, \\mu_r)$, אזי לפי **משפט ההעתקה הרציפה (CMT)** מתקיים:\n$$\\hat{\\theta}_{j, MME} = g_j(M_1, \\dots, M_r) \\xrightarrow{P} g_j(\\mu_1, \\dots, \\mu_r) = \\theta_j$$\n\nמכאן שאומדי שיטת המומנטים הם עקביים תחת תנאי רציפות כלליים ומתונים ביותר.',
+        simplifiedLogic: 'Since sample averages get closer and closer to true expectations as we collect more data, any continuous function of these sample averages will get closer and closer to the true parameter.',
+        simplifiedLogicHe: 'מכיוון שממוצעי המדגם הולכים ומתקרבים לתוחלות האמיתיות ככל שיש לנו יותר נתונים, כל פונקציה רציפה של הממוצעים הללו תתקרב בסופו של דבר לפרמטר האמיתי.',
+        toolboxConnection: 'Consistency is the most vital baseline property for any statistical estimator. It guarantees that our estimate converges to the truth given infinite data.',
+        toolboxConnectionHe: 'עקביות היא התכונה הבסיסית והחשובה ביותר של אומד סטטיסטי כלשהו. היא מבטיחה שהאומדן שלנו אכן יתכנס לאמת בהינתן כמות נתונים אינסופית.',
+        keyTakeaway: 'LLN and Continuous Mapping Theorem guarantee MME consistency.',
+        keyTakeawayHe: 'חוק המספרים הגדולים ומשפט ההעתקה הרציפה מבטיחים את עקביות אומדי המומנטים.'
+      },
+      {
+        id: 'prac-stats-7-1',
+        title: 'Practice 1: MME for Binomial Distribution with Concrete Data',
+        titleHe: 'תרגול 1: אומד שיטת המומנטים להתפלגות בינומית עם נתוני מדגם',
+        isPractice: true,
+        content: 'Let $X_1, \\dots, X_n \\sim \\text{Binomial}(m, p)$ be i.i.d. variables, where the number of trials $m$ is known, and the success probability $p \\in (0, 1)$ is unknown.\n\n1. Find the MME estimator for $p$.\n2. Consider a sample of size $n = 10$ drawn from a $\\text{Binomial}(m=5, p)$ distribution, with the following frequency table:\n   * Value $k$: $0, 1, 2, 3, 4, 5$\n   * Frequency $f_k$: $2, 5, 2, 1, 0, 0$\n   Calculate the empirical value of the MME estimator.',
+        contentHe: 'יהיו $X_1, \\dots, X_n \\sim \\text{Binomial}(m, p)$ משתנים מקריים בלתי תלויים ובעלי התפלגות זהה, כאשר מספר הניסויים $m$ ידוע, והסתברות ההצלחה $p \\in (0, 1)$ אינה ידועה.\n\n1. מצאו את אומד שיטת המומנטים (MME) עבור $p$.\n2. נתבונן במדגם בגודל $n = 10$ מהתפלגות $\\text{Binomial}(m=5, p)$, עם טבלת השכיחויות הבאה:\n   * ערך $k$: $0, 1, 2, 3, 4, 5$\n   * שכיחות $f_k$: $2, 5, 2, 1, 0, 0$\n   חשבו את הערך המספרי של אומד המומנטים במקרה זה.',
+        simplifiedLogic: 'The binomial expectation is $\\mathbb{E}[X] = m p$. To find the success rate $p$, we equate the theoretical average to our sample mean $\\bar{X}$, giving $\\hat{p} = \\bar{X}/m$.',
+        simplifiedLogicHe: 'התוחלת של התפלגות בינומית היא $\\mathbb{E}[X] = m p$. כדי למצוא את שיעור ההצלחה $p$, אנו משווים את התוחלת הזו לממוצע האמפירי של המדגם $\\bar{X}$, ומקבלים $\\hat{p} = \\bar{X}/m$.',
+        toolboxConnection: 'This estimator represents the proportion of successes across all independent trials, which is the most natural intuitive estimate.',
+        toolboxConnectionHe: 'אומד זה מייצג את פרופורציית ההצלחות מתוך כלל הניסויים הבלתי תלויים שבוצעו, וזהו האומד האינטואיטיבי הטבעי ביותר.',
+        keyTakeaway: 'The MME of $p$ for Binomial(m, p) is $\\bar{X}/m$.',
+        keyTakeawayHe: 'אומד שיטת המומנטים של $p$ עבור התפלגות בינומית הוא $\\bar{X}/m$.',
+        proof: '**Step-by-Step Derivation and Calculation:**\n\n**Part 1: Deriving the Estimator**\nWe require $r = 1$ equations because there is only one unknown parameter, $p$.\n* **Theoretical Moment**:\n$$\\mu_1 = \\mathbb{E}[X] = m p$$\n* **Sample Moment**:\n$$M_1 = \\bar{X} = \\frac{1}{n} \\sum_{i=1}^n X_i$$\n\nEquating theoretical to sample moment:\n$$m p = \\bar{X} \\implies \\hat{p}_{MME} = \\frac{\\bar{X}}{m}$$\n\n**Part 2: Empirical Value Calculation**\nWe have a sample of size $n = 10$ (sum of frequencies $2+5+2+1+0+0 = 10$).\nThe sample mean $\\bar{X}$ is:\n$$\\bar{X} = \\frac{\\sum_{k=0}^5 k \\cdot f_k}{n} = \\frac{0 \\cdot 2 + 1 \\cdot 5 + 2 \\cdot 2 + 3 \\cdot 1 + 4 \\cdot 0 + 5 \\cdot 0}{10}$$\n$$\\bar{X} = \\frac{0 + 5 + 4 + 3 + 0 + 0}{10} = \\frac{12}{10} = 1.2$$\n\nSince $m = 5$, the MME estimate for $p$ is:\n$$\\hat{p}_{MME} = \\frac{\\bar{X}}{m} = \\frac{1.2}{5} = 0.24 \\quad (24\\%)$$\nThis provides a precise empirical estimate based on the raw frequency distribution.'
+      },
+      {
+        id: 'prac-stats-7-2',
+        title: 'Practice 2: Joint MME for Normal Distribution Parameters',
+        titleHe: 'תרגול 2: אומד שיטת המומנטים המשותף לפרמטרי התפלגות נורמלית',
+        isPractice: true,
+        content: 'Let $X_1, \\dots, X_n \\sim N(\\mu, \\sigma^2)$ be i.i.d. random variables where both the mean $\\mu$ and variance $\\sigma^2$ are unknown parameters.\n\nDerive the Method of Moments estimators for both $\\mu$ and $\\sigma^2$.',
+        contentHe: 'יהיו $X_1, \\dots, X_n \\sim N(\\mu, \\sigma^2)$ משתנים מקריים בלתי תלויים ובעלי התפלגות זהה, כאשר גם התוחלת $\\mu$ וגם השונות $\\sigma^2$ הן פרמטרים לא ידועים.\n\nפתחו את אומדי שיטת המומנטים עבור $\\mu$ ועבור $\\sigma^2$.',
+        simplifiedLogic: 'We map the first moment to the mean $\\mu$ and the second moment to the variance plus mean-squared $\\sigma^2 + \\mu^2$. By replacing theoretical expectations with empirical averages, we obtain the sample mean and the biased sample variance.',
+        simplifiedLogicHe: 'אנו משייכים את המומנט הראשון לתוחלת $\\mu$ ואת המומנט השני לשונות בתוספת ריבוע התוחלת $\\sigma^2 + \\mu^2$. על ידי החלפת התוחלות התיאורטיות בממוצעי מדגם אמפיריים, אנו מקבלים את ממוצע המדגם ואת שונות המדגם המוטה.',
+        toolboxConnection: 'The resulting MME estimator for variance is biased but consistent. The bias disappears as $n \\to \\infty$.',
+        toolboxConnectionHe: 'אומד המומנטים המתקבל עבור השונות הוא מוטה אך עקבי. ההטיה נעלמת (שואפת לאפס) כאשר $n \\to \\infty$.',
+        keyTakeaway: 'The MME of $\\mu$ is $\\bar{X}$, and the MME of $\\sigma^2$ is $\\frac{1}{n}\\sum(X_i - \\bar{X})^2$.',
+        keyTakeawayHe: 'אומד המומנטים של $\\mu$ הוא $\\bar{X}$, ואומד המומנטים של $\\sigma^2$ הוא $\\frac{1}{n}\\sum(X_i - \\bar{X})^2$.',
+        proof: '**Step-by-Step Proof:**\n\nThere are two unknown parameters: $\\theta_1 = \\mu$ and $\\theta_2 = \\sigma^2$. We require the first $r = 2$ moments.\n\n**Theoretical Moments**:\n* First moment:\n$$\\mu_1 = \\mathbb{E}[X] = \\mu$$\n* Second moment:\n$$\\mu_2 = \\mathbb{E}[X^2] = \\text{Var}(X) + (\\mathbb{E}[X])^2 = \\sigma^2 + \\mu^2$$\n\n**Sample Moments**:\n* First sample moment:\n$$M_1 = \\bar{X} = \\frac{1}{n}\\sum_{i=1}^n X_i$$\n* Second sample moment:\n$$M_2 = \\frac{1}{n}\\sum_{i=1}^n X_i^2$$\n\n**System of Equations**:\n$$\\begin{cases} \\mu = M_1 \\\\\\ \\sigma^2 + \\mu^2 = M_2 \\end{cases}$$\n\nSolving for the parameters:\n1. From the first equation:\n$$\\hat{\\mu}_{MME} = M_1 = \\bar{X}$$\n2. Substituting into the second equation:\n$$\\hat{\\sigma}^2_{MME} = M_2 - (\\hat{\\mu}_{MME})^2 = M_2 - \\bar{X}^2$$\n$$\\hat{\\sigma}^2_{MME} = \\frac{1}{n}\\sum_{i=1}^n X_i^2 - \\bar{X}^2 = \\frac{1}{n}\\sum_{i=1}^n (X_i - \\bar{X})^2$$\n\nThis completes the rigorous algebraic derivation.'
+      },
+      {
+        id: 'prac-stats-7-3',
+        title: 'Practice 3: MME for Erlang-2 (Gamma) Distribution',
+        titleHe: 'תרגול 3: אומד שיטת המומנטים להתפלגות ארלנג מסדר 2',
+        isPractice: true,
+        content: 'Let $X_1, \\dots, X_n$ be i.i.d. random variables with PDF:\n$$f(x; a) = a^2 x e^{-a x} \\quad \\text{for } x \\ge 0$$\nwhere $a > 0$ is an unknown rate parameter. Derive the MME for $a$.',
+        contentHe: 'יהיו $X_1, \\dots, X_n$ משתנים מקריים בלתי תלויים ובעלי התפלגות זהה עם פונקציית צפיפות:\n$$f(x; a) = a^2 x e^{-a x} \\quad \\text{עבור } x \\ge 0$$\nכאשר $a > 0$ הוא פרמטר קצב לא ידוע. פתחו את אומד שיטת המומנטים עבור $a$.',
+        simplifiedLogic: 'This distribution is a Gamma distribution with shape $k=2$ and rate $a$. Its expected value is $2/a$. Equating this to $\\bar{X}$ gives $\\hat{a} = 2/\\bar{X}$.',
+        simplifiedLogicHe: 'התפלגות זו היא התפלגות גמא עם פרמטר צורה $k=2$ ופרמטר קצב $a$. התוחלת שלה היא $2/a$. השוואת ערך זה לממוצע המדגם $\\bar{X}$ נותנת $\\hat{a} = 2/\\bar{X}$.',
+        toolboxConnection: 'Used commonly in queueing theory and telecommunications to model the waiting time for two consecutive network packet arrivals.',
+        toolboxConnectionHe: 'נפוץ בשימוש בתורת התורים ובתקשורת נתונים לצורך מידול זמן ההמתנה לקבלת שתי חבילות מידע עוקבות ברשת.',
+        keyTakeaway: 'The MME for the Erlang-2 rate parameter is $2/\\bar{X}$.',
+        keyTakeawayHe: 'אומד שיטת המומנטים עבור פרמטר הקצב של התפלגות ארלנג-2 הוא $2/\\bar{X}$.',
+        proof: '**Step-by-Step Derivation:**\n\nThere is one unknown parameter, $a$. We require the first theoretical moment:\n$$\\mu_1 = \\mathbb{E}[X] = \\int_0^{\\infty} x \\cdot (a^2 x e^{-a x}) \\, dx = a^2 \\int_0^{\\infty} x^2 e^{-a x} \\, dx$$\n\nUsing the substitution $t = a x$, so $dx = \\frac{1}{a} dt$:\n$$\\mathbb{E}[X] = a^2 \\int_0^{\\infty} \\left(\\frac{t}{a}\\right)^2 e^{-t} \\frac{1}{a} \\, dt = \\frac{1}{a} \\int_0^{\\infty} t^2 e^{-t} \\, dt$$\n\nRecall the definition of the Gamma function, where $\\int_0^{\\infty} t^2 e^{-t} \\, dt = \\Gamma(3) = 2! = 2$. Thus:\n$$\\mathbb{E}[X] = \\frac{2}{a}$$\n\nEquating to the first sample moment $M_1 = \\bar{X}$:\n$$\\frac{2}{a} = \\bar{X} \\implies \\hat{a}_{MME} = \\frac{2}{\\bar{X}}$$\nThis completes the proof.'
+      },
+      {
+        id: 'prac-stats-7-4',
+        title: 'Practice 4: MME for Continuous Uniform Distribution U(a, b)',
+        titleHe: 'תרגול 4: אומד שיטת המומנטים להתפלגות אחידה רציפה U(a, b)',
+        isPractice: true,
+        content: 'Let $X_1, \\dots, X_n \\sim U(a, b)$ be i.i.d. variables where both boundaries $a$ and $b$ are unknown. Derive the Method of Moments estimators for $a$ and $b$.',
+        contentHe: 'יהיו $X_1, \\dots, X_n \\sim U(a, b)$ משתנים מקריים בלתי תלויים ובעלי התפלגות זהה, כאשר שני הגבולות $a$ ו-$b$ אינם ידועים. פתחו את אומדי שיטת המומנטים עבור $a$ ועבור $b$.',
+        simplifiedLogic: 'We express the boundaries $a$ and $b$ in terms of the mean $\\mu$ and standard deviation $\\sigma$. The mean is the center, and the interval width is $\\sigma \\sqrt{12}$. We plug in the sample average and standard deviation to find the estimated boundaries.',
+        simplifiedLogicHe: 'אנו מבטאים את הגבולות $a$ ו-$b$ באמצעות התוחלת $\\mu$ וסטיית התקן $\\sigma$. התוחלת היא מרכז הקטע, ורוחב הקטע הוא $\\sigma \\sqrt{12}$. אנו מציבים את ממוצע המדגם וסטיית התקן שלו כדי לקבל את אומדני הגבולות.',
+        toolboxConnection: 'The MME estimators for uniform boundaries differ significantly from the MLE estimators. MME uses all data points to estimate variance, whereas MLE only looks at the extreme min/max points.',
+        toolboxConnectionHe: 'אומדי המומנטים עבור גבולות ההתפלגות האחידה שונים באופן מהותי מאומדי רב-הסיכוי (MLE). אומדי המומנטים משתמשים בכל נקודות המדגם כדי להעריך את השונות, בעוד ש-MLE מסתכל אך ורק על ערכי הקיצון (מינימום ומקסימום).',
+        keyTakeaway: 'MME boundaries are $\\bar{X} \\pm \\sqrt{3}S_d$ where $S_d$ is the sample standard deviation.',
+        keyTakeawayHe: 'גבולות המומנטים הם $\\bar{X} \\pm \\sqrt{3}S_d$ כאשר $S_d$ היא סטיית התקן של המדגם.',
+        proof: '**Step-by-Step Proof:**\n\nThe parameters are $\\theta_1 = a$ and $\\theta_2 = b$. We use the first two moments.\n\n**Theoretical Moments**:\n* Expected Value:\n$$\\mathbb{E}[X] = \\frac{a+b}{2}$$\n* Variance:\n$$\\text{Var}(X) = \\frac{(b-a)^2}{12}$$\n\n**Sample Statistics**:\n* Sample mean: $M_1 = \\bar{X}$\n* Biased sample variance: $S_d^2 = M_2 - M_1^2 = \\frac{1}{n}\\sum(X_i - \\bar{X})^2$\n\n**Equating to Sample Moments**:\n1. For the first moment:\n$$\\frac{a+b}{2} = \\bar{X} \\implies a+b = 2\\bar{X} \\quad (1)$$\n2. For the variance:\n$$\\frac{(b-a)^2}{12} = S_d^2 \\implies (b-a)^2 = 12 S_d^2 \\implies b-a = 2\\sqrt{3}S_d \\quad (2)$$\n(since $b > a$, we take the positive square root).\n\n**Solving the System**:\nAdding (1) and (2):\n$$2b = 2\\bar{X} + 2\\sqrt{3}S_d \\implies \\hat{b}_{MME} = \\bar{X} + \\sqrt{3}S_d$$\nSubtracting (2) from (1):\n$$2a = 2\\bar{X} - 2\\sqrt{3}S_d \\implies \\hat{a}_{MME} = \\bar{X} - \\sqrt{3}S_d$$\n\nwhere $S_d = \\sqrt{\\frac{1}{n}\\sum_{i=1}^n (X_i - \\bar{X})^2}$. This completes the rigorous proof.'
+      },
+      {
+        id: 'prac-stats-7-5',
+        title: 'Practice 5: MME for Shifted Exponential Distribution',
+        titleHe: 'תרגול 5: אומד שיטת המומנטים להתפלגות מעריכית מוזזת',
+        isPractice: true,
+        content: 'Let $X_1, \\dots, X_n$ be i.i.d. variables from a Shifted Exponential distribution with PDF:\n$$f(x; a, b) = \\frac{1}{b} e^{-\\frac{x - a}{b}} \\quad \\text{for } x \\ge a$$\nwhere $a \\in \\mathbb{R}$ is the shift parameter and $b > 0$ is the scale parameter. Derive the MME estimators for both $a$ and $b$.',
+        contentHe: 'יהיו $X_1, \\dots, X_n$ משתנים מקריים בלתי תלויים ובעלי התפלגות זהה מהתפלגות מעריכית מוזזת בעלת צפיפות:\n$$f(x; a, b) = \\frac{1}{b} e^{-\\frac{x - a}{b}} \\quad \\text{עבור } x \\ge a$$\nכאשר $a \\in \\mathbb{R}$ הוא פרמטר ההזזה ו-$b > 0$ הוא פרמטר קנה המידה. פתחו את אומדי שיטת המומנטים עבור $a$ ועבור $b$.',
+        simplifiedLogic: 'The expectation of a shifted exponential is $a+b$ (the starting boundary plus the average lifetime). The variance is $b^2$. Equating variance to the sample variance gives $\\hat{b} = S_d$, which then yields $\\hat{a} = \\bar{X} - S_d$.',
+        simplifiedLogicHe: 'התוחלת של התפלגות מעריכית מוזזת היא $a+b$ (נקודת ההתחלה בתוספת אורך החיים הממוצע). השונות היא $b^2$. השוואת השונות התיאורטית לשונות המדגם נותנת $\\hat{b} = S_d$, ומכאן אנו מקבלים $\\hat{a} = \\bar{X} - S_d$.',
+        toolboxConnection: 'The shift parameter represents a minimum delay or guaranteed survival time before the exponential decay process begins.',
+        toolboxConnectionHe: 'פרמטר ההזזה מייצג השהיה מינימלית או זמן הישרדות מובטח לפני שתהליך הדעיכה המעריכי מתחיל.',
+        keyTakeaway: 'The MME estimators are $\\hat{b} = S_d$ and $\\hat{a} = \\bar{X} - S_d$.',
+        keyTakeawayHe: 'אומדי שיטת המומנטים הם $\\hat{b} = S_d$ ו-$\\hat{a} = \\bar{X} - S_d$.',
+        proof: '**Step-by-Step Derivation:**\n\n**Theoretical Moments**:\nLet $Y = X - a \\sim \\text{Exp}(1/b)$. Then:\n* expectation of $Y$ is $\\mathbb{E}[Y] = b$.\n* variance of $Y$ is $\\text{Var}(Y) = b^2$.\n\nTherefore, for $X = Y + a$:\n* **First moment**:\n$$\\mu_1 = \\mathbb{E}[X] = \\mathbb{E}[Y] + a = a + b$$\n* **Variance**:\n$$\\text{Var}(X) = \\text{Var}(Y) = b^2$$\n* **Second moment**:\n$$\\mu_2 = \\text{Var}(X) + (\\mathbb{E}[X])^2 = b^2 + (a+b)^2$$\n\n**Equating to Sample Moments**:\nLet $\\bar{X}$ be the sample mean and $S_d^2$ be the biased sample variance:\n$$S_d^2 = M_2 - M_1^2$$\n\nEquating theoretical parameters to sample statistics:\n1. For variance:\n$$b^2 = S_d^2 \\implies \\hat{b}_{MME} = S_d$$\n2. For mean:\n$$a + b = \\bar{X} \\implies \\hat{a}_{MME} = \\bar{X} - \\hat{b}_{MME} = \\bar{X} - S_d$$\n\nwhere $S_d = \\sqrt{\\frac{1}{n}\\sum_{i=1}^n (X_i - \\bar{X})^2}$. This completes the rigorous proof.'
+      }
+    ],
+    quiz: [
+      {
+        question: 'Let $X_1, \\dots, X_n \\sim \\text{Poisson}(\\lambda)$ be i.i.d. variables. We want to estimate the parameter $\\theta = e^{-\\lambda}$ (the probability of observing zero events). What is the Method of Moments Estimator (MME) of $\\theta$?',
+        questionHe: 'יהיו $X_1, \\dots, X_n \\sim \\text{Poisson}(\\lambda)$ משתנים מקריים בלתי תלויים ובעלי התפלגות זהה. ברצוננו לאמוד את הפרמטר $\\theta = e^{-\\lambda}$ (ההסתברות לקבלת אפס אירועים). מהו אומד שיטת המומנטים (MME) של $\\theta$?',
+        options: [
+          'e^{-X_n}',
+          'e^{-\\bar{X}}',
+          '\\bar{X}',
+          '\\ln(\\bar{X})'
+        ],
+        optionsHe: [
+          'e^{-X_n}',
+          'e^{-\\bar{X}}',
+          '\\bar{X}',
+          '\\ln(\\bar{X})'
+        ],
+        correctAnswerIndex: 1,
+        explanation: 'The MME of the rate parameter $\\lambda$ is $\\hat{\\lambda} = \\bar{X}$ since $\\mathbb{E}[X] = \\lambda$. By the Continuous Mapping Theorem, since the function $g(x) = e^{-x}$ is continuous, the MME of $e^{-\\lambda}$ is $g(\\hat{\\lambda}) = e^{-\\bar{X}}$.',
+        explanationHe: 'אומד המומנטים של פרמטר הקצב $\\lambda$ הוא $\\hat{\\lambda} = \\bar{X}$ מאחר ש-\\$\\mathbb{E}[X] = \\lambda\\$. לפי משפט ההעתקה הרציפה, מכיוון שהפונקציה $g(x) = e^{-x}$ רציפה, אומד המומנטים של $e^{-\\lambda}$ הוא $g(\\hat{\\lambda}) = e^{-\\bar{X}}$.'
+      },
+      {
+        question: 'Let $X_1, \\dots, X_n \\sim U(0, \\theta)$ be i.i.d. variables. What is the MME of $\\theta$?',
+        questionHe: 'יהיו $X_1, \\dots, X_n \\sim U(0, \\theta)$ משתנים מקריים בלתי תלויים ובעלי התפלגות זהה. מהו אומד שיטת המומנטים (MME) של $\\theta$?',
+        options: [
+          '\\bar{X}',
+          '2\\bar{X}',
+          'X_{(n)}',
+          '\\frac{n+1}{n} X_{(n)}'
+        ],
+        optionsHe: [
+          '\\bar{X}',
+          '2\\bar{X}',
+          'X_{(n)}',
+          '\\frac{n+1}{n} X_{(n)}'
+        ],
+        correctAnswerIndex: 1,
+        explanation: 'The theoretical expected value of $X \\sim U(0, \\theta)$ is $\\mathbb{E}[X] = \\theta / 2$. Equating this to the first sample moment $M_1 = \\bar{X}$ yields $\\theta / 2 = \\bar{X} \\implies \\hat{\\theta}_{MME} = 2\\bar{X}$. Note that this is different from the MLE, which is the sample maximum $X_{(n)}$.',
+        explanationHe: 'התוחלת התיאורטית של $X \\sim U(0, \\theta)$ היא $\\mathbb{E}[X] = \\theta / 2$. השוואת ערך זה למומנט המדגם הראשון $M_1 = \\bar{X}$ נותנת $\\theta / 2 = \\bar{X} \\implies \\hat{\\theta}_{MME} = 2\\bar{X}$. שימו לב שאומד זה שונה מאומד רב-הסיכוי (MLE), שהוא מקסימום המדגם $X_{(n)}$.'
+      }
+    ]
+  },
+  {
+    id: 'stats-8',
+    courseId: 'stats',
+    chapterNumber: '8',
+    title: 'Chapter 8: Maximum Likelihood Estimation (MLE)',
+    titleHe: 'פרק 8: אמידה בשיטת הנראות המרבית (MLE)',
+    intro: 'This chapter covers Maximum Likelihood Estimation, the most widely used and statistically powerful method of parameter estimation. We study how to construct likelihood functions, solve score equations, apply the vital invariance property, and handle parameter-dependent boundaries using order statistics.',
+    introHe: 'פרק זה עוסק באמידה בשיטת הנראות המרבית, השיטה הנפוצה והחזקה ביותר מבחינה סטטיסטית לאמידת פרמטרים. נלמד כיצד לבנות פונקציות נראות, לפתור משוואות ציונים, להשתמש בתכונת האי-שתנות הקריטית, ולטפל במקרים שבהם גבולות התומך תלויים בפרמטרים באמצעות סטטיסטי תור.',
+    motivation: 'Maximum Likelihood Estimators have exceptional asymptotic properties: they are asymptotically unbiased, efficient (achieve the Cramer-Rao Lower Bound), and asymptotically normal. MLE is the computational backbone of logistic regression, generalized linear models, and deep learning optimization via cross-entropy loss.',
+    motivationHe: 'לאומדי נראות מרבית יש תכונות אסימפטוטיות יוצאות מן הכלל: הם בלתי מוטים אסימפטוטית, יעילים (משיגים את חסם קרמר-ראו) ונורמליים אסימפטוטית. שיטה זו מהווה את הבסיס החישובי והתיאורטי של רגרסיה לוגיסטית, מודלים ליניאריים מוגללים ואופטימיזציה של למידה עמוקה באמצעות פונקציות הפסד מסוג אנטרופיה צולבת.',
+    definitions: [
+      {
+        id: 'def-stats-8-1',
+        title: 'Likelihood & Log-Likelihood Functions',
+        titleHe: 'פונקציית הנראות והלוג-נראות',
+        content: 'Let $X_1, \\dots, X_n$ be i.i.d. random variables with PDF or PMF $f(x; \\theta)$ where $\\theta$ is an unknown parameter.\n\n* **The Likelihood Function $L(\\theta)$**: The joint probability of observing our specific sample data as a function of the parameter:\n$$L(\\theta) = \\prod_{i=1}^n f(X_i; \\theta)$$\n\n* **The Log-Likelihood Function $\\ell(\\theta)$**: The natural logarithm of the likelihood function, which simplifies products into sums:\n$$\\ell(\\theta) = \\ln L(\\theta) = \\sum_{i=1}^n \\ln f(X_i; \\theta)$$\n\n* **The Score Function $U(\\theta)$**: The derivative of the log-likelihood function:\n$$U(\\theta) = \\ell\'(\\theta) = \\frac{\\partial}{\\partial \\theta} \\ell(\\theta)$$\n\nTo find the **Maximum Likelihood Estimator (MLE)** $\\hat{\\theta}_{MLE}$, we solve the score equation:\n$$U(\\theta) = 0$$\nand verify that the second derivative is negative at the critical point:\n$$\\ell\'\'(\\hat{\\theta}) < 0$$',
+        contentHe: 'יהיו $X_1, \\dots, X_n$ משתנים מקריים בלתי תלויים ובעלי התפלגות זהה עם פונקציית צפיפות (או הסתברות) $f(x; \\theta)$ כאשר $\\theta$ הוא פרמטר לא ידוע.\n\n* **פונקציית הנראות $L(\\theta)$**: ההסתברות המשותפת לקבלת נתוני המדגם הספציפיים שצפינו בהם, כפונקציה של הפרמטר:\n$$L(\\theta) = \\prod_{i=1}^n f(X_i; \\theta)$$\n\n* **פונקציית הלוג-נראות $\\ell(\\theta)$**: הלוגריתם הטבעי של פונקציית הנראות, המפשט מכפלות לכדי סכומים:\n$$\\ell(\\theta) = \\ln L(\\theta) = \\sum_{i=1}^n \\ln f(X_i; \\theta)$$\n\n* **פונקציית הציון $U(\\theta)$**: הנגזרת הראשונה של פונקציית הלוג-נראות:\n$$U(\\theta) = \\ell\'(\\theta) = \\frac{\\partial}{\\partial \\theta} \\ell(\\theta)$$\n\nכדי למצוא את **אומד הנראות המרבית (MLE)** $\\hat{\\theta}_{MLE}$, אנו פותרים את משוואת הציונים:\n$$U(\\theta) = 0$$\nומודעים לכך שהנגזרת השנייה היא שלילית בנקודת הקיצון:\n$$\\ell\'\'(\\hat{\\theta}) < 0$$',
+        simplifiedLogic: 'Instead of asking "what is the probability of the data given the parameter?", we turn it around and ask "which parameter value makes our observed data most likely to have occurred?"',
+        simplifiedLogicHe: 'במקום לשאול "מהי ההסתברות לקבלת הנתונים בהינתן הפרמטר?", אנו הופכים את השאלה ושואלים "איזה ערך של הפרמטר הופך את הנתונים שראינו בפועל להכי סבירים להתרחש?"',
+        toolboxConnection: 'Taking the log stabilizes calculations and prevents underflow when multiplying thousands of small probabilities, which is crucial for modern neural network training.',
+        toolboxConnectionHe: 'פעולת הלוגריתם מייצבת את החישובים ומונעת מצבי קריסה של דיוק חישובי (underflow) בעת הכפלה של אלפי הסתברויות קטנות, דבר שהוא קריטי באימון רשתות נוירונים מודרניות.',
+        keyTakeaway: 'MLE maximizes the probability of observing the collected sample.',
+        keyTakeawayHe: 'אומד נראות מרבית ממקסם את ההסתברות לקבלת המדגם שנאסף.'
+      },
+      {
+        id: 'def-stats-8-2',
+        title: 'The Invariance Property of MLE',
+        titleHe: 'תכונת האי-שתנות של אומד נראות מרבית',
+        content: 'Let $\\hat{\\theta}_{MLE}$ be the Maximum Likelihood Estimator of $\\theta$.\n\nIf $g: \\Theta \\to \\Phi$ is any function, then the MLE of the transformed parameter $\\tau = g(\\theta)$ is given by:\n$$\\hat{\\tau}_{MLE} = g(\\hat{\\theta}_{MLE})$$\n\nThis property holds universally, even if the function $g$ is not one-to-one (in which case we define the profile likelihood to resolve ambiguity).',
+        contentHe: 'יהי $\\hat{\\theta}_{MLE}$ אומד הנראות המרבית עבור $\\theta$.\n\nאם $g: \\Theta \\to \\Phi$ היא פונקציה כלשהי, אזי אומד הנראות המרבית של הפרמטר המותמר $\\tau = g(\\theta)$ נתון על ידי:\n$$\\hat{\\tau}_{MLE} = g(\\hat{\\theta}_{MLE})$$\n\nתכונה זו מתקיימת תמיד באופן אוניברסלי, גם אם הפונקציה $g$ אינה חד-חד-ערכית (במקרה כזה משתמשים בנראות פרופיל כדי לפתור את העמימות).',
+        simplifiedLogic: 'If we want to estimate the square or exponent of a parameter, we do not need to rewrite and maximize a new likelihood function. We simply solve for the original parameter first, and then apply the square or exponent directly to the final estimate.',
+        simplifiedLogicHe: 'אם אנו רוצים לאמוד את הריבוע או האקספוננט של פרמטר, איננו צריכים לכתוב ולמקסם פונקציית נראות חדשה מההתחלה. אנו פשוט מוצאים את האומד המקורי, ומפעילים עליו את הריבוע או האקספוננט ישירות.',
+        toolboxConnection: 'Allows engineers to easily estimate complex system metrics (like reliability or standard deviation) directly from basic parameters.',
+        toolboxConnectionHe: 'מאפשר למהנדסים לאמוד בקלות מדדים מורכבים של מערכות (כמו אמינות או סטיית תקן) ישירות מתוך הערכות של פרמטרים בסיסיים.',
+        keyTakeaway: 'The MLE of any function $g(\\theta)$ is $g(\\hat{\\theta}_{MLE})$.',
+        keyTakeawayHe: 'אומד הנראות המרבית של כל פונקציה $g(\\theta)$ הוא $g(\\hat{\\theta}_{MLE})$ של האומד המקורי.'
+      },
+      {
+        id: 'def-stats-8-3',
+        title: 'Boundary MLE & Order Statistics',
+        titleHe: 'נראות מרבית על השפה וסטטיסטי תור',
+        content: 'When the support of a probability distribution depends on the unknown parameter $\\theta$, the likelihood function is non-zero only within boundaries dictated by the sample.\n\nTo write the likelihood function rigorously, we use indicator functions:\n$$f(x; \\theta) = h(x, \\theta) I_{\\{x \\in \\text{supp}(\\theta)\\}}$$\n\nFor example, if $X_i \\sim U(0, \\theta)$:\n$$L(\\theta) = \\frac{1}{\\theta^n} \\prod_{i=1}^n I_{\\{0 \\le X_i \\le \\theta\\}} = \\frac{1}{\\theta^n} I_{\\{X_{(n)} \\le \\theta\\}} I_{\\{X_{(1)} \\ge 0\\}}$$\nwhere $X_{(n)} = \\max(X_1, \\dots, X_n)$ is the maximum order statistic.\n\nSince $L(\\theta)$ is strictly decreasing in $\\theta$ for $\\theta \\ge X_{(n)}$, the maximum is achieved at the smallest valid boundary:\n$$\\hat{\\theta}_{MLE} = X_{(n)}$$',
+        contentHe: 'כאשר התומך של התפלגות הסתברותית תלוי בפרמטר הלא ידוע $\\theta$, פונקציית הנראות אינה אפס רק בתוך גבולות המוכתבים על ידי ערכי המדגם.\n\nכדי לכתוב את פונקציית הנראות בצורה מדויקת, אנו משתמשים בפונקציות אינדיקטור:\n$$f(x; \\theta) = h(x, \\theta) I_{\\{x \\in \\text{supp}(\\theta)\\}}$$\n\nלדוגמה, אם $X_i \\sim U(0, \\theta)$:\n$$L(\\theta) = \\frac{1}{\\theta^n} \\prod_{i=1}^n I_{\\{0 \\le X_i \\le \\theta\\}} = \\frac{1}{\\theta^n} I_{\\{X_{(n)} \\le \\theta\\}} I_{\\{X_{(1)} \\ge 0\\}}$$\nכאשר $X_{(n)} = \\max(X_1, \\dots, X_n)$ הוא סטטיסטי הסדר המקסימלי (מקסימום המדגם).\n\nמכיוון ש-$L(\\theta)$ היא פונקציה יורדת מונוטונית ב-\\$\\theta\\$ עבור $\\theta \\ge X_{(n)}$, ערך הנראות המקסימלי מתקבל בגבול התחתון האפשרי של הפרמטר:\n$$\\hat{\\theta}_{MLE} = X_{(n)}$$',
+        simplifiedLogic: 'If a parameter defines the maximum possible value of a uniform process, then the true parameter cannot be smaller than any value we have actually observed. To make the observed maximum as likely as possible, we choose the boundary to be exactly equal to our sample maximum.',
+        simplifiedLogicHe: 'אם פרמטר מגדיר את הערך המקסימלי האפשרי של תהליך אחיד, אזי הפרמטר האמיתי אינו יכול להיות קטן יותר מאף ערך שראינו בפועל במדגם. כדי להפוך את המקסימום שראינו להכי סביר, אנו בוחרים את הגבול להיות שווה בדיוק למקסימום המדגם.',
+        toolboxConnection: 'Used in non-regular statistical problems where standard calculus (derivatives) fails completely because the likelihood is not differentiable at the boundary.',
+        toolboxConnectionHe: 'משמש בבעיות סטטיסטיות לא-רגולריות שבהן החשבון הדיפרנציאלי הסטנדרטי (נגזרות) נכשל לחלוטין מכיוון שפונקציית הנראות אינה גזירה בנקודת המקסימום שנמצאת על השפה.',
+        keyTakeaway: 'If support depends on $\\theta$, analyze boundary conditions using order statistics.',
+        keyTakeawayHe: 'אם התומך תלוי ב-\\$\\theta\\$, מנתחים את תנאי השפה בעזרת סטטיסטי סדר.'
+      },
+      {
+        id: 'prac-stats-8-1',
+        title: 'Practice 1: Step-by-Step MLE for Poisson Distribution',
+        titleHe: 'תרגול 1: אומד נראות מרבית להתפלגות פואסון שלב אחר שלב',
+        isPractice: true,
+        content: 'Let $X_1, \\dots, X_n \\sim \\text{Poisson}(\\lambda)$ be i.i.d. variables with unknown rate $\\lambda > 0$.\n\n1. Write the likelihood and log-likelihood functions.\n2. Derive the MLE for $\\lambda$ by solving the score equation and verifying the second derivative condition.',
+        contentHe: 'יהיו $X_1, \\dots, X_n \\sim \\text{Poisson}(\\lambda)$ משתנים מקריים בלתי תלויים ובעלי התפלגות זהה עם קצב לא ידוע $\\lambda > 0$.\n\n1. כיתבו את פונקציית הנראות והלוג-נראות.\n2. פתחו את אומד הנראות המרבית (MLE) עבור $\\lambda$ על ידי פתרון משוואת הציונים ווידוא תנאי הנגזרת השנייה.',
+        simplifiedLogic: 'The Poisson likelihood represents the joint chance of our outcomes. By taking the log, we get a sum. The derivative setting yields $\\hat{\\lambda} = \\bar{X}$, which is the sample average.',
+        simplifiedLogicHe: 'פונקציית הנראות של פואסון מייצגת את ההסתברות המשותפת של תוצאות המדגם. על ידי מעבר ללוג, אנו מקבלים סכום. השוואת הנגזרת לאפס נותנת $\\hat{\\lambda} = \\bar{X}$, שהוא ממוצע המדגם.',
+        toolboxConnection: 'The Poisson MLE is widely used in network traffic analysis and call center load estimation to find arrival rates.',
+        toolboxConnectionHe: 'אומד נראות מרבית של פואסון משמש רבות בניתוח תעבורת רשתות מחשבים והערכת עומסים במוקדי שירות לקוחות למציאת קצבי הגעה.',
+        keyTakeaway: 'The MLE of the Poisson parameter is the sample mean $\\bar{X}$.',
+        keyTakeawayHe: 'אומד הנראות המרבית של פרמטר פואסון הוא ממוצע המדגם $\\bar{X}$.',
+        proof: '**Step-by-Step Derivation:**\n\n**Part 1: Writing Likelihood and Log-Likelihood**\nThe PMF of an individual variable is:\n$$f(x; \\lambda) = \\frac{e^{-\\lambda} \\lambda^x}{x!}$$\n\nThe joint likelihood function of the independent sample is:\n$$L(\\lambda) = \\prod_{i=1}^n \\frac{e^{-\\lambda} \\lambda^{X_i}}{X_i!} = \\frac{e^{-n\\lambda} \\lambda^{\\sum_{i=1}^n X_i}}{\\prod_{i=1}^n X_i!}$$\n\nTaking the natural logarithm:\n$$\\ell(\\lambda) = \\ln L(\\lambda) = -n\\lambda + \\left(\\sum_{i=1}^n X_i\\right) \\ln\\lambda - \\ln\\left(\\prod_{i=1}^n X_i!\\right)$$\n\n**Part 2: Maximization**\nWe calculate the score function (first derivative):\n$$U(\\lambda) = \\ell\'(\\lambda) = -n + \\frac{\\sum_{i=1}^n X_i}{\\lambda}$$\n\nSetting the score to zero:\n$$-n + \\frac{\\sum_{i=1}^n X_i}{\\lambda} = 0 \\implies n\\lambda = \\sum_{i=1}^n X_i \\implies \\hat{\\lambda}_{MLE} = \\frac{1}{n}\\sum_{i=1}^n X_i = \\bar{X}$$\n\nTo guarantee that this critical point is a maximum, we check the second derivative:\n$$\\ell\'\'(\\lambda) = -\\frac{\\sum_{i=1}^n X_i}{\\lambda^2}$$\n\nSince $X_i \\ge 0$ for all Poisson variables, the sum is non-negative. If at least one $X_i > 0$ (which is virtually guaranteed for any active process):\n$$\\ell\'\'(\\hat{\\lambda}) = -\\frac{n\\bar{X}}{\\bar{X}^2} = -\\frac{n}{\\bar{X}} < 0$$\n\nSince the second derivative is strictly negative, the critical point is a global maximum. Thus, **$\\hat{\\lambda}_{MLE} = \\bar{X}$**.'
+      },
+      {
+        id: 'prac-stats-8-2',
+        title: 'Practice 2: Joint MLE for Normal Distribution Parameters',
+        titleHe: 'תרגול 2: אומד נראות מרבית משותף לפרמטרי התפלגות נורמלית',
+        isPractice: true,
+        content: 'Let $X_1, \\dots, X_n \\sim N(\\mu, \\sigma^2)$ be i.i.d. variables where both the mean $\\mu$ and variance $\\sigma^2$ are unknown parameters.\n\nDerive the joint Maximum Likelihood Estimator for the parameter pair $(\\mu, \\sigma^2)$.',
+        contentHe: 'יהיו $X_1, \\dots, X_n \\sim N(\\mu, \\sigma^2)$ משתנים מקריים בלתי תלויים ובעלי התפלגות זהה, כאשר גם התוחלת $\\mu$ וגם השונות $\\sigma^2$ אינן ידועות.\n\nפתחו את אומד הנראות המרבית (MLE) המשותף עבור צמד הפרמטרים $(\\mu, \\sigma^2)$.',
+        simplifiedLogic: 'We write the joint log-likelihood as a function of two variables $\\mu$ and $\\sigma^2$. By taking partial derivatives, we find that the likelihood is maximized when the mean is the sample average $\\bar{X}$ and the variance is the biased sample variance $S_d^2$.',
+        simplifiedLogicHe: 'אנו כותבים את פונקציית הלוג-נראות המשותפת כפונקציה של שני משתנים $\\mu$ ו-$\\sigma^2$. על ידי גזירה חלקית, אנו מגלים שהנראות מגיעה למקסימום כאשר התוחלת היא ממוצע המדגם $\\bar{X}$ והשונות היא שונות המדגם המוטה $S_d^2$.',
+        toolboxConnection: 'The MLE estimator for normal variance is identical to the MME estimator. It is biased, which is why Bessel correction ($n-1$) is applied in standard sample variance calculations.',
+        toolboxConnectionHe: 'אומד הנראות המרבית לשונות נורמלית זהה לחלוטין לאומד המומנטים. הוא מוטה, וזו הסיבה שמשתמשים בתיקון בסל ($n-1$) בחישובי שונות המדגם הסטנדרטיים.',
+        keyTakeaway: 'The joint MLE estimators are $\\hat{\\mu} = \\bar{X}$ and $\\hat{\\sigma}^2 = \\frac{1}{n}\\sum(X_i - \\bar{X})^2$.',
+        keyTakeawayHe: 'אומדי הנראות המרבית המשותפים הם $\\hat{\\mu} = \\bar{X}$ ו-$\\hat{\\sigma}^2 = \\frac{1}{n}\\sum(X_i - \\bar{X})^2$.',
+        proof: '**Step-by-Step Proof:**\n\n**Likelihood Function**:\nThe PDF of $X_i \\sim N(\\mu, \\sigma^2)$ is:\n$$f(x; \\mu, \\sigma^2) = \\frac{1}{\\sqrt{2\\pi\\sigma^2}} e^{-\\frac{(x-\\mu)^2}{2\\sigma^2}}$$\n\nFor a sample of size $n$, the log-likelihood function is:\n$$\\ell(\\mu, \\sigma^2) = \\ln \\prod_{i=1}^n \\frac{1}{\\sqrt{2\\pi\\sigma^2}} e^{-\\frac{(X_i-\\mu)^2}{2\\sigma^2}}$$\n$$\\ell(\\mu, \\sigma^2) = -\\frac{n}{2}\\ln(2\\pi) - \\frac{n}{2}\\ln(\\sigma^2) - \\frac{1}{2\\sigma^2}\\sum_{i=1}^n (X_i - \\mu)^2$$\n\n**Maximizing with respect to $\\mu$**:\nTaking the partial derivative with respect to $\\mu$:\n$$\\frac{\\partial \\ell}{\\partial \\mu} = \\frac{1}{\\sigma^2}\\sum_{i=1}^n (X_i - \\mu)$$\nSetting this to zero:\n$$\\sum_{i=1}^n (X_i - \\hat{\\mu}) = 0 \\implies \\sum_{i=1}^n X_i - n\\hat{\\mu} = 0 \\implies \\hat{\\mu}_{MLE} = \\bar{X}$$\n\n**Maximizing with respect to $\\sigma^2$**:\nWe define $\\theta = \\sigma^2$ as the parameter. Taking the partial derivative with respect to $\\theta$:\n$$\\frac{\\partial \\ell}{\\partial \\theta} = -\\frac{n}{2\\theta} + \\frac{1}{2\\theta^2}\\sum_{i=1}^n (X_i - \\mu)^2$$\nSetting this to zero:\n$$-\\frac{n}{2\\hat{\\theta}} + \\frac{1}{2\\hat{\\theta}^2}\\sum_{i=1}^n (X_i - \\hat{\\mu})^2 = 0 \\implies n\\hat{\\theta} = \\sum_{i=1}^n (X_i - \\bar{X})^2$$\n$$\\hat{\\sigma}^2_{MLE} = \\hat{\\theta} = \\frac{1}{n}\\sum_{i=1}^n (X_i - \\bar{X})^2$$\n\nThis completes the joint maximum likelihood derivation.'
+      },
+      {
+        id: 'prac-stats-8-3',
+        title: 'Practice 3: Boundary MLE for Uniform Distribution U(0, theta)',
+        titleHe: 'תרגול 3: אומד נראות מרבית על השפה להתפלגות אחידה U(0, theta)',
+        isPractice: true,
+        content: 'Let $X_1, \\dots, X_n \\sim U(0, \\theta)$ be i.i.d. random variables with unknown boundary $\\theta > 0$.\n\n1. Write the likelihood function using indicator notation.\n2. Derive the MLE for $\\theta$.',
+        contentHe: 'יהיו $X_1, \\dots, X_n \\sim U(0, \\theta)$ משתנים מקריים בלתי תלויים ובעלי התפלגות זהה עם חסם עליון לא ידוע $\\theta > 0$.\n\n1. כיתבו את פונקציית הנראות באמצעות סימון אינדיקטורים.\n2. פתחו את אומד הנראות המרבית (MLE) עבור $\\theta$.',
+        simplifiedLogic: 'The support of the distribution is $[0, \\theta]$, meaning no data point can exceed $\\theta$. The likelihood is $\\theta^{-n}$ as long as $\\theta \\ge X_{(n)}$. To maximize this decreasing curve, we choose the smallest possible value, which is exactly the maximum observed value $X_{(n)}$.',
+        simplifiedLogicHe: 'התומך של ההתפלגות הוא $[0, \\theta]$, כלומר אף נקודה במדגם אינה יכולה לעלות על $\\theta$. פונקציית הנראות היא $\\theta^{-n}$ בתנאי ש-\\$\\theta \\ge X_{(n)}\\$. כדי למקסם עקומה יורדת זו, אנו בוחרים את הערך הקטן ביותר האפשרי, שהוא בדיוק ערך המקסימום הנצפה במדגם $X_{(n)}$.',
+        toolboxConnection: 'Calculus derivatives fail here because the maximum is at a corner/boundary point. This illustrates the absolute necessity of indicator functions in statistical analysis.',
+        toolboxConnectionHe: 'הנגזרות של החשבון הדיפרנציאלי נכשלות כאן כיוון שהמקסימום מתקבל בנקודת פינה/שפה. מקרה זה מדגים את הנחיצות המוחלטת של שימוש בפונקציות אינדיקטור בניתוח סטטיסטי.',
+        keyTakeaway: 'The MLE for the upper boundary of a Uniform distribution is the sample maximum $X_{(n)}$.',
+        keyTakeawayHe: 'אומד הנראות המרבית לגבול העליון של התפלגות אחידה הוא מקסימום המדגם $X_{(n)}$.',
+        proof: '**Step-by-Step Derivation:**\n\n**Part 1: Likelihood with Indicators**\nThe individual PDF of $X_i \\sim U(0, \\theta)$ is:\n$$f(x; \\theta) = \\frac{1}{\\theta} I_{\\{0 \\le x \\le \\theta\\}}$$\n\nFor an independent sample of size $n$, the joint likelihood is:\n$$L(\\theta) = \\prod_{i=1}^n \\frac{1}{\\theta} I_{\\{0 \\le X_i \\le \\theta\\}} = \\frac{1}{\\theta^n} \\prod_{i=1}^n I_{\\{0 \\le X_i \\le \\theta\\}}$$\n\nFor the product of indicator functions to be 1, every single $X_i$ must satisfy $0 \\le X_i \\le \\theta$. This is equivalent to saying the minimum is non-negative and the maximum is less than or equal to $\\theta$:\n$$L(\\theta) = \\frac{1}{\\theta^n} I_{\\{0 \\le X_{(1)}\\}} I_{\\{X_{(n)} \\le \\theta\\}}$$\nwhere $X_{(1)} = \\min(X_1, \\dots, X_n)$ and $X_{(n)} = \\max(X_1, \\dots, X_n)$.\n\n**Part 2: Optimization**\nWe evaluate the behavior of $L(\\theta)$ as a function of $\\theta$:\n- For $\\theta < X_{(n)}$, the indicator $I_{\\{X_{(n)} \\le \\theta\\}} = 0$, so $L(\\theta) = 0$.\n- For $\\theta \\ge X_{(n)}$, $L(\\theta) = \\frac{1}{\\theta^n}$.\n\nSince $\\frac{1}{\\theta^n}$ is a strictly decreasing function of $\\theta$ for $\\theta > 0$, the maximum of $L(\\theta)$ is achieved at the smallest possible value in the domain $\\theta \\ge X_{(n)}$, which is exactly $\\theta = X_{(n)}$.\n\nTherefore:\n$$\\hat{\\theta}_{MLE} = X_{(n)} = \\max(X_1, \\dots, X_n)$$\nThis completes the rigorous mathematical proof.'
+      },
+      {
+        id: 'prac-stats-8-4',
+        title: 'Practice 4: MLE for Both Boundaries of Uniform Distribution U(a, b)',
+        titleHe: 'תרגול 4: אומד נראות מרבית לשני הגבולות של התפלגות אחידה U(a, b)',
+        isPractice: true,
+        content: 'Let $X_1, \\dots, X_n \\sim U(a, b)$ be i.i.d. variables where both the lower bound $a$ and the upper bound $b$ are unknown parameters. Derive the MLE estimators for both $a$ and $b$.',
+        contentHe: 'יהיו $X_1, \\dots, X_n \\sim U(a, b)$ משתנים מקריים בלתי תלויים ובעלי התפלגות זהה, כאשר גם הגבול התחתון $a$ וגם הגבול העליון $b$ הם פרמטרים לא ידועים. פתחו את אומדי הנראות המרבית עבור $a$ ועבור $b$.',
+        simplifiedLogic: 'To maximize the likelihood $(b-a)^{-n}$, we need to minimize the interval length $b-a$. Since $a$ must be smaller than the minimum observed value $X_{(1)}$, and $b$ must be larger than the maximum observed value $X_{(n)}$, the optimal choice is to set $a = X_{(1)}$ and $b = X_{(n)}$.',
+        simplifiedLogicHe: 'כדי למקסם את הנראות $(b-a)^{-n}$, עלינו למזער ככל הניתן את אורך הקטע $b-a$. מכיוון ש-$a$ חייב להיות קטן או שווה לערך המינימלי שנצפה $X_{(1)}$, ו-$b$ חייב להיות גדול או שווה לערך המקסימלי שנצפה $X_{(n)}$, הבחירה האופטימלית היא לקבוע $a = X_{(1)}$ ו-$b = X_{(n)}$.',
+        toolboxConnection: 'This is a classical example of a multi-dimensional boundary estimation problem where order statistics define the estimators.',
+        toolboxConnectionHe: 'זהו דוגמה קלאסית לבעיית אמידת שפה רב-ממדית, שבה סטטיסטי הסדר (הקיצון) מגדירים את האומדים האופטימליים.',
+        keyTakeaway: 'The MLE boundaries of $U(a, b)$ are the sample minimum $X_{(1)}$ and sample maximum $X_{(n)}$.',
+        keyTakeawayHe: 'אומדי הנראות המרבית של גבולות $U(a, b)$ הם מינימום המדגם $X_{(1)}$ ומקסימום המדגם $X_{(n)}$.',
+        proof: '**Step-by-Step Derivation:**\n\nThe PDF of $X_i \\sim U(a, b)$ is:\n$$f(x; a, b) = \\frac{1}{b-a} I_{\\{a \\le x \\le b\\}}$$\n\nFor a sample of size $n$, the joint likelihood is:\n$$L(a, b) = \\prod_{i=1}^n \\frac{1}{b-a} I_{\\{a \\le X_i \\le b\\}} = \\frac{1}{(b-a)^n} \\prod_{i=1}^n I_{\\{a \\le X_i \\le b\\}}$$\n\nEvery $X_i$ lies in $[a, b]$ if and only if the minimum $X_{(1)} \\ge a$ and the maximum $X_{(n)} \\le b$. Therefore:\n$$L(a, b) = \\frac{1}{(b-a)^n} I_{\\{a \\le X_{(1)}\\}} I_{\\{X_{(n)} \\le b\\}}$$\n\nTo maximize this expression with respect to $a$ and $b$:\n1. The indicator is non-zero only if $a \\le X_{(1)}$ and $b \\ge X_{(n)}$.\n2. Within this domain, $L(a, b) = (b-a)^{-n}$. To make this term as large as possible, we must make the denominator $(b-a)^n$ as small as possible, which means minimizing the difference $b - a$.\n3. To minimize $b - a$, we want to make $b$ as small as possible (which is bounded below by $X_{(n)}$) and $a$ as large as possible (which is bounded above by $X_{(1)}$).\n\nThus, the optimal values are:\n$$\\hat{a}_{MLE} = X_{(1)} = \\min(X_1, \\dots, X_n)$$\n$$\\hat{b}_{MLE} = X_{(n)} = \\max(X_1, \\dots, X_n)$$\n\nThis completes the rigorous mathematical proof.'
+      },
+      {
+        id: 'prac-stats-8-5',
+        title: 'Practice 5: MLE Invariance for Exponential Tail Probability',
+        titleHe: 'תרגול 5: תכונת האי-שתנות עבור הסתברות זנב של התפלגות מעריכית',
+        isPractice: true,
+        content: 'Let $X_1, \\dots, X_n \\sim \\text{Exp}(\\lambda)$ be i.i.d. variables with unknown rate $\\lambda > 0$.\n\n1. Find the MLE of $\\lambda$.\n2. Find the MLE of the tail probability $\\theta = \\mathbb{P}(X_i > 2)$ using the invariance property of MLE.',
+        contentHe: 'יהיו $X_1, \\dots, X_n \\sim \\text{Exp}(\\lambda)$ משתנים מקריים בלתי תלויים ובעלי התפלגות זהה עם קצב לא ידוע $\\lambda > 0$.\n\n1. מצאו את אומד הנראות המרבית (MLE) של $\\lambda$.\n2. מצאו את אומד הנראות המרבית של הסתברות הזנב $\\theta = \\mathbb{P}(X_i > 2)$ תוך שימוש בתכונת האי-שתנות של ה-MLE.',
+        simplifiedLogic: 'The MLE of the exponential rate is $\\hat{\\lambda} = 1/\\bar{X}$. Since the probability of surviving past 2 hours is $e^{-2\\lambda}$, we apply this exact function to our estimated rate to get the MLE: $e^{-2/\\bar{X}}$.',
+        simplifiedLogicHe: 'אומד הנראות המרבית של קצב ההתפלגות המעריכית הוא $\\hat{\\lambda} = 1/\\bar{X}$. מכיוון שההסתברות לשרוד מעבר ל-2 שעות היא $e^{-2\\lambda}$, אנו מפעילים את הפונקציה הזו בדיוק על הקצב המוערך ומקבלים את אומד הנראות המרבית: $e^{-2/\\bar{X}}$.',
+        toolboxConnection: 'Highly valuable in reliability and survival engineering where we estimate system failures or biological survival probabilities directly from average lifetime data.',
+        toolboxConnectionHe: 'שימושי ביותר בהנדסת אמינות וניתוח הישרדות שבהם אנו מעריכים סיכוי כשל של מערכת או הסתברויות הישרדות ביולוגיות ישירות מתוך נתוני ממוצע אורך החיים.',
+        keyTakeaway: 'The MLE of a transformed parameter is the transformation applied to the parameter\'s MLE.',
+        keyTakeawayHe: 'אומד הנראות המרבית של פרמטר מותמר הוא הפעלת הטרנספורמציה על אומד הנראות המרבית המקורי.',
+        proof: '**Step-by-Step Derivation:**\n\n**Part 1: MLE of $\\lambda$**\nThe PDF of $X_i \\sim \\text{Exp}(\\lambda)$ is:\n$$f(x; \\lambda) = \\lambda e^{-\\lambda x} \\quad \\text{for } x \\ge 0$$\n\nFor a sample of size $n$, the log-likelihood is:\n$$\\ell(\\lambda) = \\ln \\prod_{i=1}^n \\lambda e^{-\\lambda X_i} = n\\ln\\lambda - \\lambda \\sum_{i=1}^n X_i$$\n\nTaking the derivative with respect to $\\lambda$ (score function):\n$$U(\\lambda) = \\ell\'(\\lambda) = \\frac{n}{\\lambda} - \\sum_{i=1}^n X_i$$\nSetting this to zero yields:\n$$\\hat{\\lambda}_{MLE} = \\frac{n}{\\sum_{i=1}^n X_i} = \\frac{1}{\\bar{X}}$$\n\nChecking the second derivative:\n$$\\ell\'\'(\\lambda) = -\\frac{n}{\\lambda^2} < 0$$\nwhich guarantees a global maximum.\n\n**Part 2: MLE of $\\theta = \\mathbb{P}(X_i > 2)$**\nThe theoretical tail probability is:\n$$\\theta = \\mathbb{P}(X_i > 2) = \\int_2^{\\infty} \\lambda e^{-\\lambda x} \\, dx = \\left[-e^{-\\lambda x}\\right]_2^{\\infty} = e^{-2\\lambda}$$\n\nWe define $g(\\lambda) = e^{-2\\lambda}$. By the **Invariance Property of MLE**, the MLE of the transformed parameter $\\theta = g(\\lambda)$ is:\n$$\\hat{\\theta}_{MLE} = g(\\hat{\\lambda}_{MLE}) = e^{-2\\hat{\\lambda}_{MLE}} = e^{-\\frac{2}{\\bar{X}}}$$\n\nThis completes the step-by-step rigorous derivation.'
+      }
+    ],
+    quiz: [
+      {
+        question: 'Let $X_1, \\dots, X_n \\sim \\text{Exp}(\\lambda)$ be i.i.d. variables. What is the Maximum Likelihood Estimator (MLE) of the rate parameter $\\lambda$?',
+        questionHe: 'יהיו $X_1, \\dots, X_n \\sim \\text{Exp}(\\lambda)$ משתנים מקריים בלתי תלויים ובעלי התפלגות זהה. מהו אומד הנראות המרבית (MLE) של פרמטר הקצב $\\lambda$?',
+        options: [
+          '\\bar{X}',
+          '1/\\bar{X}',
+          'X_{(1)}',
+          'n/\\bar{X}'
+        ],
+        optionsHe: [
+          '\\bar{X}',
+          '1/\\bar{X}',
+          'X_{(1)}',
+          'n/\\bar{X}'
+        ],
+        correctAnswerIndex: 1,
+        explanation: 'By setting the derivative of the log-likelihood function $n/\\lambda - n\\bar{X} = 0$, we find $\\hat{\\lambda}_{MLE} = 1/\\bar{X}$. The second derivative is $-n/\\lambda^2 < 0$, verifying a maximum.',
+        explanationHe: 'על ידי השוואת הנגזרת של פונקציית הלוג-נראות $n/\\lambda - n\\bar{X} = 0$ לאפס, אנו מקבלים $\\hat{\\lambda}_{MLE} = 1/\\bar{X}$. הנגזרת השנייה היא $-n/\\lambda^2 < 0$, מה שמוכיח קיומו של מקסימום.'
+      },
+      {
+        question: 'Let $\\hat{\\theta}$ be the MLE of a parameter $\\theta$. What is the MLE of $\\psi = \\theta^2 + 1$?',
+        questionHe: 'יהי $\\hat{\\theta}$ אומד הנראות המרבית של פרמטר $\\theta$. מהו אומד הנראות המרבית של $\\psi = \\theta^2 + 1$?',
+        options: [
+          '\\hat{\\theta}^2 + 1',
+          '\\text{Not enough information}',
+          '(\\hat{\\theta} + 1)^2',
+          '\\frac{1}{\\hat{\\theta}^2 + 1}'
+        ],
+        optionsHe: [
+          '\\hat{\\theta}^2 + 1',
+          '\\text{אין מספיק מידע}',
+          '(\\hat{\\theta} + 1)^2',
+          '\\frac{1}{\\hat{\\theta}^2 + 1}'
+        ],
+        correctAnswerIndex: 0,
+        explanation: 'By the Invariance Property of Maximum Likelihood Estimators, the MLE of any transformed parameter $g(\\theta)$ is simply the function evaluated at the parameter\'s MLE: $g(\\hat{\\theta}) = \\hat{\\theta}^2 + 1$.',
+        explanationHe: 'לפי תכונת האי-שתנות של אומדי נראות מרבית, אומד הנראות המרבית של פרמטר מותמר $g(\\theta)$ הוא פשוט הפעלת הפונקציה על האומד המקורי: $g(\\hat{\\theta}) = \\hat{\\theta}^2 + 1$.'
+      }
+    ]
+  }
+,
+  {
+    id: 'stats-9',
+    courseId: 'stats',
+    chapterNumber: '9',
+    title: 'Chapter 9: Confidence Intervals',
+    titleHe: 'פרק 9: מרווחי סמך',
+    intro: 'This chapter introduces the concept of interval estimation. Unlike point estimators, which provide a single numerical value, confidence intervals provide a range of plausible values for an unknown parameter, associated with a specified confidence level. We cover pivotal quantities, intervals for normal means (both variance known and unknown), proportions, and sample size calculations.',
+    introHe: 'פרק זה מציג את מושג אמידת המרווחים. בניגוד לאומדים נקודתיים המספקים ערך מספרי בודד, מרווחי סמך מספקים טווח של ערכים סבירים עבור פרמטר לא ידוע, המשויך לרמת סמך מוגדרת. אנו נלמד על פונקציות ציר (pivotal quantities), מרווחי סמך לתוחלת של התפלגות נורמלית (כאשר השונות ידועה או שאינה ידועה), מרווחי סמך לפרופורציה וחישובי גודל מדגם נדרש.',
+    motivation: 'In empirical sciences and clinical trials, point estimates are almost never reported alone. A confidence interval quantifies the uncertainty in our estimation, enabling decision-makers to understand the margin of error and the reliability of their claims.',
+    motivationHe: 'במדעים אמפיריים ובניסויים קליניים, אומדים נקודתיים כמעט לעולם אינם מדווחים לבדם. מרווח סמך מכמת את אי-הוודאות באמידה שלנו, ומאפשר למקבל ההחלטות להבין את מרווח הטעות ואת מידת האמינות של הממצאים.',
+    definitions: [
+      {
+        id: 'def-stats-9-1',
+        title: 'Confidence Intervals & Pivotal Quantities',
+        titleHe: 'מרווחי סמך ופונקציית ציר',
+        content: 'Let $X_1, \\dots, X_n$ be a sample from a distribution parameterized by an unknown parameter $\\theta$.\n\n* **Confidence Interval (CI)**: An interval $[L(X), U(X)]$ constructed from the sample such that the true parameter $\\theta$ lies within this range with a specified probability $1 - \\alpha$:\n$$P(L(X) \\le \\theta \\le U(X)) = 1 - \\alpha$$\nwhere $1 - \\alpha$ is the **confidence level** (e.g., $95\\%$).\n\n* **Pivotal Quantity $Q(X, \\theta)$**: A function of the sample data $X$ and the parameter $\\theta$ whose probability distribution is completely independent of $\\theta$ and any other nuisance parameters. We use pivotal quantities to derive exact boundaries for confidence intervals.',
+        contentHe: 'יהי $X_1, \\dots, X_n$ מדגם מתוך התפלגות התלויה בפרמטר לא ידוע $\\theta$.\n\n* **מרווח סמך (CI)**: מרווח $[L(X), U(X)]$ המחושב מתוך ערכי המדגם, כך שהפרמטר האמיתי $\\theta$ נמצא בטווח זה בהסתברות מוגדרת מראש של $1 - \\alpha$:\n$$P(L(X) \\le \\theta \\le U(X)) = 1 - \\alpha$$\nכאשר $1 - \\alpha$ נקרא **רמת הסמך** (למשל, $95\\%$).\n\n* **פונקציית ציר (Pivotal Quantity) $Q(X, \\theta)$**: פונקציה של נתוני המדגם $X$ ושל הפרמטר $\\theta$ שהתפלגות ההסתברות שלה אינה תלויה בכלל בפרמטר $\\theta$ (או בכל פרמטר מפריע אחר). אנו משתמשים בפונקציית ציר כדי לגזור את הגבולות המדויקים של מרווח הסמך.',
+        simplifiedLogic: 'Instead of guessing a single point, we build a "net" (the interval) that is designed to catch the true parameter value $95\\%$ of the times we repeat the experiment.',
+        simplifiedLogicHe: 'במקום לנחש נקודה בודדת, אנו בונים "רשת" (המרווח) אשר מתוכננת ללכוד את ערך הפרמטר האמיתי ב-$95\\%$ מהפעמים שנחזור על הניסוי.',
+        toolboxConnection: 'Underpins A/B testing statistical significance and precision limits in modern physics experiments (like measuring particle masses).',
+        toolboxConnectionHe: 'מהווה את הבסיס למובהקות סטטיסטית במבחני A/B ולקביעת גבולות דיוק בניסויים בפיזיקה מודרנית (כמו מדידת מסות של חלקיקים).',
+        keyTakeaway: 'A pivotal quantity distribution is independent of the parameter, enabling exact interval construction.',
+        keyTakeawayHe: 'ההתפלגות של פונקציית ציר אינה תלויה בפרמטר, מה שמאפשר בנייה של מרווח סמך מדויק.'
+      },
+      {
+        id: 'def-stats-9-2',
+        title: 'CI for a Normal Mean (Variance Known vs. Unknown)',
+        titleHe: 'מרווח סמך לתוחלת (שונות ידועה לעומת שונות לא ידועה)',
+        content: 'Let $X_1, \\dots, X_n \\sim N(\\mu, \\sigma^2)$ be i.i.d. variables. We construct a confidence interval for $\\mu$ under two scenarios:\n\n1. **Variance $\\sigma^2$ is Known**: We use the standard normal pivotal quantity $Z = \\frac{\\bar{X} - \\mu}{\\sigma/\\sqrt{n}} \\sim N(0,1)$, yielding the **$Z$-interval**:\n$$\\left[ \\bar{X} - z_{1-\\alpha/2} \\frac{\\sigma}{\\sqrt{n}} ,\\ \\bar{X} + z_{1-\\alpha/2} \\frac{\\sigma}{\\sqrt{n}} \\right]$$\nwhere $z_{1-\\alpha/2}$ is the standard normal critical value.\n\n2. **Variance $\\sigma^2$ is Unknown**: We substitute $\\sigma$ with the sample standard deviation $S$ and use the Student $t$ pivotal quantity $t = \\frac{\\bar{X} - \\mu}{S/\\sqrt{n}} \\sim t(n-1)$, yielding the **$t$-interval**:\n$$\\left[ \\bar{X} - t_{1-\\alpha/2, n-1} \\frac{S}{\\sqrt{n}} ,\\ \\bar{X} + t_{1-\\alpha/2, n-1} \\frac{S}{\\sqrt{n}} \\right]$$\nwhere $t_{1-\\alpha/2, n-1}$ is the critical value of the $t$-distribution with $n-1$ degrees of freedom.',
+        contentHe: 'יהיו $X_1, \\dots, X_n \\sim N(\\mu, \\sigma^2)$ משתנים מקריים בלתי תלויים ובעלי התפלגות זהה. אנו בונים מרווח סמך עבור התוחלת $\\mu$ בשני מקרים:\n\n1. **השונות $\\sigma^2$ ידועה**: אנו משתמשים בפונקציית הציר הנורמלית הסטנדרטית $Z = \\frac{\\bar{X} - \\mu}{\\sigma/\\sqrt{n}} \\sim N(0,1)$, המניבה את **מרווח ה-Z**:\n$$\\left[ \\bar{X} - z_{1-\\alpha/2} \\frac{\\sigma}{\\sqrt{n}} ,\\ \\bar{X} + z_{1-\\alpha/2} \\frac{\\sigma}{\\sqrt{n}} \\right]$$\nכאשר $z_{1-\\alpha/2}$ הוא הערך הקריטי מהתפלגות נורמלית סטנדרטית.\n\n2. **השונות $\\sigma^2$ אינה ידועה**: אנו מחליפים את $\\sigma$ בסטיית התקן המדגמית $S$ ומשתמשים בפונקציית ציר של התפלגות $t$ של סטודנט $t = \\frac{\\bar{X} - \\mu}{S/\\sqrt{n}} \\sim t(n-1)$, המניבה את **מרווח ה-t**:\n$$\\left[ \\bar{X} - t_{1-\\alpha/2, n-1} \\frac{S}{\\sqrt{n}} ,\\ \\bar{X} + t_{1-\\alpha/2, n-1} \\frac{S}{\\sqrt{n}} \\right]$$\nכאשר $t_{1-\\alpha/2, n-1}$ הוא הערך הקריטי של התפלגות $t$ עם $n-1$ דרגות חופש.',
+        simplifiedLogic: 'When we do not know the true variance, we use the sample variance instead. This adds extra uncertainty, which is accounted for by using the wider t-distribution instead of the normal distribution.',
+        simplifiedLogicHe: 'כאשר איננו יודעים את השונות האמיתית באוכלוסייה, אנו משתמשים בשונות המדגם במקום. הדבר מוסיף אי-ודאות, אותה אנו מאזנים על ידי שימוש בהתפלגות t שהיא רחבה יותר מההתפלגות הנורמלית.',
+        toolboxConnection: 'Essential for estimating average conversion rates or user response times in web optimization when population variance is naturally unknown.',
+        toolboxConnectionHe: 'חיוני להערכת זמני תגובה ממוצעים של משתמשים או שיעורי המרה כאשר שונות האוכלוסייה אינה ידועה מראש.',
+        keyTakeaway: 'Use Z-interval if variance is known, and t-interval if variance is unknown.',
+        keyTakeawayHe: 'השתמשו במרווח Z אם השונות ידועה, ובמרווח t אם השונות אינה ידועה.'
+      },
+      {
+        id: 'def-stats-9-3',
+        title: 'CI for Population Proportion & Sample Size Determination',
+        titleHe: 'מרווח סמך לפרופורציה וקביעת גודל מדגם',
+        content: 'Confidence intervals for proportions and rules for planning sample sizes:\n\n* **CI for a Proportion $p$**: For a large sample size $n$, the sample proportion $\\hat{p} = X/n$ is approximately normal by the CLT. Using the standard error estimate $SE = \\sqrt{\\frac{\\hat{p}(1-\\hat{p})}{n}}$, the **Wald interval** is:\n$$\\hat{p} \\pm z_{1-\\alpha/2} \\sqrt{\\frac{\\hat{p}(1-\\hat{p})}{n}}$$\n\n* **Sample Size Determination**: To guarantee that the margin of error does not exceed a specified bound $E$ with confidence level $1 - \\alpha$, the minimum required sample size is:\n$$n \\ge \\left( \\frac{z_{1-\\alpha/2} \\sigma}{E} \\right)^2$$\nIf $\\sigma$ is unknown, we can use a conservative estimate or prior pilot data.',
+        contentHe: 'מרווחי סמך לפרופורציה וכללים לתכנון גדלי מדגם:\n\n* **מרווח סמך לפרופורציה $p$**: עבור גודל מדגם $n$ גדול מספיק, פרופורציית המדגם $\\hat{p} = X/n$ מתפלגת בקירוב נורמלית לפי משפט הגבול המרכזי. באמצעות אומד טעות התקן $SE = \\sqrt{\\frac{\\hat{p}(1-\\hat{p})}{n}}$, **מרווח ואלד (Wald)** הוא:\n$$\\hat{p} \\pm z_{1-\\alpha/2} \\sqrt{\\frac{\\hat{p}(1-\\hat{p})}{n}}$$\n\n* **קביעת גודל המדגם הנדרש**: כדי להבטיח שחצי רוחב מרווח הסמך (מרווח השגיאה) לא יעלה על ערך חסם מוגדר $E$ ברמת סמך $1 - \\alpha$, גודל המדגם המינימלי הנדרש הוא:\n$$n \\ge \\left( \\frac{z_{1-\\alpha/2} \\sigma}{E} \\right)^2$$\nאם $\\sigma$ אינה ידועה, ניתן להשתמש בהערכה שמרנית או בנתוני פיילוט קודמים.',
+        simplifiedLogic: 'Wald interval wraps the sample proportion with a normal bell curve. For sample size, to cut your error in half, you need four times as many samples.',
+        simplifiedLogicHe: 'מרווח ואלד עוטף את פרופורציית המדגם בעקומת פעמון נורמלית. לגבי גודל המדגם, כדי לחצות את השגיאה בחצי, עליך להגדיל את המדגם פי ארבעה.',
+        toolboxConnection: 'Critical for election polling and sizing marketing campaigns to guarantee a maximum 3% margin of error.',
+        toolboxConnectionHe: 'קריטי לסקרי בחירות ולתכנון קמפיינים שיווקיים כדי להבטיח מרווח טעות מרבי של לא יותר מ-3%.',
+        keyTakeaway: 'Sample size scales quadratically with the inverse of the desired error bound.',
+        keyTakeawayHe: 'גודל המדגם גדל ריבועית ביחס הפוך לחסם השגיאה המבוקש.'
+      },
+      {
+        id: 'prac-stats-9-1',
+        title: 'Practice 1: CI for Mean with Known Variance',
+        titleHe: 'תרגול 1: מרווח סמך לתוחלת כאשר השונות ידועה',
+        isPractice: true,
+        content: 'Given a sample of size $n=100$ from a normal distribution with known variance $\\sigma^2=900$. The sample mean is $\\bar{X}=3000$. Construct a $95\\%$ confidence interval for $\\mu$.',
+        contentHe: 'בהינתן מדגם בגודל $n=100$ מהתפלגות נורמלית בעלת שונות ידועה $\\sigma^2=900$. ממוצע המדגם הוא $\\bar{X}=3000$. חשבו מרווח סמך ברמת סמך של $95\\%$ עבור התוחלת $\\mu$.',
+        proof: 'We collect the parameters:\n* $n = 100$\n* $\\sigma^2 = 900 \\implies \\sigma = 30$\n* $\\bar{X} = 3000$\n* Confidence Level $= 0.95 \\implies \\alpha = 0.05 \\implies z_{1-\\alpha/2} = z_{0.975} = 1.96$\n\nApplying the Z-interval formula:\n$$E = z_{1-\\alpha/2} \\frac{\\sigma}{\\sqrt{n}} = 1.96 \\cdot \\frac{30}{\\sqrt{100}} = 1.96 \\cdot 3 = 5.88$$\n\nThus, the confidence interval is:\n$$[L, U] = [\\bar{X} - E, \\bar{X} + E] = [3000 - 5.88, 3000 + 5.88] = [2994.12, 3005.88]$$',
+        proofHe: 'נאסוף את הפרמטרים מתוך השאלה:\n* $n = 100$\n* $\\sigma^2 = 900 \\implies \\sigma = 30$\n* $\\bar{X} = 3000$\n* רמת הסמך היא $0.95 \\implies \\alpha = 0.05 \\implies z_{1-\\alpha/2} = z_{0.975} = 1.96$\n\nנפעיל את נוסחת מרווח ה-Z:\n$$E = z_{1-\\alpha/2} \\frac{\\sigma}{\\sqrt{n}} = 1.96 \\cdot \\frac{30}{\\sqrt{100}} = 1.96 \\cdot 3 = 5.88$$\n\nלכן, מרווח הסמך הוא:\n$$[L, U] = [\\bar{X} - E, \\bar{X} + E] = [3000 - 5.88, 3000 + 5.88] = [2994.12, 3005.88]$$'
+      },
+      {
+        id: 'prac-stats-9-2',
+        title: 'Practice 2: Sample Size Determination',
+        titleHe: 'תרגול 2: קביעת גודל מדגם מינימלי',
+        isPractice: true,
+        content: 'Using the parameters from Practice 1 ($\\sigma=30$, $95\\%$ confidence level), determine the minimum sample size $n$ required so that the margin of error does not exceed $3$.',
+        contentHe: 'בהתבסס על הנתונים מתרגול 1 (שונות $\\sigma^2=900$ ורמת סמך $95\\%$), מצאו את גודל המדגם המינימלי $n$ הנדרש כך שחצי רוחב מרווח הסמך (חסימת השגיאה) לא יעלה על $3$.',
+        proof: 'We require the margin of error $E \\le 3$. The formula is:\n$$E = z_{1-\\alpha/2} \\frac{\\sigma}{\\sqrt{n}} \\le 3$$\n\nSubstitute the known values:\n$$1.96 \\cdot \\frac{30}{\\sqrt{n}} \\le 3 \\implies \\frac{58.8}{\\sqrt{n}} \\le 3$$\n$$\\sqrt{n} \\ge \\frac{58.8}{3} = 19.6$$\n$$n \\ge 19.6^2 = 384.16$$\n\nSince $n$ must be an integer, we round up to get the minimum sample size:\n$$n = 385$$',
+        proofHe: 'אנו דורשים שחצי רוחב מרווח הסמך (השגיאה) יקיים $E \\le 3$. הנוסחה היא:\n$$E = z_{1-\\alpha/2} \\frac{\\sigma}{\\sqrt{n}} \\le 3$$\n\nנציב את הערכים הידועים לנו:\n$$1.96 \\cdot \\frac{30}{\\sqrt{n}} \\le 3 \\implies \\frac{58.8}{\\sqrt{n}} \\le 3$$\n$$\\sqrt{n} \\ge \\frac{58.8}{3} = 19.6$$\n$$n \\ge 19.6^2 = 384.16$$\n\nמכיוון שגודל מדגם חייב להיות מספר שלם, אנו מעגלים תמיד כלפי מעלה לקבלת גודל המדגם המינימלי:\n$$n = 385$$'
+      },
+      {
+        id: 'prac-stats-9-3',
+        title: 'Practice 3: CI for Mean with Unknown Variance',
+        titleHe: 'תרגול 3: מרווח סמך לתוחלת כאשר השונות אינה ידועה (התפלגות $t$)',
+        isPractice: true,
+        content: 'A random sample of $n=16$ observations is drawn from a normal population. The sample mean is $\\bar{X}=50$ and the sample standard deviation is $S=8$. Construct a $95\\%$ confidence interval for $\\mu$.',
+        contentHe: 'מדגם מקרי של $n=16$ תצפיות נלקח מאוכלוסייה נורמלית. ממוצע המדגם הוא $\\bar{X}=50$ וסטיית התקן המדגמית היא $S=8$. חשבו מרווח סמך ברמת סמך של $95\\%$ עבור התוחלת $\\mu$.',
+        proof: 'Since the variance is unknown and the sample size is small ($n=16$), we use the Student t-distribution.\n* $df = n - 1 = 15$\n* $\\bar{X} = 50$\n* $S = 8$\n* $1-\\alpha = 0.95 \\implies \\alpha = 0.05 \\implies t_{1-\\alpha/2, n-1} = t_{0.975, 15} = 2.131$\n\nApplying the t-interval formula:\n$$E = t_{1-\\alpha/2, n-1} \\frac{S}{\\sqrt{n}} = 2.131 \\cdot \\frac{8}{\\sqrt{16}} = 2.131 \\cdot 2 = 4.262$$\n\nThus, the confidence interval is:\n$$[L, U] = [50 - 4.262, 50 + 4.262] = [45.738, 54.262]$$',
+        proofHe: 'מכיוון ששונות האוכלוסייה אינה ידועה וגודל המדגם קטן ($n=16$), נשתמש במרווח המבוסס על התפלגות t של סטודנט.\n* דרגות החופש: $df = n - 1 = 15$\n* ממוצע המדגם: $\\bar{X} = 50$\n* סטיית התקן המדגמית: $S = 8$\n* רמת הסמך היא $0.95 \\implies \\alpha = 0.05 \\implies t_{1-\\alpha/2, n-1} = t_{0.975, 15} = 2.131$\n\nנפעיל את נוסחת מרווח ה-t:\n$$E = t_{1-\\alpha/2, n-1} \\frac{S}{\\sqrt{n}} = 2.131 \\cdot \\frac{8}{\\sqrt{16}} = 2.131 \\cdot 2 = 4.262$$\n\nלכן, מרווח הסמך הוא:\n$$[L, U] = [50 - 4.262, 50 + 4.262] = [45.738, 54.262]$$'
+      },
+      {
+        id: 'prac-stats-9-4',
+        title: 'Practice 4: CI for Proportion',
+        titleHe: 'תרגול 4: מרווח סמך לפרופורציה',
+        isPractice: true,
+        content: 'In a random sample of $n=400$ citizens, $120$ support a certain policy. Construct a $95\\%$ confidence interval for the true population proportion $p$.',
+        contentHe: 'במדגם מקרי של $n=400$ אזרחים, $120$ תומכים במדיניות מסוימת. חשבו מרווח סמך ברמת סמך של $95\\%$ עבור הפרופורציה האמיתית באוכלוסייה $p$.',
+        proof: 'We estimate the sample proportion:\n$$\\hat{p} = \\frac{120}{400} = 0.3$$\n\nThe standard error of the estimate is:\n$$SE = \\sqrt{\\frac{\\hat{p}(1-\\hat{p})}{n}} = \\sqrt{\\frac{0.3 \\cdot 0.7}{400}} = \\sqrt{\\frac{0.21}{400}} = \\frac{\\sqrt{0.21}}{20} \\approx \\frac{0.45826}{20} = 0.02291$$\n\nFor a $95\\%$ confidence level, the critical value is $z_{0.975} = 1.96$. The margin of error is:\n$$E = z_{0.975} \\cdot SE = 1.96 \\cdot 0.02291 \\approx 0.0449$$\n\nThus, the confidence interval is:\n$$[L, U] = [0.3 - 0.0449, 0.3 + 0.0449] = [0.2551, 0.3449]$$',
+        proofHe: 'נאמוד את פרופורציית המדגם:\n$$\\hat{p} = \\frac{120}{400} = 0.3$$\n\nטעות התקן של האומד היא:\n$$SE = \\sqrt{\\frac{\\hat{p}(1-\\hat{p})}{n}} = \\sqrt{\\frac{0.3 \\cdot 0.7}{400}} = \\sqrt{\\frac{0.21}{400}} = \\frac{\\sqrt{0.21}}{20} \\approx \\frac{0.45826}{20} = 0.02291$$\n\nעבור רמת סמך של $95\\%$, הערך הקריטי הוא $z_{0.975} = 1.96$. חסימת השגיאה (Margin of Error) היא:\n$$E = z_{0.975} \\cdot SE = 1.96 \\cdot 0.02291 \\approx 0.0449$$\n\nלכן, מרווח הסמך לפרופורציה הוא:\n$$[L, U] = [0.3 - 0.0449, 0.3 + 0.0449] = [0.2551, 0.3449]$$'
+      },
+      {
+        id: 'prac-stats-9-5',
+        title: 'Practice 5: CI for Variance',
+        titleHe: 'תרגול 5: מרווח סמך לשונות (התפלגות חי בריבוע $\\chi^2$)',
+        isPractice: true,
+        content: 'A normal sample of size $n=20$ has a sample variance $S^2=25$. Construct a $90\\%$ confidence interval for the true variance $\\sigma^2$.',
+        contentHe: 'מדגם נורמלי בגודל $n=20$ הניב שונות מדגמית $S^2=25$. חשבו מרווח סמך ברמת סמך של $90\\%$ עבור השונות האמיתית באוכלוסייה $\\sigma^2$.',
+        proof: 'We construct a CI for variance using the Chi-Square distribution pivotal quantity $Q = \\frac{(n-1)S^2}{\\sigma^2} \\sim \\chi^2(n-1)$.\n* $n = 20 \\implies df = 19$\n* $S^2 = 25$\n* $1-\\alpha = 0.90 \\implies \\alpha/2 = 0.05$\n\nUsing the Chi-Square table for $19$ degrees of freedom:\n* Lower critical value: $\\chi^2_{0.05, 19} = 10.117$\n* Upper critical value: $\\chi^2_{0.95, 19} = 30.144$\n\nApplying the formula:\n$$[L, U] = \\left[ \\frac{(n-1)S^2}{\\chi^2_{1-\\alpha/2, n-1}} ,\\ \\frac{(n-1)S^2}{\\chi^2_\\alpha/2, n-1} \\right]$$\n$$L = \\frac{19 \\cdot 25}{30.144} = \\frac{475}{30.144} \\approx 15.76$$\n$$U = \\frac{19 \\cdot 25}{10.117} = \\frac{475}{10.117} \\approx 46.95$$\n\nThus, the $90\\%$ confidence interval for the variance $\\sigma^2$ is:\n$$[15.76, 46.95]$$',
+        proofHe: 'אנו בונים מרווח סמך עבור השונות באמצעות פונקציית ציר המתפלגת חי בריבוע: $Q = \\frac{(n-1)S^2}{\\sigma^2} \\sim \\chi^2(n-1)$.\n* $n = 20 \\implies df = 19$\n* השונות המדגמית היא $S^2 = 25$\n* רמת הסמך היא $0.90 \\implies \\alpha = 0.10 \\implies \\alpha/2 = 0.05$\n\nמתוך טבלת התפלגות חי בריבוע עבור $19$ דרגות חופש:\n* ערך קריטי תחתון: $\\chi^2_{0.05, 19} = 10.117$\n* ערך קריטי עליון: $\\chi^2_{0.95, 19} = 30.144$\n\nנפעיל את נוסחת המרווח:\n$$[L, U] = \\left[ \\frac{(n-1)S^2}{\\chi^2_{1-\\alpha/2, n-1}} ,\\ \\frac{(n-1)S^2}{\\chi^2_\\alpha/2, n-1} \\right]$$\n$$L = \\frac{19 \\cdot 25}{30.144} = \\frac{475}{30.144} \\approx 15.76$$\n$$U = \\frac{19 \\cdot 25}{10.117} = \\frac{475}{10.117} \\approx 46.95$$\n\nלכן, מרווח הסמך ברמת סמך של $90\\%$ עבור השונות $\\sigma^2$ הוא:\n$$[15.76, 46.95]$$'
+      }
+    ],
+    quiz: [
+      {
+        question: 'What happens to the width of a confidence interval if the confidence level increases (e.g., from $95\\%$ to $99\\%$) while keeping the sample size constant?',
+        questionHe: 'מה קורה לרוחב מרווח הסמך כאשר רמת הסמך עולה (למשל מ-$95\\%$ ל-$99\\%$) תוך שמירה על גודל מדגם קבוע?',
+        options: [
+          'It increases',
+          'It decreases',
+          'It remains the same',
+          'It becomes zero'
+        ],
+        optionsHe: [
+          'הוא גדל',
+          'הוא קטן',
+          'הוא נשאר זהה',
+          'הוא הופך לאפס'
+        ],
+        correctAnswerIndex: 0,
+        explanation: 'Increasing the confidence level requires a larger critical value (e.g., from $1.96$ to $2.576$), which directly increases the margin of error and widens the interval.',
+        explanationHe: 'העלאת רמת הסמך דורשת ערך קריטי גדול יותר (למשל, מ-1.96 ל-2.576), מה שמגדיל ישירות את חסימת השגיאה ומרחיב את המרווח.'
+      },
+      {
+        question: 'If we multiply the sample size $n$ by $4$, what happens to the width of the confidence interval for the mean (assuming $\\sigma$ is constant)?',
+        questionHe: 'אם נכפיל את גודל המדגם $n$ פי $4$, מה יקרה לרוחב מרווח הסמך עבור התוחלת (בהנחה ש-$\\sigma$ קבוע)?',
+        options: [
+          'It is halved',
+          'It is doubled',
+          'It is divided by 4',
+          'It remains unchanged'
+        ],
+        optionsHe: [
+          'הוא קטן פי 2 (נחצה)',
+          'הוא גדל פי 2 (מוכפל)',
+          'הוא קטן פי 4',
+          'הוא נותר ללא שינוי'
+        ],
+        correctAnswerIndex: 0,
+        explanation: 'The margin of error is inversely proportional to $\\sqrt{n}$. Multiplying $n$ by $4$ divides the standard error by $\\sqrt{4} = 2$, thereby halving the width.',
+        explanationHe: 'חסימת השגיאה נמצאת ביחס הפוך לשורש של $n$. הכפלת $n$ פי $4$ מחלקת את סטיית התקן של הממוצע ב-$\\sqrt{4}=2$, ובכך חוצה את רוחב המרווח.'
+      }
+    ]
+  },
+  {
+    id: 'stats-10',
+    courseId: 'stats',
+    chapterNumber: '10',
+    title: 'Chapter 10: Hypothesis Testing',
+    titleHe: 'פרק 10: מבחני השערות',
+    intro: 'This chapter covers the framework of statistical hypothesis testing. We learn how to formulate null and alternative hypotheses, understand Type I and Type II errors, calculate the power of a test, perform parametric tests for means and proportions, and interpret the p-value.',
+    introHe: 'פרק זה עוסק במסגרת המושגית של מבחני השערות סטטיסטיים. אנו נלמד כיצד לנסח השערת אפס והשערה אלטרנטיבית, נבין את המשמעות של טעויות מסוג ראשון ומסוג שני, נחשב את עוצמת המבחן, נבצע מבחנים פרמטריים עבור תוחלות ופרופורציות, ונפרש את משמעות ה-p-value.',
+    motivation: 'Hypothesis testing is the standard scientific protocol for determining whether experimental results are statistically significant or merely due to random chance. It is the logical basis behind A/B testing in tech, drug efficacy approvals in medicine, and experimental validation in all fields of science.',
+    motivationHe: 'מבחני השערות הם הפרוטוקול המדעי הסטנדרטי לקביעה האם תוצאות ניסיוניות הן בעלות מובהקות סטטיסטית או שהן נובעות פשוט מקשר מקרי. זהו הבסיס הלוגי שמאחורי מבחני A/B בהייטק, אישורי יעילות של תרופות ברפואה, ואימות ניסיוני בכל תחומי המדע.',
+    definitions: [
+      {
+        id: 'def-stats-10-1',
+        title: 'Hypothesis Formulation & Error Types',
+        titleHe: 'ניסוח השערות וסוגי טעויות',
+        content: 'We define the logical framework for making statistical decisions under uncertainty:\n\n* **Null Hypothesis ($H_0$)**: The default hypothesis that states there is no effect, no difference, or no change (e.g., $\\mu = \\mu_0$).\n\n* **Alternative Hypothesis ($H_1$ or $H_a$)**: The hypothesis we wish to establish evidence for, stating there is an effect or change (e.g., $\\mu > \\mu_0$ or $\\mu \\ne \\mu_0$).\n\n* **Type I Error (False Positive)**: Rejecting $H_0$ when it is actually true. The probability of committing this error is denoted by $\\alpha$ (the **significance level**):\n$$\\alpha = P(\\text{Reject } H_0 \\mid H_0 \\text{ is True})$$\n\n* **Type II Error (False Negative)**: Failing to reject $H_0$ when $H_0$ is false ($H_1$ is true). The probability is denoted by $\\beta$:\n$$\\beta = P(\\text{Fail to Reject } H_0 \\mid H_1 \\text{ is True})$$\n\n* **Power of a Test ($1 - \\beta$)**: The probability of correctly rejecting a false null hypothesis:\n$$\\text{Power} = 1 - \\beta = P(\\text{Reject } H_0 \\mid H_1 \\text{ is True})$$',
+        contentHe: 'אנו מגדירים את המסגרת הלוגית לקבלת החלטות סטטיסטיות תחת תנאי אי-ודאות:\n\n* **השערת האפס ($H_0$)**: השערת ברירת המחדל, הטוענת שאין הבדל, אין השפעה או אין שינוי (למשל, $\\mu = \\mu_0$).\n\n* **ההשערה האלטרנטיבית ($H_1$ או $H_a$)**: ההשערה שאנו מעוניינים לבסס ולמצוא לה תימוכין סטטיסטיים, הטוענת שישנו שינוי או אפקט (למשל, $\\mu > \\mu_0$ או $\\mu \\ne \\mu_0$).\n\n* **טעות מסוג ראשון (False Positive)**: דחיית השערת האפס $H_0$ כאשר היא בעצם נכונה. ההסתברות לבצע טעות זו מסומנת ב-$\\alpha$ (והיא נקראת **רמת המובהקות**):\n$$\\alpha = P(\\text{דחיית } H_0 \\mid H_0 \\text{ נכונה})$$\n\n* **טעות מסוג שני (False Negative)**: אי-דחיית השערת האפס $H_0$ כאשר היא אינה נכונה ($H_1$ היא הנכונה). ההסתברות לכך מסומנת ב-$\\beta$:\n$$\\beta = P(\\text{אי-דחיית } H_0 \\mid H_1 \\text{ נכונה})$$\n\n* **עוצמת המבחן ($1 - \\beta$)**: ההסתברות לדחות בצורה נכונה את השערת האפס כאשר היא שקרית:\n$$\\text{עוצמת המבחן} = 1 - \\beta = P(\\text{דחיית } H_0 \\mid H_1 \\text{ נכונה})$$',
+        simplifiedLogic: 'Type I error is convicting an innocent person. Type II error is letting a guilty person walk free. We set Type I error to be small (typically $5\\%$), and then try to maximize power (minimize Type II error).',
+        simplifiedLogicHe: 'טעות מסוג ראשון היא הרשעת אדם חף מפשע. טעות מסוג שני היא זיכוי של אדם אשם. אנו קובעים את הטעות מסוג ראשון מראש להיות קטנה (בדרך כלל $5\\%$), ומנסים למקסם את עוצמת המבחן (כלומר למזער את הטעות מסוג שני).',
+        toolboxConnection: 'Crucial for clinical trials where Type I error rate of 0.05 is legally mandated for pharmaceutical approvals.',
+        toolboxConnectionHe: 'קריטי לניסויים קליניים שבהם רמת מובהקות של 0.05 היא חובה חוקית לאישור תרופות חדשות.',
+        keyTakeaway: 'Type I and Type II errors are inversely related for a fixed sample size.',
+        keyTakeawayHe: 'עבור גודל מדגם קבוע, קיימת מערכת יחסים הפוכה בין ההסתברות לטעות מסוג ראשון לבין ההסתברות לטעות מסוג שני.'
+      },
+      {
+        id: 'def-stats-10-2',
+        title: 'Parametric Tests for Mean (Z-Test & t-Test)',
+        titleHe: 'מבחנים פרמטריים לתוחלת (מבחן Z ומבחן t)',
+        content: 'Let $X_1, \\dots, X_n \\sim N(\\mu, \\sigma^2)$ be i.i.d. variables. To test $H_0: \\mu = \\mu_0$ against $H_1: \\mu \\ne \\mu_0$ (two-sided) or $H_1: \\mu > \\mu_0$ (one-sided):\n\n1. **Z-Test (Variance $\\sigma^2$ is Known)**: The test statistic is:\n$$Z = \\frac{\\bar{X} - \\mu_0}{\\sigma/\\sqrt{n}}$$\nUnder $H_0$, $Z \\sim N(0,1)$. We reject $H_0$ if $|Z| > z_{1-\\alpha/2}$ (two-sided) or $Z > z_{1-\\alpha}$ (one-sided right).\n\n2. **t-Test (Variance $\\sigma^2$ is Unknown)**: The test statistic is:\n$$t = \\frac{\\bar{X} - \\mu_0}{S/\\sqrt{n}}$$\nUnder $H_0$, $t \\sim t(n-1)$. We reject $H_0$ if $|t| > t_{1-\\alpha/2, n-1}$ (two-sided) or $t > t_{1-\\alpha, n-1}$ (one-sided right).',
+        contentHe: 'יהיו $X_1, \\dots, X_n \\sim N(\\mu, \\sigma^2)$ משתנים מקריים בלתי תלויים ובעלי התפלגות זהה. כדי לבחון את השערת האפס $H_0: \\mu = \\mu_0$ מול $H_1: \\mu \\ne \\mu_0$ (מבחן דו-צדדי) או $H_1: \\mu > \\mu_0$ (מבחן חד-צדדי):\n\n1. **מבחן Z (כאשר השונות $\\sigma^2$ ידועה)**: סטטיסטי המבחן הוא:\n$$Z = \\frac{\\bar{X} - \\mu_0}{\\sigma/\\sqrt{n}}$$\nתחת השערת האפס $H_0$, מתקיים $Z \\sim N(0,1)$. נדחה את $H_0$ אם $|Z| > z_{1-\\alpha/2}$ (דו-צדדי) או $Z > z_{1-\\alpha}$ (חד-צדדי ימני).\n\n2. **מבחן t (כאשר השונות $\\sigma^2$ אינה ידועה)**: סטטיסטי המבחן הוא:\n$$t = \\frac{\\bar{X} - \\mu_0}{S/\\sqrt{n}}$$\nתחת השערת האפס $H_0$, מתקיים $t \\sim t(n-1)$. נדחה את $H_0$ אם $|t| > t_{1-\\alpha/2, n-1}$ (דו-צדדי) או $t > t_{1-\\alpha, n-1}$ (חד-צדדי ימני).',
+        simplifiedLogic: 'We measure how many standard errors our sample mean $\\bar{X}$ is away from the claimed null mean $\\mu_0$. If it is too far (e.g., more than 1.96 standard deviations), we reject the claim.',
+        simplifiedLogicHe: 'אנו מודדים כמה סטיות תקן ממוצע המדגם $\\bar{X}$ רחוק מהתוחלת המובטחת $\\mu_0$ תחת השערת האפס. אם המרחק גדול מדי (למשל, מעל 1.96 סטיות תקן), נדחה את ההשערה.',
+        toolboxConnection: 'The foundational math behind comparing treatment group vs. control group in A/B feature releases.',
+        toolboxConnectionHe: 'המתמטיקה הבסיסית שמאחורי השוואת קבוצת טיפול לעומת קבוצת ביקורת בשחרור פיצ\'רים חדשים במבחני A/B.',
+        keyTakeaway: 'Use Z-test if variance is known, and t-test if variance is unknown.',
+        keyTakeawayHe: 'השתמשו במבחן Z אם השונות ידועה, ובמבחן t אם השונות אינה ידועה.'
+      },
+      {
+        id: 'def-stats-10-3',
+        title: 'Test for Proportion & The p-value',
+        titleHe: 'מבחן לפרופורציה וערך ה-p (p-value)',
+        content: 'Testing rules for binary outcomes and the standard interpretation of significance:\n\n* **Z-Test for a Proportion $p$**: To test $H_0: p = p_0$ under a large sample size, we use the Central Limit Theorem. The test statistic is:\n$$Z = \\frac{\\hat{p} - p_0}{\\sqrt{\\frac{p_0(1-p_0)}{n}}}$$\nwhere under $H_0$, $Z \\approx N(0,1)$.\n\n* **The p-value**: The probability, assuming the null hypothesis $H_0$ is true, of obtaining a test statistic value at least as extreme as the one actually observed. Formally, for a right-tailed test:\n$$p\\text{-value} = P(Z \\ge Z_{\\text{obs}} \\mid H_0 \\text{ is True})$$\nWe reject $H_0$ if and only if $p\\text{-value} \\le \\alpha$.',
+        contentHe: 'כללי בדיקה עבור משתנים בינאריים והפרשנות הסטנדרטית לרמת מובהקות:\n\n* **מבחן Z לפרופורציה $p$**: כדי לבחון $H_0: p = p_0$ עבור גודל מדגם גדול, נשתמש במשפט הגבול המרכזי. סטטיסטי המבחן הוא:\n$$Z = \\frac{\\hat{p} - p_0}{\\sqrt{\\frac{p_0(1-p_0)}{n}}}$$\nכאשר תחת השערת האפס $H_0$, מתקיים $Z \\approx N(0,1)$.\n\n* **ערך ה-p (p-value)**: ההסתברות, תחת ההנחה שהשערת האפס $H_0$ היא נכונה, לקבל סטטיסטי מבחן קיצוני לפחות כמו הערך שנצפה בפועל במדגם. פורמלית, עבור מבחן חד-צדדי ימני:\n$$p\\text{-value} = P(Z \\ge Z_{\\text{obs}} \\mid H_0 \\text{ נכונה})$$\nאנו דוחים את השערת האפס $H_0$ אם ורק אם $p\\text{-value} \\le \\alpha$.',
+        simplifiedLogic: 'The p-value measures how "surprising" our data is under the assumption that $H_0$ is true. A tiny p-value means the data is extremely surprising, so we reject $H_0$.',
+        simplifiedLogicHe: 'ערך ה-p מודד כמה הנתונים שקיבלנו "מפתיעים" תחת ההנחה שהשערת האפס נכונה. ערך p קטנטן אומר שהנתונים מפתיעים באופן קיצוני, ולכן אנו מבינים שהשערת האפס כנראה אינה נכונה ודוחים אותה.',
+        toolboxConnection: 'The single most universally reported metric in academic scientific papers to prove research findings are significant.',
+        toolboxConnectionHe: 'המדד המדווח והנפוץ ביותר בעולם במאמרים מדעיים אקדמיים כדי להוכיח שהממצאים הם בעלי משמעות.',
+        keyTakeaway: 'Reject H0 if p-value <= alpha.',
+        keyTakeawayHe: 'דוחים את השערת האפס H0 אם ורק אם ערך ה-p קטן או שווה לרמת המובהקות אלפא.'
+      },
+      {
+        id: 'prac-stats-10-1',
+        title: 'Practice 1: One-sided Z-test',
+        titleHe: 'תרגול 1: מבחן Z חד-צדדי לתוחלת',
+        isPractice: true,
+        content: 'A manufacturer claims that the mean lifetime of a component is $\\mu_0 = 1000$ hours. A quality manager suspects the lifetime is actually higher. A sample of $n=64$ components has a mean lifetime of $\\bar{X}=1025$ hours. Assuming a known population standard deviation $\\sigma=80$ hours, perform a hypothesis test at a $5\\%$ significance level.',
+        contentHe: 'יצרן טוען שזמן החיים הממוצע של רכיב הוא $\\mu_0 = 1000$ שעות. מנהל האיכות חושד שזמן החיים גבוה יותר בפועל. מדגם של $n=64$ רכיבים הניב זמן חיים ממוצע של $\\bar{X}=1025$ שעות. בהנחה שסטיית התקן באוכלוסייה ידועה והיא $\\sigma=80$ שעות, בצעו מבחן השערות ברמת מובהקות של $5\\%$.',
+        proof: 'We state the hypotheses:\n* $H_0: \\mu = 1000$\n* $H_1: \\mu > 1000$ (one-sided right-tailed test)\n\nWe collect the parameters:\n* $n = 64$\n* $\\bar{X} = 1025$\n* $\\sigma = 80$\n* $\\alpha = 0.05 \\implies$ Critical Value $z_{1-\\alpha} = z_{0.95} = 1.645$\n\nWe compute the Z-test statistic:\n$$Z = \\frac{\\bar{X} - \\mu_0}{\\sigma/\\sqrt{n}} = \\frac{1025 - 1000}{80/\\sqrt{64}} = \\frac{25}{80/8} = \\frac{25}{10} = 2.5$$\n\nDecision Rule:\nReject $H_0$ if $Z > 1.645$.\n\nSince $Z = 2.5 > 1.645$, we reject the null hypothesis $H_0$. There is statistically significant evidence at the $5\\%$ level that the mean lifetime is indeed higher than 1000 hours.',
+        proofHe: 'ננסח את ההשערות למבחן:\n* $H_0: \\mu = 1000$\n* $H_1: \\mu > 1000$ (מבחן חד-צדדי ימני)\n\nנאסוף את הפרמטרים מהשאלה:\n* $n = 64$\n* $\\bar{X} = 1025$\n* $\\sigma = 80$\n* רמת מובהקות $\\alpha = 0.05 \\implies$ ערך קריטי חד-צדדי הוא $z_{1-\\alpha} = z_{0.95} = 1.645$\n\nנחשב את סטטיסטי המבחן Z:\n$$Z = \\frac{\\bar{X} - \\mu_0}{\\sigma/\\sqrt{n}} = \\frac{1025 - 1000}{80/\\sqrt{64}} = \\frac{25}{80/8} = \\frac{25}{10} = 2.5$$\n\nכלל ההכרעה:\nנדחה את $H_0$ אם $Z > 1.645$.\n\nמכיוון ש-$Z = 2.5 > 1.645$, אנו דוחים את השערת האפס $H_0$. ישנן ראיות סטטיסטיות מובהקות ברמת מובהקות של $5\\%$ שזמן החיים הממוצע אכן ארוך מ-1000 שעות.'
+      },
+      {
+        id: 'prac-stats-10-2',
+        title: 'Practice 2: Two-sided t-test',
+        titleHe: 'תרגול 2: מבחן t דו-צדדי לתוחלת',
+        isPractice: true,
+        content: 'Test $H_0: \\mu = 500$ vs. $H_1: \\mu \\neq 500$ using a sample of size $n=9$ from a normal distribution. The sample mean is $\\bar{X}=496$ and the sample standard deviation is $S=6$. Use a significance level of $\\alpha = 0.05$.',
+        contentHe: 'בנו השערות ובחנו $H_0: \\mu = 500$ מול $H_1: \\mu \\neq 500$ בעזרת מדגם בגודל $n=9$ מהתפלגות נורמלית. ממוצע המדגם שהתקבל הוא $\\bar{X}=496$ וסטיית התקן המדגמית היא $S=6$. רמת המובהקות היא $\\alpha = 0.05$.',
+        proof: 'We state the hypotheses:\n* $H_0: \\mu = 500$\n* $H_1: \\mu \\ne 500$ (two-sided test)\n\nWe collect the parameters:\n* $n = 9 \\implies df = n - 1 = 8$\n* $\\bar{X} = 496$\n* $S = 6$\n* $\\alpha = 0.05 \\implies$ Critical values $\\pm t_{1-\\alpha/2, n-1} = \\pm t_{0.975, 8} = \\pm 2.306$\n\nWe compute the t-test statistic:\n$$t = \\frac{\\bar{X} - \\mu_0}{S/\\sqrt{n}} = \\frac{496 - 500}{6/\\sqrt{9}} = \\frac{-4}{6/3} = \\frac{-4}{2} = -2$$\n\nDecision Rule:\nReject $H_0$ if $|t| > 2.306$.\n\nSince $|t| = |-2| = 2 < 2.306$, we fail to reject the null hypothesis $H_0$. There is not enough statistical evidence at the $5\\%$ level to conclude that the population mean is different from 500.',
+        proofHe: 'ננסח את ההשערות למבחן:\n* $H_0: \\mu = 500$\n* $H_1: \\mu \\ne 500$ (מבחן דו-צדדי)\n\nנאסוף את הפרמטרים מהשאלה:\n* $n = 9 \\implies$ דרגות חופש $df = n - 1 = 8$\n* ממוצע המדגם: $\\bar{X} = 496$\n* סטיית התקן המדגמית: $S = 6$\n* רמת מובהקות $\\alpha = 0.05 \\implies$ ערכים קריטיים דו-צדדיים הם $\\pm t_{1-\\alpha/2, n-1} = \\pm t_{0.975, 8} = \\pm 2.306$\n\nנחשב את סטטיסטי המבחן t:\n$$t = \\frac{\\bar{X} - \\mu_0}{S/\\sqrt{n}} = \\frac{496 - 500}{6/\\sqrt{9}} = \\frac{-4}{6/3} = \\frac{-4}{2} = -2$$\n\nכלל ההכרעה:\nנדחה את $H_0$ אם $|t| > 2.306$.\n\nמכיוון ש-$|t| = |-2| = 2 < 2.306$, אנו נמנעים מלדחות את השערת האפס $H_0$. אין מספיק ראיות סטטיסטיות מובהקות ברמת מובהקות של $5\\%$ כדי לקבוע שהתוחלת באוכלוסייה שונה מ-500.'
+      },
+      {
+        id: 'prac-stats-10-3',
+        title: 'Practice 3: Z-test for Proportion',
+        titleHe: 'תרגול 3: מבחן Z לפרופורציה',
+        isPractice: true,
+        content: 'An online store wants to test if the return rate of items has changed from the historical value of $p_0 = 0.10$. A sample of $n=100$ orders shows $15$ returns. Test this claim at a $5\\%$ significance level (one-sided: testing if it has increased, i.e., $H_1: p > 0.10$).',
+        contentHe: 'חנות מקוונת רוצה לבדוק האם שיעור ההחזרות של מוצרים עלה משיעורו ההיסטורי העומד על $p_0 = 0.10$. מדגם מקרי של $n=100$ הזמנות הראה $15$ החזרות. בחנו טענה זו ברמת מובהקות של $5\\%$ (במבחן חד-צדדי: האם שיעור ההחזרות גדל, כלומר $H_1: p > 0.10$).',
+        proof: 'We state the hypotheses:\n* $H_0: p = 0.10$\n* $H_1: p > 0.10$ (one-sided right-tailed test)\n\nWe collect the parameters:\n* $n = 100$\n* observed successes $X = 15 \\implies \\hat{p} = 0.15$\n* $\\alpha = 0.05 \\implies z_{0.95} = 1.645$\n\nUnder $H_0$, the standard error is calculated using the null proportion $p_0$:\n$$SE_0 = \\sqrt{\\frac{p_0(1-p_0)}{n}} = \\sqrt{\\frac{0.10 \\cdot 0.90}{100}} = \\sqrt{\\frac{0.09}{100}} = \\frac{0.3}{10} = 0.03$$\n\nWe compute the Z-test statistic:\n$$Z = \\frac{\\hat{p} - p_0}{SE_0} = \\frac{0.15 - 0.10}{0.03} = \\frac{0.05}{0.03} \\approx 1.667$$\n\nDecision Rule:\nReject $H_0$ if $Z > 1.645$.\n\nSince $Z = 1.667 > 1.645$, we reject $H_0$. There is significant evidence at the $5\\%$ level that the return rate has increased.',
+        proofHe: 'ננסח את ההשערות למבחן:\n* $H_0: p = 0.10$\n* $H_1: p > 0.10$ (מבחן חד-צדדי ימני)\n\nנאסוף את הפרמטרים מהשאלה:\n* $n = 100$\n* מספר ההחזרות בפועל הוא $X = 15 \\implies \\hat{p} = 0.15$\n* רמת מובהקות $\\alpha = 0.05 \\implies z_{0.95} = 1.645$\n\nתחת השערת האפס $H_0$, טעות התקן מחושבת על סמך פרופורציית האפס $p_0$:\n$$SE_0 = \\sqrt{\\frac{p_0(1-p_0)}{n}} = \\sqrt{\\frac{0.10 \\cdot 0.90}{100}} = \\sqrt{\\frac{0.09}{100}} = \\frac{0.3}{10} = 0.03$$\n\nנחשב את סטטיסטי המבחן Z:\n$$Z = \\frac{\\hat{p} - p_0}{SE_0} = \\frac{0.15 - 0.10}{0.03} = \\frac{0.05}{0.03} \\approx 1.667$$\n\nכלל ההכרעה:\nנדחה את $H_0$ אם $Z > 1.645$.\n\nמכיוון ש-$Z = 1.667 > 1.645$, אנו דוחים את השערת האפס $H_0$. ישנן ראיות מובהקות סטטיסטית ברמת מובהקות של $5\\%$ ששיעור ההחזרות אכן עלה.'
+      },
+      {
+        id: 'prac-stats-10-4',
+        title: 'Practice 4: p-value Calculation',
+        titleHe: 'תרגול 4: חישוב ערך ה-p (p-value)',
+        isPractice: true,
+        content: 'For the proportion test in Practice 3 (where the test statistic was $Z = 1.67$ for a right-tailed test), calculate the exact p-value and state whether $H_0$ is rejected at $\\alpha=0.05$.',
+        contentHe: 'עבור מבחן הפרופורציה בתרגול 3 (בו התקבל סטטיסטי מבחן $Z=1.67$ במבחן חד-צדדי ימני), חשבו את ערך ה-p המדויק וקבעו האם דוחים את $H_0$ ברמת מובהקות של $\\alpha=0.05$.',
+        proof: 'For a right-tailed Z-test, the p-value is the probability that a standard normal variable is greater than or equal to our observed statistic $Z_{\\text{obs}} = 1.667$:\n$$p\\text{-value} = P(Z \\ge 1.667) = 1 - \\Phi(1.667)$$\n\nUsing standard normal cumulative distribution values:\n$$\\Phi(1.67) \\approx 0.9525$$\n$$p\\text{-value} = 1 - 0.9525 = 0.0475$$\n\nSince $p\\text{-value} = 0.0475 \\le 0.05$, we reject $H_0$ at the $\\alpha=0.05$ significance level. (Note that the p-value is less than our threshold, which is mathematically equivalent to the test statistic exceeding the critical value of $1.645$).',
+        proofHe: 'עבור מבחן Z חד-צדדי ימני, ערך ה-p הוא ההסתברות שמשתנה נורמלי סטנדרטי יקבל ערך גדול או שווה לסטטיסטי שנצפה בפועל $Z_{\\text{obs}} = 1.667$:\n$$p\\text{-value} = P(Z \\ge 1.667) = 1 - \\Phi(1.667)$$\n\nנעזר בערכי ההתפלגות הנורמלית הסטנדרטית המצטברת:\n$$\\Phi(1.67) \\approx 0.9525$$\n$$p\\text{-value} = 1 - 0.9525 = 0.0475$$\n\nמכיוון ש-$p\\text{-value} = 0.0475 \\le 0.05$, אנו דוחים את השערת האפס $H_0$ ברמת מובהקות של $\\alpha=0.05$. (שימו לב שערך ה-p קטן מרמת המובהקות, מה ששקול מתמטית לכך שסטטיסטי המבחן גדול מהערך הקריטי 1.645).'
+      },
+      {
+        id: 'prac-stats-10-5',
+        title: 'Practice 5: Type II Error & Power Calculation',
+        titleHe: 'תרגול 5: חישוב טעות מסוג שני ועוצמת המבחן',
+        isPractice: true,
+        content: 'For the one-sided Z-test in Practice 1 ($H_0: \\mu = 1000$ vs. $H_1: \\mu > 1000$, $\\sigma=80$, $n=64$, $\\alpha=0.05$), calculate the probability of a Type II error ($\\beta$) and the power of the test ($1-\\beta$) if the true mean is $\\mu_1 = 1030$.',
+        contentHe: 'עבור מבחן ה-Z החד-צדדי בתרגול 1 ($H_0: \\mu = 1000$ מול $H_1: \\mu > 1000$, שונות $\\sigma=80$, גודל מדגם $n=64$, רמת מובהקות $\\alpha=0.05$), חשבו את ההסתברות לטעות מסוג שני ($\\beta$) ואת עוצמת המבחן ($1-\\beta$) אם התוחלת האמיתית היא $\\mu_1 = 1030$.',
+        proof: 'First, find the critical value of the sample mean $\\bar{X}_c$ that triggers rejection. We reject $H_0$ if:\n$$Z = \\frac{\\bar{X} - 1000}{\\sigma/\\sqrt{n}} > 1.645 \\implies \\bar{X} > 1000 + 1.645 \\cdot \\frac{80}{\\sqrt{64}}$$\n$$\\bar{X} > 1000 + 1.645 \\cdot 10 = 1016.45$$\n\nSo the non-rejection (acceptance) region is $\\bar{X} \\le 1016.45$.\n\nIf the true mean is $\\mu_1 = 1030$, the sample mean is distributed as $\\bar{X} \\sim N(1030, 10^2)$ since $SE = 80/\\sqrt{64} = 10$.\n\nWe calculate $\\beta$ (probability of failing to reject $H_0$ under $\\mu=1030$):\n$$\\beta = P(\\bar{X} \\le 1016.45 \\mid \\mu=1030) = P\\left( \\frac{\\bar{X} - 1030}{10} \\le \\frac{1016.45 - 1030}{10} \\right)$$\n$$\\beta = P(Z \\le -1.355) = \\Phi(-1.355) = 1 - \\Phi(1.355) \\approx 1 - 0.9123 = 0.0877$$\n\nNow, we compute the power of the test:\n$$\\text{Power} = 1 - \\beta = 1 - 0.0877 = 0.9123 \\quad (\\text{or } 91.23\\%)$$',
+        proofHe: 'ראשית, נמצא את ערך ממוצע המדגם הקריטי $\\bar{X}_c$ שמעבר לו אנו דוחים את השערת האפס. אנו דוחים את $H_0$ אם:\n$$Z = \\frac{\\bar{X} - 1000}{\\sigma/\\sqrt{n}} > 1.645 \\implies \\bar{X} > 1000 + 1.645 \\cdot \\frac{80}{\\sqrt{64}}$$\n$$\\bar{X} > 1000 + 1.645 \\cdot 10 = 1016.45$$\n\nכלומר, אזור אי-הדחייה הוא $\\bar{X} \\le 1016.45$.\n\nאם התוחלת האמיתית היא $\\mu_1 = 1030$, אזי ממוצע המדגם מתפלג בפועל $\\bar{X} \\sim N(1030, 10^2)$ כיוון שטעות התקן היא $SE = 80/\\sqrt{64} = 10$.\n\nנחשב את $\\beta$ (ההסתברות לא לדחות את $H_0$ למרות שהתוחלת היא 1030):\n$$\\beta = P(\\bar{X} \\le 1016.45 \\mid \\mu=1030) = P\\left( \\frac{\\bar{X} - 1030}{10} \\le \\frac{1016.45 - 1030}{10} \\right)$$\n$$\\beta = P(Z \\le -1.355) = \\Phi(-1.355) = 1 - \\Phi(1.355) \\approx 1 - 0.9123 = 0.0877$$\n\nכעת, נחשב את עוצמת המבחן:\n$$\\text{עוצמת המבחן} = 1 - \\beta = 1 - 0.0877 = 0.9123 \\quad (\\text{או } 91.23\\%)$$'
+      }
+    ],
+    quiz: [
+      {
+        question: 'What is the probability of committing a Type I error when the null hypothesis is true?',
+        questionHe: 'מהי ההסתברות לבצע טעות מסוג ראשון כאשר השערת האפס נכונה?',
+        options: [
+          '\\alpha (The significance level)',
+          '\\beta',
+          '1 - \\alpha',
+          '1 - \\beta (The power)'
+        ],
+        optionsHe: [
+          '\\alpha (רמת המובהקות)',
+          '\\beta',
+          '1 - \\alpha',
+          '1 - \\beta (עוצמת המבחן)'
+        ],
+        correctAnswerIndex: 0,
+        explanation: 'By definition, the probability of a Type I error is set to the significance level $\\alpha$ of the test.',
+        explanationHe: 'לפי ההגדרה, ההסתברות לביצוע טעות מסוג ראשון שווה לרמת המובהקות $\\alpha$ שנקבעה למבחן.'
+      },
+      {
+        question: 'If we decrease the significance level $\\alpha$ (e.g., from $0.05$ to $0.01$), what happens to the probability of committing a Type II error $\\beta$, assuming everything else remains constant?',
+        questionHe: 'אם נקטין את רמת המובהקות $\\alpha$ (למשל מ-0.05 ל-0.01), מה יקרה להסתברות לטעות מסוג שני $\\beta$, בהנחה שכל שאר התנאים קבועים?',
+        options: [
+          'It increases',
+          'It decreases',
+          'It remains the same',
+          'It becomes zero'
+        ],
+        optionsHe: [
+          'היא תגדל',
+          'היא תקטן',
+          'היא תישאר ללא שינוי',
+          'היא תתאפס'
+        ],
+        correctAnswerIndex: 0,
+        explanation: 'Decreasing $\\alpha$ makes it harder to reject $H_0$, which increases the probability of failing to reject a false $H_0$ (Type II error).',
+        explanationHe: 'הקטנת $\\alpha$ מקשה על דחיית השערת האפס $H_0$, מה שמגדיל באופן ישיר את ההסתברות שלא לדחות השערת אפס שקרית (טעות מסוג שני).'
+      }
+    ]
+  }
 ];
