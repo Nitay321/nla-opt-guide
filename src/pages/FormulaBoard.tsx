@@ -1345,7 +1345,12 @@ export default function FormulaBoard() {
                           {isHe ? 'קבוע חיובי:' : 'Positive constant:'} <MathRenderer tex="x > 0" />
                         </td>
                         <td style={{ padding: '0.85rem' }}>
-                          <MathRenderer tex="P(Z > x) \le \frac{1}{x} \phi(x) = \frac{1}{x\sqrt{2\pi}} e^{-x^2/2}" />
+                          <strong>{isHe ? 'חד-צדדי (One-sided):' : 'One-sided:'}</strong><br/>
+                          <MathRenderer tex="P(Z \ge x) \le \frac{\phi(x)}{x} = \frac{e^{-x^2/2}}{x\sqrt{2\pi}}" /><br/><br/>
+                          <strong>{isHe ? 'דו-צדדי (Two-sided):' : 'Two-sided:'}</strong><br/>
+                          <MathRenderer tex="P(|Z| \ge x) \le \sqrt{\frac{2}{\pi}} \frac{e^{-x^2/2}}{x} = \frac{2\phi(x)}{x}" /><br/><br/>
+                          <strong>{isHe ? 'חסם דו-כיווני (Upper & Lower Bounds):' : 'Upper & Lower Bounds:'}</strong><br/>
+                          <MathRenderer tex="\left(\frac{1}{x} - \frac{1}{x^3}\right)\phi(x) \le P(Z \ge x) \le \frac{\phi(x)}{x}" />
                         </td>
                         <td style={{ padding: '0.85rem', fontWeight: 600, color: '#10b981' }}>
                           {isHe ? 'מעריכי מהיר (תת-גאוסי)' : 'Sub-Gaussian Exponential'}<br/>

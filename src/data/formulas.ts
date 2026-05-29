@@ -493,7 +493,7 @@ export const formulas: Formula[] = [
     categoryHe: 'אי-שוויונות',
     name: "Mill's Inequality",
     nameHe: 'אי-שוויון מיל',
-    equation: 'P(Z > x) \\le \\frac{1}{x} \\phi(x) = \\frac{1}{x\\sqrt{2\\pi}} e^{-x^2/2}, \\quad Z \\sim N(0,1), \\quad x > 0',
+    equation: 'P(Z \\ge x) \\le \\frac{\\phi(x)}{x} = \\frac{e^{-x^2/2}}{x\\sqrt{2\\pi}}, \\quad P(|Z| \\ge x) \\le \\sqrt{\\frac{2}{\\pi}} \\frac{e^{-x^2/2}}{x} = \\frac{2\\phi(x)}{x}, \\quad \\left(\\frac{1}{x} - \\frac{1}{x^3}\\right)\\phi(x) \\le P(Z \\ge x) \\le \\frac{\\phi(x)}{x}',
     description: 'Provides a highly accurate tail bound for a standard normal distribution without requiring numerical CDF integration.',
     descriptionHe: 'חוסם את הסתברות הזנב של משתנה נורמלי סטנדרטי Z ללא צורך בחישוב נומרי מורכב של פונקציית ההתפלגות המצטברת.'
   },
