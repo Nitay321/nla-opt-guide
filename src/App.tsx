@@ -970,17 +970,6 @@ function Navigation({ theme, toggleTheme }: { theme: 'dark' | 'light'; toggleThe
           <Link to="/formulas" className={`btn ${location.pathname === '/formulas' ? 'btn-accent' : 'btn-secondary'}`} style={{ padding: '0.5rem 0.75rem', fontSize: '0.85rem', height: '38px' }}>
             <FunctionSquare size={16} /> {tFormulas}
           </Link>
-          <a 
-            href="https://nla-opt-portal.surge.sh/" 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            className="btn btn-secondary"
-            style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.5rem 0.75rem', fontSize: '0.85rem', fontWeight: 600, height: '38px' }}
-            title={isHe ? 'עבור לפורטל אופטימיזציה ואלגברה נומרית' : 'Switch to NLA & Optimization Portal'}
-          >
-            <span style={{ fontSize: '1rem', display: 'flex', alignItems: 'center' }}>🧮</span>
-            <span>{isHe ? 'אלגברה ואופטימיזציה' : 'NLA & Optimization'}</span>
-          </a>
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexShrink: 0 }}>
