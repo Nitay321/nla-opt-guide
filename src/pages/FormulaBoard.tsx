@@ -151,7 +151,7 @@ export default function FormulaBoard() {
   const [selectedStatus, setSelectedStatus] = useState<'all' | 'green' | 'yellow' | 'red' | 'to-learn'>('all');
   const [selectedFormula, setSelectedFormula] = useState<Formula | null>(null);
   const [viewMode, setViewMode] = useState<'grouped' | 'list' | 'tables'>('grouped');
-  const [activeTableTab, setActiveTableTab] = useState<'distributions' | 'discrete-continuous' | '1d-2d'>('distributions');
+  const [activeTableTab, setActiveTableTab] = useState<'distributions' | 'discrete-continuous' | '1d-2d' | 'inequalities'>('distributions');
   const [sortBy, setSortBy] = useState<'name' | 'course' | 'category'>('name');
   
   // Collapse Toggles for NLA & OPT Stats Blocks
@@ -818,6 +818,22 @@ export default function FormulaBoard() {
           >
             {isHe ? 'משתנה חד-ממדי מול דו-ממדי 🌀' : '1D vs. 2D Random Variables 🌀'}
           </motion.button>
+          
+          <motion.button
+            onClick={() => setActiveTableTab('inequalities')}
+            whileHover={{ scale: 1.03, y: -1 }}
+            whileTap={{ scale: 0.97 }}
+            className={`filter-btn ${activeTableTab === 'inequalities' ? 'active' : ''}`}
+            style={{ 
+              background: activeTableTab === 'inequalities' ? 'var(--primary-color)' : 'var(--math-bg)',
+              color: activeTableTab === 'inequalities' ? 'white' : 'var(--text-secondary)',
+              border: '1px solid var(--surface-border)',
+              padding: '0.6rem 1.1rem',
+              fontWeight: 600
+            }}
+          >
+            {isHe ? 'אי-שוויונות הסתברותיים 🛡️' : 'Probability Inequalities 🛡️'}
+          </motion.button>
         </div>
 
         {/* Tab Content */}
@@ -1175,6 +1191,116 @@ export default function FormulaBoard() {
                           <strong>{isHe ? 'מקדם המתאם של פירסון:' : 'Pearson Correlation:'}</strong><br/>
                           <MathRenderer tex="\\rho_{X,Y} = \\frac{\\text{Cov}(X,Y)}{\\sqrt{\\text{Var}(X)\\text{Var}(Y)}}" /><br/>
                           <span style={{fontSize:'0.8rem', color:'var(--text-muted)'}}><MathRenderer tex="-1 \\le \\rho_{X,Y} \\le 1" /></span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </motion.div>
+          )}
+
+          {activeTableTab === 'inequalities' && (
+            <motion.div
+              key="inequalities-table"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+            >
+              <div className="glass-card" style={{ padding: '1.75rem', borderLeft: '4px solid var(--primary-color)' }}>
+                <h2 style={{ fontSize: '1.45rem', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <span>🛡️</span> {isHe ? 'אי-שוויונות הסתברותיים וריכוז הסתברות' : 'Probability Inequalities & Concentration Bounds'}
+                </h2>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.92rem', marginBottom: '1.5rem' }}>
+                  {isHe 
+                    ? 'השוואה מקיפה בין אי-השוויונות המרכזיים המשמשים לחסימת הסתברויות זנב וקביעת גודלי מדגם מינימליים ללא ידיעת ההתפלגות המלאה.'
+                    : 'A comprehensive comparison between the core inequalities used to bound tail probabilities and determine minimum sample sizes without knowing the exact underlying distribution.'}
+                </p>
+
+                <div style={{ overflowX: 'auto', width: '100%' }}>
+                  <table className="custom-table" style={{ width: '100%', minWidth: '850px', borderCollapse: 'collapse', fontSize: '0.92rem' }}>
+                    <thead>
+                      <tr style={{ background: 'rgba(255,255,255,0.02)', borderBottom: '2px solid var(--surface-border)' }}>
+                        <th style={{ padding: '0.85rem', width: '18%', textAlign: isHe ? 'right' : 'left' }}>{isHe ? 'שם האי-שוויון' : 'Inequality'}</th>
+                        <th style={{ padding: '0.85rem', width: '22%', textAlign: isHe ? 'right' : 'left' }}>{isHe ? 'תנאי קדם ודרישות' : 'Prerequisites & Conditions'}</th>
+                        <th style={{ padding: '0.85rem', width: '25%', textAlign: isHe ? 'right' : 'left', color: 'var(--primary-color)' }}>{isHe ? 'הנוסחה המתמטית' : 'Mathematical Formula'}</th>
+                        <th style={{ padding: '0.85rem', width: '15%', textAlign: isHe ? 'right' : 'left' }}>{isHe ? 'קצב דעיכת הזנב' : 'Tail Decay Rate'}</th>
+                        <th style={{ padding: '0.85rem', width: '20%', textAlign: isHe ? 'right' : 'left' }}>{isHe ? 'שימושים ומשמעות' : 'Core Application & Intuition'}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr style={{ borderBottom: '1px solid var(--surface-border)' }}>
+                        <td style={{ padding: '0.85rem', fontWeight: 'bold' }}>
+                          {isHe ? 'מרקוב (Markov)' : "Markov's Inequality"}
+                        </td>
+                        <td style={{ padding: '0.85rem' }}>
+                          {isHe ? 'משתנה מקרי אי-שלילי בלבד:' : 'Non-negative random variable only:'} <br/>
+                          <MathRenderer tex="X \\ge 0" /><br/>
+                          {isHe ? 'קבוע חיובי:' : 'Positive constant:'} <MathRenderer tex="c > 0" />
+                        </td>
+                        <td style={{ padding: '0.85rem' }}>
+                          <MathRenderer tex="P(X \\ge c) \\le \\frac{\\mathbb{E}[X]}{c}" />
+                        </td>
+                        <td style={{ padding: '0.85rem', fontWeight: 600, color: '#f59e0b' }}>
+                          {isHe ? 'ליניארי איטי' : 'Slow Linear'}<br/>
+                          <MathRenderer tex="O(1/c)" />
+                        </td>
+                        <td style={{ padding: '0.85rem' }}>
+                          {isHe 
+                            ? 'הבסיסי ביותר. מאפשר לחסום הסתברות זנב על סמך התוחלת בלבד. לדוגמה: לכל היותר 10% מהעובדים יכולים להרוויח פי 10 מהשכר הממוצע.' 
+                            : 'The most basic bound. Requires only the expected value. Example: at most 10% of employees can earn 10 times the average salary.'}
+                        </td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid var(--surface-border)' }}>
+                        <td style={{ padding: '0.85rem', fontWeight: 'bold' }}>
+                          {isHe ? "צ'בישב (Chebyshev)" : "Chebyshev's Inequality"}
+                        </td>
+                        <td style={{ padding: '0.85rem' }}>
+                          {isHe ? 'כל התפלגות בעלת תוחלת ושונות סופיות:' : 'Any distribution with finite mean and variance:'}<br/>
+                          <MathRenderer tex="\\mathbb{E}[X] = \\mu, \\ \\text{Var}(X) = \\sigma^2" /><br/>
+                          {isHe ? 'קבוע חיובי:' : 'Positive constant:'} <MathRenderer tex="c > 0" />
+                        </td>
+                        <td style={{ padding: '0.85rem' }}>
+                          <MathRenderer tex="P(|X - \\mu| \\ge c) \\le \\frac{\\text{Var}(X)}{c^2}" /><br/><br/>
+                          <strong>{isHe ? 'צורת סטיות תקן:' : 'Standard deviation form:'}</strong><br/>
+                          <MathRenderer tex="P(|X - \\mu| \\ge k\\sigma) \\le \\frac{1}{k^2}" />
+                        </td>
+                        <td style={{ padding: '0.85rem', fontWeight: 600, color: '#f59e0b' }}>
+                          {isHe ? 'פולינומי בינוני' : 'Medium Polynomial'}<br/>
+                          <MathRenderer tex="O(1/c^2)" /> {isHe ? 'או' : 'or'} <MathRenderer tex="O(1/k^2)" />
+                        </td>
+                        <td style={{ padding: '0.85rem' }}>
+                          {isHe 
+                            ? 'חוסם את מרחק המשתנה מהממוצע שלו על סמך השונות, ללא קשר לצורת ההתפלגות. לדוגמה: לכל היותר 11.1% מכל התפלגות בעולם רחוקים יותר מ-3 סטיות תקן מהממוצע.' 
+                            : 'Bounds the distance of a variable from its mean using variance, regardless of shape. Example: at most 11.1% of any distribution lies beyond 3 standard deviations.'}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style={{ padding: '0.85rem', fontWeight: 'bold' }}>
+                          {isHe ? 'הופדינג (Hoeffding)' : "Hoeffding's Inequality"}
+                        </td>
+                        <td style={{ padding: '0.85rem' }}>
+                          {isHe ? 'משתנים בלתי תלויים בעלי התפלגות זהה (i.i.d.):' : 'Independent & identically distributed (i.i.d.) variables:'}<br/>
+                          <MathRenderer tex="X_1, \\dots, X_n \\sim Bern(p)" /><br/>
+                          {isHe ? 'ממוצע מדגם:' : 'Sample mean:'} <MathRenderer tex="\\bar{X}_n = \\frac{1}{n}\\sum X_i" /><br/>
+                          {isHe ? 'חסומים בקטע.' : 'Bounded support.'}
+                        </td>
+                        <td style={{ padding: '0.85rem' }}>
+                          <MathRenderer tex="P(|\\bar{X}_n - p| \\ge \\epsilon) \\le 2e^{-2n\\epsilon^2}" />
+                        </td>
+                        <td style={{ padding: '0.85rem', fontWeight: 600, color: '#10b981' }}>
+                          {isHe ? 'מעריכי מהיר במיוחד' : 'Super Fast Exponential'}<br/>
+                          <MathRenderer tex="O(e^{-n})" />
+                        </td>
+                        <td style={{ padding: '0.85rem' }}>
+                          <strong>{isHe ? 'קביעת גודל מדגם מינימלי:' : 'Minimum Sample Size:'}</strong><br/>
+                          <MathRenderer tex="n \\ge \\frac{\\ln(2/\\alpha)}{2\\epsilon^2}" /><br/>
+                          <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                            {isHe 
+                              ? "חיסכון עצום בגודל המדגם (מעל 60% לעומת צ'בישב) בסקרים, מערכות תוכנה וניסויים קליניים בזכות דעיכה מעריכית." 
+                              : 'Massive sample size savings (over 60% compared to Chebyshev) in clinical trials and software testing due to exponential decay.'}
+                          </span>
                         </td>
                       </tr>
                     </tbody>
