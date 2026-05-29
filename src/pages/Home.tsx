@@ -15,7 +15,7 @@ export default function Home() {
   const lTitle = isHe ? 'פורטל למידה מואצת' : 'Accelerated Mastery Portal';
   const lSubTitle = isHe 
     ? 'למד תורת ההסתברות (PROB) וסטטיסטיקה (STATS) ביעילות ובמהירות. בחר יחידת לימוד מטה כדי להתחיל למידה פעילה, לקרוא הוכחות פורמליות, לסקור דוגמאות מפורטות ולבחון את עצמך.'
-    : 'Master Probability Theory (PROB) and Optimization (STATS) efficiently. Pick a chapter below to start active learning, read proofs, review examples, and test yourself.';
+    : 'Master Probability Theory (PROB) and Statistics (STATS) efficiently. Pick a chapter below to start active learning, read proofs, review examples, and test yourself.';
 
   const lProbTitle = isHe ? 'תורת ההסתברות' : 'Probability Theory';
   const lStatsTitle = isHe ? 'סטטיסטיקה' : 'Statistics';

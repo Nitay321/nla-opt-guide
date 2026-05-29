@@ -15,68 +15,124 @@ interface CategoryStyle {
 }
 
 const CATEGORY_STYLES: Record<string, CategoryStyle> = {
-  'Matrix & Vector Norms': {
+  'Probability Spaces': {
     border: 'var(--primary-color)',
-    badgeBg: 'rgba(99, 102, 241, 0.15)',
+    badgeBg: 'rgba(99, 102, 241, 0.12)',
     badgeText: 'var(--primary-color)',
-    shadow: 'rgba(99, 102, 241, 0.1)',
-    glow: 'rgba(99, 102, 241, 0.2)'
+    shadow: 'rgba(99, 102, 241, 0.05)',
+    glow: 'rgba(99, 102, 241, 0.15)'
   },
-  'Direct Solvers': {
-    border: '#a855f7',
-    badgeBg: 'rgba(168, 85, 247, 0.15)',
-    badgeText: '#a855f7',
-    shadow: 'rgba(168, 85, 247, 0.1)',
-    glow: 'rgba(168, 85, 247, 0.2)'
+  'Inclusion-Exclusion': {
+    border: '#06b6d4',
+    badgeBg: 'rgba(6, 182, 212, 0.12)',
+    badgeText: '#06b6d4',
+    shadow: 'rgba(6, 182, 212, 0.05)',
+    glow: 'rgba(6, 182, 212, 0.15)'
   },
-  'Least Squares Minimization': {
-    border: '#ec4899',
-    badgeBg: 'rgba(236, 72, 153, 0.15)',
-    badgeText: '#ec4899',
-    shadow: 'rgba(236, 72, 153, 0.1)',
-    glow: 'rgba(236, 72, 153, 0.2)'
+  'Conditional & Bayes': {
+    border: '#0ea5e9',
+    badgeBg: 'rgba(14, 165, 233, 0.12)',
+    badgeText: '#0ea5e9',
+    shadow: 'rgba(14, 165, 233, 0.05)',
+    glow: 'rgba(14, 165, 233, 0.15)'
   },
-  'Orthogonalization & SVD': {
-    border: '#3b82f6',
-    badgeBg: 'rgba(59, 130, 246, 0.15)',
-    badgeText: '#3b82f6',
-    shadow: 'rgba(59, 130, 246, 0.1)',
-    glow: 'rgba(59, 130, 246, 0.2)'
-  },
-  'Iterative Solvers': {
-    border: '#14b8a6',
-    badgeBg: 'rgba(20, 184, 166, 0.15)',
-    badgeText: '#14b8a6',
-    shadow: 'rgba(20, 184, 166, 0.1)',
-    glow: 'rgba(20, 184, 166, 0.2)'
-  },
-  'Eigenvalue Solvers': {
-    border: '#f59e0b',
-    badgeBg: 'rgba(245, 158, 11, 0.15)',
-    badgeText: '#f59e0b',
-    shadow: 'rgba(245, 158, 11, 0.1)',
-    glow: 'rgba(245, 158, 11, 0.2)'
-  },
-  'Optimization Foundations': {
-    border: '#eab308',
-    badgeBg: 'rgba(234, 179, 8, 0.15)',
-    badgeText: '#eab308',
-    shadow: 'rgba(234, 179, 8, 0.1)',
-    glow: 'rgba(234, 179, 8, 0.2)'
-  },
-  'Unconstrained Optimization': {
-    border: '#ef4444',
-    badgeBg: 'rgba(239, 68, 68, 0.15)',
-    badgeText: '#ef4444',
-    shadow: 'rgba(239, 68, 68, 0.1)',
-    glow: 'rgba(239, 68, 68, 0.2)'
-  },
-  'Constrained Optimization': {
+  'Continuous Variables': {
     border: '#10b981',
-    badgeBg: 'rgba(16, 185, 129, 0.15)',
+    badgeBg: 'rgba(16, 185, 129, 0.12)',
     badgeText: '#10b981',
-    shadow: 'rgba(16, 185, 129, 0.1)',
-    glow: 'rgba(16, 185, 129, 0.2)'
+    shadow: 'rgba(16, 185, 129, 0.05)',
+    glow: 'rgba(16, 185, 129, 0.15)'
+  },
+  'Continuous Distributions': {
+    border: '#14b8a6',
+    badgeBg: 'rgba(20, 184, 166, 0.12)',
+    badgeText: '#14b8a6',
+    shadow: 'rgba(20, 184, 166, 0.05)',
+    glow: 'rgba(20, 184, 166, 0.15)'
+  },
+  'Discrete Variables': {
+    border: '#f59e0b',
+    badgeBg: 'rgba(245, 158, 11, 0.12)',
+    badgeText: '#f59e0b',
+    shadow: 'rgba(245, 158, 11, 0.05)',
+    glow: 'rgba(245, 158, 11, 0.15)'
+  },
+  'Discrete Distributions': {
+    border: '#f97316',
+    badgeBg: 'rgba(249, 115, 22, 0.12)',
+    badgeText: '#f97316',
+    shadow: 'rgba(249, 115, 22, 0.05)',
+    glow: 'rgba(249, 115, 22, 0.15)'
+  },
+  'Joint Distributions': {
+    border: '#8b5cf6',
+    badgeBg: 'rgba(139, 92, 246, 0.12)',
+    badgeText: '#8b5cf6',
+    shadow: 'rgba(139, 92, 246, 0.05)',
+    glow: 'rgba(139, 92, 246, 0.15)'
+  },
+  'Probability Inequalities': {
+    border: '#ec4899',
+    badgeBg: 'rgba(236, 72, 153, 0.12)',
+    badgeText: '#ec4899',
+    shadow: 'rgba(236, 72, 153, 0.05)',
+    glow: 'rgba(236, 72, 153, 0.15)'
+  },
+  'Moment Generating Functions': {
+    border: '#d946ef',
+    badgeBg: 'rgba(217, 70, 239, 0.12)',
+    badgeText: '#d946ef',
+    shadow: 'rgba(217, 70, 239, 0.05)',
+    glow: 'rgba(217, 70, 239, 0.15)'
+  },
+  'Limit Theorems': {
+    border: '#f43f5e',
+    badgeBg: 'rgba(244, 63, 94, 0.12)',
+    badgeText: '#f43f5e',
+    shadow: 'rgba(244, 63, 94, 0.05)',
+    glow: 'rgba(244, 63, 94, 0.15)'
+  },
+  'Method of Moments': {
+    border: '#4f46e5',
+    badgeBg: 'rgba(79, 70, 229, 0.12)',
+    badgeText: '#4f46e5',
+    shadow: 'rgba(79, 70, 229, 0.05)',
+    glow: 'rgba(79, 70, 229, 0.15)'
+  },
+  'Maximum Likelihood': {
+    border: '#7c3aed',
+    badgeBg: 'rgba(124, 58, 237, 0.12)',
+    badgeText: '#7c3aed',
+    shadow: 'rgba(124, 58, 237, 0.05)',
+    glow: 'rgba(124, 58, 237, 0.15)'
+  },
+  'Confidence Intervals': {
+    border: '#059669',
+    badgeBg: 'rgba(5, 150, 105, 0.12)',
+    badgeText: '#059669',
+    shadow: 'rgba(5, 150, 105, 0.05)',
+    glow: 'rgba(5, 150, 105, 0.15)'
+  },
+  'Hypothesis Testing': {
+    border: '#d97706',
+    badgeBg: 'rgba(217, 119, 6, 0.12)',
+    badgeText: '#d97706',
+    shadow: 'rgba(217, 119, 6, 0.05)',
+    glow: 'rgba(217, 119, 6, 0.15)'
+  },
+  'Estimator Properties': {
+    border: '#475569',
+    badgeBg: 'rgba(71, 85, 105, 0.12)',
+    badgeText: '#475569',
+    shadow: 'rgba(71, 85, 105, 0.05)',
+    glow: 'rgba(71, 85, 105, 0.15)'
+  },
+  'Linear Regression': {
+    border: '#0891b2',
+    badgeBg: 'rgba(8, 145, 178, 0.12)',
+    badgeText: '#0891b2',
+    shadow: 'rgba(8, 145, 178, 0.05)',
+    glow: 'rgba(8, 145, 178, 0.15)'
   }
 };
 
@@ -94,7 +150,8 @@ export default function FormulaBoard() {
   const [selectedCourse, setSelectedCourse] = useState<'all' | 'prob' | 'stats'>('all');
   const [selectedStatus, setSelectedStatus] = useState<'all' | 'green' | 'yellow' | 'red' | 'to-learn'>('all');
   const [selectedFormula, setSelectedFormula] = useState<Formula | null>(null);
-  const [viewMode, setViewMode] = useState<'grouped' | 'list'>('grouped');
+  const [viewMode, setViewMode] = useState<'grouped' | 'list' | 'tables'>('grouped');
+  const [activeTableTab, setActiveTableTab] = useState<'distributions' | 'discrete-continuous' | '1d-2d'>('distributions');
   const [sortBy, setSortBy] = useState<'name' | 'course' | 'category'>('name');
   
   // Collapse Toggles for NLA & OPT Stats Blocks
@@ -276,7 +333,7 @@ export default function FormulaBoard() {
                 textTransform: 'uppercase', 
                 color: f.courseId === 'prob' ? 'var(--primary-color)' : 'var(--secondary-color)' 
               }}>
-                {f.courseId === 'prob' ? 'NLA' : 'OPT'}
+                {f.courseId === 'prob' ? (isHe ? 'הסתברות' : 'PROB') : (isHe ? 'סטטיסטיקה' : 'STATS')}
               </span>
               {showCategory && (
                 <span style={{ 
@@ -595,7 +652,7 @@ export default function FormulaBoard() {
             textTransform: 'uppercase', 
             color: f.courseId === 'prob' ? 'var(--primary-color)' : 'var(--secondary-color)' 
           }}>
-            {f.courseId === 'prob' ? 'NLA' : 'OPT'}
+            {f.courseId === 'prob' ? (isHe ? 'הסתברות' : 'PROB') : (isHe ? 'סטטיסטיקה' : 'STATS')}
           </span>
           {showCategory && (
             <span style={{ 
@@ -705,22 +762,448 @@ export default function FormulaBoard() {
     );
   };
 
+
+  // ==========================================
+  // Comparative Summary Tables Render Function
+  // ==========================================
+  const renderComparisonTables = () => {
+    return (
+      <div style={{ marginBottom: '4rem', direction: isHe ? 'rtl' : 'ltr' }}>
+        {/* Table Tabs */}
+        <div style={{ display: 'flex', gap: '0.65rem', marginBottom: '2rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+          <motion.button
+            onClick={() => setActiveTableTab('distributions')}
+            whileHover={{ scale: 1.03, y: -1 }}
+            whileTap={{ scale: 0.97 }}
+            className={`filter-btn ${activeTableTab === 'distributions' ? 'active' : ''}`}
+            style={{ 
+              background: activeTableTab === 'distributions' ? 'var(--primary-color)' : 'var(--math-bg)',
+              color: activeTableTab === 'distributions' ? 'white' : 'var(--text-secondary)',
+              border: '1px solid var(--surface-border)',
+              padding: '0.6rem 1.1rem',
+              fontWeight: 600
+            }}
+          >
+            {isHe ? 'מטריצת התפלגויות מלאה 📊' : 'Master Distributions Matrix 📊'}
+          </motion.button>
+          
+          <motion.button
+            onClick={() => setActiveTableTab('discrete-continuous')}
+            whileHover={{ scale: 1.03, y: -1 }}
+            whileTap={{ scale: 0.97 }}
+            className={`filter-btn ${activeTableTab === 'discrete-continuous' ? 'active' : ''}`}
+            style={{ 
+              background: activeTableTab === 'discrete-continuous' ? 'var(--primary-color)' : 'var(--math-bg)',
+              color: activeTableTab === 'discrete-continuous' ? 'white' : 'var(--text-secondary)',
+              border: '1px solid var(--surface-border)',
+              padding: '0.6rem 1.1rem',
+              fontWeight: 600
+            }}
+          >
+            {isHe ? 'הסתברות בדידה מול רציפה ⚖️' : 'Discrete vs. Continuous ⚖️'}
+          </motion.button>
+
+          <motion.button
+            onClick={() => setActiveTableTab('1d-2d')}
+            whileHover={{ scale: 1.03, y: -1 }}
+            whileTap={{ scale: 0.97 }}
+            className={`filter-btn ${activeTableTab === '1d-2d' ? 'active' : ''}`}
+            style={{ 
+              background: activeTableTab === '1d-2d' ? 'var(--primary-color)' : 'var(--math-bg)',
+              color: activeTableTab === '1d-2d' ? 'white' : 'var(--text-secondary)',
+              border: '1px solid var(--surface-border)',
+              padding: '0.6rem 1.1rem',
+              fontWeight: 600
+            }}
+          >
+            {isHe ? 'משתנה חד-ממדי מול דו-ממדי 🌀' : '1D vs. 2D Random Variables 🌀'}
+          </motion.button>
+        </div>
+
+        {/* Tab Content */}
+        <AnimatePresence mode="wait">
+          {activeTableTab === 'distributions' && (
+            <motion.div
+              key="distributions-table"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+            >
+              <div className="glass-card" style={{ padding: '1.75rem', borderLeft: '4px solid var(--primary-color)' }}>
+                <h2 style={{ fontSize: '1.45rem', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <span>📊</span> {isHe ? 'מטריצת התפלגויות מלאה' : 'Master Distributions Matrix'}
+                </h2>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.92rem', marginBottom: '1.5rem' }}>
+                  {isHe 
+                    ? 'סיכום מקיף של כל ההתפלגויות שלמדנו בקורס הנוכחי, ומתחתיהן התפלגויות הרקע שחשוב להכיר מקורסים קודמים.'
+                    : 'A comprehensive summary of all probability distributions learned in the current course, followed by essential background distributions from prerequisites.'}
+                </p>
+
+                {/* Section A: Learned in This Course */}
+                <h3 style={{ fontSize: '1.15rem', color: '#10b981', borderBottom: '1px dashed rgba(16, 185, 129, 0.3)', paddingBottom: '0.4rem', marginTop: '1.5rem', marginBottom: '1rem' }}>
+                  ✨ {isHe ? 'התפלגויות שלמדנו בקורס הנוכחי (נושאים חדשים)' : 'Distributions Learned in This Course'}
+                </h3>
+                <div style={{ overflowX: 'auto', width: '100%' }}>
+                  <table className="custom-table" style={{ width: '100%', minWidth: '1000px', borderCollapse: 'collapse', fontSize: '0.88rem' }}>
+                    <thead>
+                      <tr style={{ background: 'rgba(255,255,255,0.02)', borderBottom: '2px solid var(--surface-border)' }}>
+                        <th style={{ padding: '0.75rem', textAlign: isHe ? 'right' : 'left' }}>{isHe ? 'שם ההתפלגות' : 'Distribution Name'}</th>
+                        <th style={{ padding: '0.75rem', textAlign: 'center' }}>{isHe ? 'סוג' : 'Type'}</th>
+                        <th style={{ padding: '0.75rem', textAlign: 'center' }}>{isHe ? 'פרמטרים' : 'Parameters'}</th>
+                        <th style={{ padding: '0.75rem', textAlign: 'left' }}>{isHe ? 'פונקציית צפיפות/הסתברות' : 'PDF / PMF'}</th>
+                        <th style={{ padding: '0.75rem', textAlign: 'left' }}>{isHe ? 'תוחלת' : 'Expectation'}</th>
+                        <th style={{ padding: '0.75rem', textAlign: 'left' }}>{isHe ? 'שונות' : 'Variance'}</th>
+                        <th style={{ padding: '0.75rem', textAlign: 'left' }}>{isHe ? 'פונקציה יוצרת מומנטים MGF' : 'MGF'}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr style={{ borderBottom: '1px solid var(--surface-border)' }}>
+                        <td style={{ padding: '0.75rem', fontWeight: 'bold' }}>{isHe ? 'אחידה רציפה (Uniform)' : 'Continuous Uniform'}</td>
+                        <td style={{ padding: '0.75rem', textAlign: 'center' }}><span style={{ color: '#10b981' }}>{isHe ? 'רציף' : 'Continuous'}</span></td>
+                        <td style={{ padding: '0.75rem', textAlign: 'center' }}>{"$a, b \\in \\mathbb{R}$"}</td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="f_X(x) = \\frac{1}{b-a}" /> <br/><span style={{fontSize:'0.75rem', color:'var(--text-muted)'}}>{"$a \\le x \\le b$"}</span></td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="\\frac{a+b}{2}" /></td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="\\frac{(b-a)^2}{12}" /></td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="\\frac{e^{bt} - e^{at}}{t(b-a)}" /></td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid var(--surface-border)' }}>
+                        <td style={{ padding: '0.75rem', fontWeight: 'bold' }}>{isHe ? 'מעריכית (Exponential)' : 'Exponential'}</td>
+                        <td style={{ padding: '0.75rem', textAlign: 'center' }}><span style={{ color: '#10b981' }}>{isHe ? 'רציף' : 'Continuous'}</span></td>
+                        <td style={{ padding: '0.75rem', textAlign: 'center' }}>{"$\\lambda > 0$"}</td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="f_X(x) = \\lambda e^{-\\lambda x}" /> <br/><span style={{fontSize:'0.75rem', color:'var(--text-muted)'}}>{"$x \\ge 0$"}</span></td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="\\frac{1}{\\lambda}" /></td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="\\frac{1}{\\lambda^2}" /></td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="\\frac{\\lambda}{\\lambda - t}" /><br/><span style={{fontSize:'0.75rem', color:'var(--text-muted)'}}>{"$t < \\lambda$"}</span></td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid var(--surface-border)' }}>
+                        <td style={{ padding: '0.75rem', fontWeight: 'bold' }}>{isHe ? 'נורמלית (Normal)' : 'Normal'}</td>
+                        <td style={{ padding: '0.75rem', textAlign: 'center' }}><span style={{ color: '#10b981' }}>{isHe ? 'רציף' : 'Continuous'}</span></td>
+                        <td style={{ padding: '0.75rem', textAlign: 'center' }}>{"$\\mu \\in \\mathbb{R}, \\sigma^2 > 0$"}</td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="f_X(x) = \\frac{1}{\\sigma\\sqrt{2\\pi}} e^{-\\frac{(x-\\mu)^2}{2\\sigma^2}}" /></td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="\\mu" /></td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="\\sigma^2" /></td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="e^{\\mu t + \\frac{1}{2}\\sigma^2 t^2}" /></td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid var(--surface-border)' }}>
+                        <td style={{ padding: '0.75rem', fontWeight: 'bold' }}>{isHe ? 'חי בריבוע (Chi-Square)' : 'Chi-Square'}</td>
+                        <td style={{ padding: '0.75rem', textAlign: 'center' }}><span style={{ color: '#10b981' }}>{isHe ? 'רציף' : 'Continuous'}</span></td>
+                        <td style={{ padding: '0.75rem', textAlign: 'center' }}>{"$k \\in \\mathbb{N}$"}</td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="f_X(x) = \\frac{x^{k/2-1} e^{-x/2}}{2^{k/2}\\Gamma(k/2)}" /> <br/><span style={{fontSize:'0.75rem', color:'var(--text-muted)'}}>{"$x > 0$"}</span></td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="k" /></td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="2k" /></td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="(1 - 2t)^{-k/2}" /><br/><span style={{fontSize:'0.75rem', color:'var(--text-muted)'}}>{"$t < 1/2$"}</span></td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid var(--surface-border)' }}>
+                        <td style={{ padding: '0.75rem', fontWeight: 'bold' }}>{isHe ? "סטודנט t (Student's t)" : "Student's t"}</td>
+                        <td style={{ padding: '0.75rem', textAlign: 'center' }}><span style={{ color: '#10b981' }}>{isHe ? 'רציף' : 'Continuous'}</span></td>
+                        <td style={{ padding: '0.75rem', textAlign: 'center' }}>{"$\\nu \\in \\mathbb{N}$"}</td>
+                        <td style={{ padding: '0.75rem', color: 'var(--text-muted)' }}>{isHe ? 'עקומה פעמונית סימטרית' : 'Symmetric bell shape'}</td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="0" /><br/><span style={{fontSize:'0.75rem', color:'var(--text-muted)'}}>{"($\\nu > 1$)"}</span></td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="\\frac{\\nu}{\\nu - 2}" /><br/><span style={{fontSize:'0.75rem', color:'var(--text-muted)'}}>{"($\\nu > 2$)"}</span></td>
+                        <td style={{ padding: '0.75rem', color: 'var(--text-muted)' }}>{isHe ? 'לא קיים' : 'None'}</td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid var(--surface-border)' }}>
+                        <td style={{ padding: '0.75rem', fontWeight: 'bold' }}>{isHe ? 'ריילי (Rayleigh)' : 'Rayleigh'}</td>
+                        <td style={{ padding: '0.75rem', textAlign: 'center' }}><span style={{ color: '#10b981' }}>{isHe ? 'רציף' : 'Continuous'}</span></td>
+                        <td style={{ padding: '0.75rem', textAlign: 'center' }}>{"$\\sigma > 0$"}</td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="f_X(x) = \\frac{x}{\\sigma^2} e^{-x^2/(2\\sigma^2)}" /> <br/><span style={{fontSize:'0.75rem', color:'var(--text-muted)'}}>{"$x \\ge 0$"}</span></td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="\\sigma \\sqrt{\\frac{\\pi}{2}}" /></td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="\\sigma^2 \\frac{4 - \\pi}{2}" /></td>
+                        <td style={{ padding: '0.75rem', color:'var(--text-muted)' }}>{isHe ? 'פתרון אינטגרלי מורכב' : 'Complex integral'}</td>
+                      </tr>
+                      <tr>
+                        <td style={{ padding: '0.75rem', fontWeight: 'bold' }}>{isHe ? 'גאמה / ארלנג (Gamma)' : 'Gamma / Erlang'}</td>
+                        <td style={{ padding: '0.75rem', textAlign: 'center' }}><span style={{ color: '#10b981' }}>{isHe ? 'רציף' : 'Continuous'}</span></td>
+                        <td style={{ padding: '0.75rem', textAlign: 'center' }}>{"$\\alpha, \\beta > 0$"}</td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="f_X(x) = \\frac{\\beta^\\alpha x^{\\alpha-1} e^{-\\beta x}}{\\Gamma(\\alpha)}" /> <br/><span style={{fontSize:'0.75rem', color:'var(--text-muted)'}}>{"$x \\ge 0$"}</span></td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="\\frac{\\alpha}{\\beta}" /></td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="\\frac{\\alpha}{\\beta^2}" /></td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="(1 - t/\\beta)^{-\\alpha}" /><br/><span style={{fontSize:'0.75rem', color:'var(--text-muted)'}}>{"$t < \\beta$"}</span></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Section B: Prerequisite distributions */}
+                <h3 style={{ fontSize: '1.15rem', color: '#f59e0b', borderBottom: '1px dashed rgba(245, 158, 11, 0.3)', paddingBottom: '0.4rem', marginTop: '3rem', marginBottom: '1rem' }}>
+                  ⏳ {isHe ? 'התפלגויות רקע (מקורסים קודמים - קדם הכרחי)' : 'Prerequisite Background Distributions'}
+                </h3>
+                <div style={{ overflowX: 'auto', width: '100%' }}>
+                  <table className="custom-table" style={{ width: '100%', minWidth: '1000px', borderCollapse: 'collapse', fontSize: '0.88rem' }}>
+                    <thead>
+                      <tr style={{ background: 'rgba(255,255,255,0.02)', borderBottom: '2px solid var(--surface-border)' }}>
+                        <th style={{ padding: '0.75rem', textAlign: isHe ? 'right' : 'left' }}>{isHe ? 'שם ההתפלגות' : 'Distribution Name'}</th>
+                        <th style={{ padding: '0.75rem', textAlign: 'center' }}>{isHe ? 'סוג' : 'Type'}</th>
+                        <th style={{ padding: '0.75rem', textAlign: 'center' }}>{isHe ? 'פרמטרים' : 'Parameters'}</th>
+                        <th style={{ padding: '0.75rem', textAlign: 'left' }}>{isHe ? 'פונקציית צפיפות/הסתברות' : 'PDF / PMF'}</th>
+                        <th style={{ padding: '0.75rem', textAlign: 'left' }}>{isHe ? 'תוחלת' : 'Expectation'}</th>
+                        <th style={{ padding: '0.75rem', textAlign: 'left' }}>{isHe ? 'שונות' : 'Variance'}</th>
+                        <th style={{ padding: '0.75rem', textAlign: 'left' }}>{isHe ? 'פונקציה יוצרת מומנטים MGF' : 'MGF'}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr style={{ borderBottom: '1px solid var(--surface-border)' }}>
+                        <td style={{ padding: '0.75rem', fontWeight: 'bold' }}>{isHe ? 'ברנולי (Bernoulli)' : 'Bernoulli'}</td>
+                        <td style={{ padding: '0.75rem', textAlign: 'center' }}><span style={{ color: '#f59e0b' }}>{isHe ? 'בדיד' : 'Discrete'}</span></td>
+                        <td style={{ padding: '0.75rem', textAlign: 'center' }}>{"$p \\in [0,1]$"}</td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="p_X(x) = p^x (1-p)^{1-x}" /> <br/><span style={{fontSize:'0.75rem', color:'var(--text-muted)'}}>{"$x \\in \\{0, 1\\}$"}</span></td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="p" /></td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="p(1-p)" /></td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="(1-p) + pe^t" /></td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid var(--surface-border)' }}>
+                        <td style={{ padding: '0.75rem', fontWeight: 'bold' }}>{isHe ? 'בינומית (Binomial)' : 'Binomial'}</td>
+                        <td style={{ padding: '0.75rem', textAlign: 'center' }}><span style={{ color: '#f59e0b' }}>{isHe ? 'בדיד' : 'Discrete'}</span></td>
+                        <td style={{ padding: '0.75rem', textAlign: 'center' }}>{"$n \\in \\mathbb{N}, p \\in [0,1]$"}</td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="P(X=k) = \\binom{n}{k}p^k(1-p)^{n-k}" /> <br/><span style={{fontSize:'0.75rem', color:'var(--text-muted)'}}>{"$k \\in \\{0,..,n\\}$"}</span></td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="np" /></td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="np(1-p)" /></td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="((1-p) + pe^t)^n" /></td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid var(--surface-border)' }}>
+                        <td style={{ padding: '0.75rem', fontWeight: 'bold' }}>{isHe ? 'פואסון (Poisson)' : 'Poisson'}</td>
+                        <td style={{ padding: '0.75rem', textAlign: 'center' }}><span style={{ color: '#f59e0b' }}>{isHe ? 'בדיד' : 'Discrete'}</span></td>
+                        <td style={{ padding: '0.75rem', textAlign: 'center' }}>{"$\\lambda > 0$"}</td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="P(X=k) = \\frac{e^{-\\lambda}\\lambda^k}{k!}" /> <br/><span style={{fontSize:'0.75rem', color:'var(--text-muted)'}}>{"$k \\in \\{0, 1, ..\\}$"}</span></td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="\\lambda" /></td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="\\lambda" /></td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="e^{\\lambda(e^t - 1)}" /></td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid var(--surface-border)' }}>
+                        <td style={{ padding: '0.75rem', fontWeight: 'bold' }}>{isHe ? 'גיאומטרית (Geometric)' : 'Geometric'}</td>
+                        <td style={{ padding: '0.75rem', textAlign: 'center' }}><span style={{ color: '#f59e0b' }}>{isHe ? 'בדיד' : 'Discrete'}</span></td>
+                        <td style={{ padding: '0.75rem', textAlign: 'center' }}>{"$p \\in (0,1]$"}</td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="P(X=k) = (1-p)^{k-1}p" /> <br/><span style={{fontSize:'0.75rem', color:'var(--text-muted)'}}>{"$k \\in \\{1, 2, ..\\}$"}</span></td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="\\frac{1}{p}" /></td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="\\frac{1-p}{p^2}" /></td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="\\frac{pe^t}{1 - (1-p)e^t}" /></td>
+                      </tr>
+                      <tr>
+                        <td style={{ padding: '0.75rem', fontWeight: 'bold' }}>{isHe ? 'היפרגיאומטרית (Hypergeom.)' : 'Hypergeometric'}</td>
+                        <td style={{ padding: '0.75rem', textAlign: 'center' }}><span style={{ color: '#f59e0b' }}>{isHe ? 'בדיד' : 'Discrete'}</span></td>
+                        <td style={{ padding: '0.75rem', textAlign: 'center' }}>{"$N, D, n \\in \\mathbb{N}$"}</td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="P(X=k) = \\frac{\\binom{D}{k}\\binom{N-D}{n-k}}{\\binom{N}{n}}" /></td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="n \\frac{D}{N}" /></td>
+                        <td style={{ padding: '0.75rem' }}><MathRenderer tex="n \\frac{D}{N}(1-\\frac{D}{N})\\frac{N-n}{N-1}" /></td>
+                        <td style={{ padding: '0.75rem', color:'var(--text-muted)' }}>{isHe ? 'לא שימושי / מורכב' : 'Not useful / Complex'}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </motion.div>
+          )}
+
+          {activeTableTab === 'discrete-continuous' && (
+            <motion.div
+              key="discrete-continuous-table"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+            >
+              <div className="glass-card" style={{ padding: '1.75rem', borderLeft: '4px solid var(--accent-secondary)' }}>
+                <h2 style={{ fontSize: '1.45rem', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <span>⚖️</span> {isHe ? 'הבדלים בין הסתברות רציפה לבדידה' : 'Continuous vs. Discrete Probability'}
+                </h2>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.92rem', marginBottom: '1.5rem' }}>
+                  {isHe 
+                    ? 'טבלת השוואה מקיפה בין מודל הסתברות בדיד למודל הסתברות רציף, המציגה את האנלוגיה המלאה בין סכומים לאינטגרלים.'
+                    : 'A comprehensive comparative analysis between discrete and continuous probability models, showcasing the perfect mathematical analogy between sums and integrals.'}
+                </p>
+
+                <div style={{ overflowX: 'auto', width: '100%' }}>
+                  <table className="custom-table" style={{ width: '100%', minWidth: '700px', borderCollapse: 'collapse', fontSize: '0.92rem' }}>
+                    <thead>
+                      <tr style={{ background: 'rgba(255,255,255,0.02)', borderBottom: '2px solid var(--surface-border)' }}>
+                        <th style={{ padding: '0.85rem', width: '20%', textAlign: isHe ? 'right' : 'left' }}>{isHe ? 'תכונה להשוואה' : 'Concept / Property'}</th>
+                        <th style={{ padding: '0.85rem', width: '40%', textAlign: isHe ? 'right' : 'left', color: '#f59e0b' }}>{isHe ? 'הסתברות בדידה (Discrete)' : 'Discrete Probability'}</th>
+                        <th style={{ padding: '0.85rem', width: '40%', textAlign: isHe ? 'right' : 'left', color: '#10b981' }}>{isHe ? 'הסתברות רציפה (Continuous)' : 'Continuous Probability'}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr style={{ borderBottom: '1px solid var(--surface-border)' }}>
+                        <td style={{ padding: '0.85rem', fontWeight: 'bold' }}>{isHe ? 'תומך / מרחב ערכים' : 'Support / Value Space'}</td>
+                        <td style={{ padding: '0.85rem' }}>{isHe ? 'קבוצה סופית או בת-מנייה של נקודות מבודדות (למשל, מספרים שלמים).' : 'Finite or countable set of isolated points (e.g. integers).'}</td>
+                        <td style={{ padding: '0.85rem' }}>{isHe ? 'קבוצה שאינה בת-מנייה, מיוצגת לרוב כקטע או רצף של מספרים ממשיים.' : 'Uncountable set, typically represented as an interval or union of intervals on R.'}</td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid var(--surface-border)' }}>
+                        <td style={{ padding: '0.85rem', fontWeight: 'bold' }}>{isHe ? 'פונקציית ההסתברות' : 'Probability Function'}</td>
+                        <td style={{ padding: '0.85rem' }}>
+                          <strong>{isHe ? 'פונקציית הסתברות (PMF)' : 'Probability Mass Function (PMF)'}</strong><br/>
+                          <MathRenderer tex="p_X(x) = P(X = x)" /><br/>
+                          <span style={{fontSize:'0.8rem', color:'var(--text-muted)'}}>{isHe ? 'נותנת את ההסתברות המדויקת בכל נקודה.' : 'Gives exact point probabilities.'}</span>
+                        </td>
+                        <td style={{ padding: '0.85rem' }}>
+                          <strong>{isHe ? 'פונקציית צפיפות (PDF)' : 'Probability Density Function (PDF)'}</strong><br/>
+                          <MathRenderer tex="f_X(x) = \\frac{d}{dx}F_X(x)" /><br/>
+                          <span style={{fontSize:'0.8rem', color:'var(--text-muted)'}}>{isHe ? 'מייצגת צפיפות/קצב צבירה; ערכי פונקציה יכולים לעלות על 1.' : 'Represents density/accumulation rate; values can exceed 1.'}</span>
+                        </td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid var(--surface-border)' }}>
+                        <td style={{ padding: '0.85rem', fontWeight: 'bold' }}>{isHe ? 'הסתברות בנקודה בודדת' : 'Single Point Probability'}</td>
+                        <td style={{ padding: '0.85rem' }}><MathRenderer tex="P(X = x) = p_X(x) \\ge 0" /></td>
+                        <td style={{ padding: '0.85rem' }}><MathRenderer tex="P(X = x) = 0" /> <br/><span style={{fontSize:'0.8rem', color:'var(--text-muted)'}}>{isHe ? 'ההסתברות בנקודה מדויקת היא אפס לחלוטין.' : 'The probability of any exact single point is mathematically zero.'}</span></td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid var(--surface-border)' }}>
+                        <td style={{ padding: '0.85rem', fontWeight: 'bold' }}>{isHe ? 'תנאי נרמול' : 'Normalization Rule'}</td>
+                        <td style={{ padding: '0.85rem' }}><MathRenderer tex="\\sum_{x \\in S} p_X(x) = 1" /></td>
+                        <td style={{ padding: '0.85rem' }}><MathRenderer tex="\\int_{-\\infty}^{\\infty} f_X(x)dx = 1" /></td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid var(--surface-border)' }}>
+                        <td style={{ padding: '0.85rem', fontWeight: 'bold' }}>{isHe ? 'פונקציית התפלגות (CDF)' : 'Cumulative Dist. Function'}</td>
+                        <td style={{ padding: '0.85rem' }}><MathRenderer tex="F_X(x) = \\sum_{t \\le x} p_X(t)" /><br/><span style={{fontSize:'0.8rem', color:'var(--text-muted)'}}>{isHe ? 'פונקציית מדרגות רציפה מימין' : 'Step-wise right-continuous function'}</span></td>
+                        <td style={{ padding: '0.85rem' }}><MathRenderer tex="F_X(x) = \\int_{-\\infty}^{x} f_X(t)dt" /><br/><span style={{fontSize:'0.8rem', color:'var(--text-muted)'}}>{isHe ? 'פונקציה רציפה וחלקלקה' : 'Fully continuous, smooth function'}</span></td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid var(--surface-border)' }}>
+                        <td style={{ padding: '0.85rem', fontWeight: 'bold' }}>{isHe ? 'התוחלת' : 'Expected Value'}</td>
+                        <td style={{ padding: '0.85rem' }}><MathRenderer tex="\\text{Var}(X) = \\sum_{x \\in S} (x-\\mu)^2 p_X(x)" /></td>
+                        <td style={{ padding: '0.85rem' }}><MathRenderer tex="\\text{Var}(X) = \\int_{-\\infty}^{\\infty} (x-\\mu)^2 f_X(x)dx" /></td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid var(--surface-border)' }}>
+                        <td style={{ padding: '0.85rem', fontWeight: 'bold' }}>{isHe ? 'משפט הסטטיסטיקאי ההמום (LOTUS)' : 'LOTUS'}</td>
+                        <td style={{ padding: '0.85rem' }}><MathRenderer tex="\\mathbb{E}[h(X)] = \\sum_{x \\in S} h(x) \\cdot p_X(x)" /></td>
+                        <td style={{ padding: '0.85rem' }}><MathRenderer tex="\\mathbb{E}[h(X)] = \\int_{-\\infty}^{\\infty} h(x) \\cdot f_X(x)dx" /></td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid var(--surface-border)' }}>
+                        <td style={{ padding: '0.85rem', fontWeight: 'bold' }}>{isHe ? 'השונות' : 'Variance'}</td>
+                        <td style={{ padding: '0.85rem' }}><MathRenderer tex="\\text{Var}(X) = \\sum_{x \\in S} (x-\\mu)^2 p_X(x)" /></td>
+                        <td style={{ padding: '0.85rem' }}><MathRenderer tex="\\text{Var}(X) = \\int_{-\\infty}^{\\infty} (x-\\mu)^2 f_X(x)dx" /></td>
+                      </tr>
+                      <tr>
+                        <td style={{ padding: '0.85rem', fontWeight: 'bold' }}>{isHe ? 'פונקציה יוצרת מומנטים MGF' : 'MGF'}</td>
+                        <td style={{ padding: '0.85rem' }}><MathRenderer tex="M_X(t) = \\sum_{x \\in S} e^{tx} p_X(x)" /></td>
+                        <td style={{ padding: '0.85rem' }}><MathRenderer tex="M_X(t) = \\int_{-\\infty}^{\\infty} e^{tx} f_X(x)dx" /></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </motion.div>
+          )}
+
+          {activeTableTab === '1d-2d' && (
+            <motion.div
+              key="1d-2d-table"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+            >
+              <div className="glass-card" style={{ padding: '1.75rem', borderLeft: '4px solid var(--secondary-color)' }}>
+                <h2 style={{ fontSize: '1.45rem', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <span>🌀</span> {isHe ? 'השוואה בין משתנה מקרי חד-ממדי לדו-ממדי' : '1D vs. 2D Random Variables'}
+                </h2>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.92rem', marginBottom: '1.5rem' }}>
+                  {isHe 
+                    ? 'השוואה שיטתית של אופן הטיפול במשתנה מקרי יחיד (1D) לעומת וקטור מקרי משותף (2D), הן במקרה הבדיד והן במקרה הרציף.'
+                    : 'A systematic comparison of operations on a single random variable (1D) versus a joint random vector (2D) for both discrete and continuous domains.'}
+                </p>
+
+                <div style={{ overflowX: 'auto', width: '100%' }}>
+                  <table className="custom-table" style={{ width: '100%', minWidth: '850px', borderCollapse: 'collapse', fontSize: '0.92rem' }}>
+                    <thead>
+                      <tr style={{ background: 'rgba(255,255,255,0.02)', borderBottom: '2px solid var(--surface-border)' }}>
+                        <th style={{ padding: '0.85rem', width: '20%', textAlign: isHe ? 'right' : 'left' }}>{isHe ? 'היבט להשוואה' : 'Operation / Dimension'}</th>
+                        <th style={{ padding: '0.85rem', width: '40%', textAlign: isHe ? 'right' : 'left', color: 'var(--primary-color)' }}>{isHe ? 'משתנה חד-ממדי (1D)' : '1D Random Variable'}</th>
+                        <th style={{ padding: '0.85rem', width: '40%', textAlign: isHe ? 'right' : 'left', color: 'var(--secondary-color)' }}>{isHe ? 'וקטור דו-ממדי (2D)' : '2D Random Variable (Joint)'}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr style={{ borderBottom: '1px solid var(--surface-border)' }}>
+                        <td style={{ padding: '0.85rem', fontWeight: 'bold' }}>{isHe ? 'הגדרה ומיפוי' : 'Basic Concept'}</td>
+                        <td style={{ padding: '0.85rem' }}>{isHe ? 'משתנה מקרי יחיד X הממפה ממרחב המדגם לישר הממשי R.' : 'A single mapping X: Omega -> R.'}</td>
+                        <td style={{ padding: '0.85rem' }}>{isHe ? 'זוג סדור (X, Y) הממפה ממרחב המדגם למישור הדו-ממדי R2.' : 'A random vector (X, Y): Omega -> R^2, mapping outcomes to a coordinate plane.'}</td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid var(--surface-border)' }}>
+                        <td style={{ padding: '0.85rem', fontWeight: 'bold' }}>{isHe ? 'פונקציית התפלגות (CDF)' : 'Cumulative Dist. Function'}</td>
+                        <td style={{ padding: '0.85rem' }}><MathRenderer tex="F_X(x) = P(X \\le x)" /></td>
+                        <td style={{ padding: '0.85rem' }}><MathRenderer tex="F_{X,Y}(x,y) = P(X \\le x, Y \\le y)" /></td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid var(--surface-border)' }}>
+                        <td style={{ padding: '0.85rem', fontWeight: 'bold' }}>{isHe ? 'פונקציית ההסתברות (בדיד)' : 'Discrete Case (PMF)'}</td>
+                        <td style={{ padding: '0.85rem' }}><MathRenderer tex="p_X(x) = P(X = x)" /></td>
+                        <td style={{ padding: '0.85rem' }}>
+                          <strong>{isHe ? 'הסתברות משותפת:' : 'Joint PMF:'}</strong> <MathRenderer tex="p_{X,Y}(x,y) = P(X=x, Y=y)" /><br/><br/>
+                          <strong>{isHe ? 'חילוץ שוליים:' : 'Marginal PMF:'}</strong><br/>
+                          <MathRenderer tex="p_X(x) = \\sum_y p_{X,Y}(x,y)" /><br/>
+                          <MathRenderer tex="p_Y(y) = \\sum_x p_{X,Y}(x,y)" />
+                        </td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid var(--surface-border)' }}>
+                        <td style={{ padding: '0.85rem', fontWeight: 'bold' }}>{isHe ? 'פונקציית צפיפות (רציף)' : 'Continuous Case (PDF)'}</td>
+                        <td style={{ padding: '0.85rem' }}><MathRenderer tex="f_X(x) = \\frac{d}{dx}F_X(x)" /></td>
+                        <td style={{ padding: '0.85rem' }}>
+                          <strong>{isHe ? 'צפיפות משותפת:' : 'Joint PDF:'}</strong> <MathRenderer tex="f_{X,Y}(x,y) = \\frac{\\partial^2}{\\partial x \\partial y}F_{X,Y}(x,y)" /><br/><br/>
+                          <strong>{isHe ? 'חילוץ שוליים (אינטגרציה):' : 'Marginal PDF:'}</strong><br/>
+                          <MathRenderer tex="f_X(x) = \\int_{-\\infty}^{\\infty} f_{X,Y}(x,y)dy" /><br/>
+                          <MathRenderer tex="f_Y(y) = \\int_{-\\infty}^{\\infty} f_{X,Y}(x,y)dx" />
+                        </td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid var(--surface-border)' }}>
+                        <td style={{ padding: '0.85rem', fontWeight: 'bold' }}>{isHe ? 'אי-תלות בין משתנים' : 'Independence Condition'}</td>
+                        <td style={{ padding: '0.85rem', color: 'var(--text-muted)' }}>{isHe ? 'לא רלוונטי (משתנה יחיד)' : 'N/A (Single variable)'}</td>
+                        <td style={{ padding: '0.85rem' }}>
+                          {isHe ? 'ההתפלגות המשותפת היא מכפלת השוליות:' : 'Joint distribution factors into product of marginals:'}<br/>
+                          <span style={{color: '#10b981'}}><strong>{isHe ? 'בדיד:' : 'Discrete:'}</strong></span> <MathRenderer tex="p_{X,Y}(x,y) = p_X(x) \\cdot p_Y(y)" /><br/>
+                          <span style={{color: '#06b6d4'}}><strong>{isHe ? 'רציף:' : 'Continuous:'}</strong></span> <MathRenderer tex="f_{X,Y}(x,y) = f_X(x) \\cdot f_Y(y)" />
+                        </td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid var(--surface-border)' }}>
+                        <td style={{ padding: '0.85rem', fontWeight: 'bold' }}>{isHe ? 'תוחלת של פונקציה' : 'Expectation of Functions'}</td>
+                        <td style={{ padding: '0.85rem' }}><MathRenderer tex="\\mathbb{E}[g(X)] = \\int g(x)f_X(x)dx" /></td>
+                        <td style={{ padding: '0.85rem' }}><MathRenderer tex="\\mathbb{E}[g(X,Y)] = \\int \\int g(x,y)f_{X,Y}(x,y)dxdy" /></td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid var(--surface-border)' }}>
+                        <td style={{ padding: '0.85rem', fontWeight: 'bold' }}>{isHe ? 'שונות וקשרים ליניאריים' : 'Variance & Covariance'}</td>
+                        <td style={{ padding: '0.85rem' }}>
+                          <strong>{isHe ? 'שונות:' : 'Variance:'}</strong><br/>
+                          <MathRenderer tex="\\text{Var}(X) = \\mathbb{E}[X^2] - (\\mathbb{E}[X])^2" />
+                        </td>
+                        <td style={{ padding: '0.85rem' }}>
+                          <strong>{isHe ? 'שונות משותפת (קובריאנס):' : 'Covariance:'}</strong><br/>
+                          <MathRenderer tex="\\text{Cov}(X,Y) = \\mathbb{E}[XY] - \\mathbb{E}[X]\\mathbb{E}[Y]" /><br/><br/>
+                          <strong>{isHe ? 'שונות סכום:' : 'Variance of Sum:'}</strong><br/>
+                          <MathRenderer tex="\\text{Var}(X \\pm Y) = \\text{Var}(X) + \\text{Var}(Y) \\pm 2\\text{Cov}(X,Y)" />
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style={{ padding: '0.85rem', fontWeight: 'bold' }}>{isHe ? 'מדד קשר מנורמל' : 'Normalized Correlation'}</td>
+                        <td style={{ padding: '0.85rem', color: 'var(--text-muted)' }}>{isHe ? 'לא רלוונטי' : 'N/A'}</td>
+                        <td style={{ padding: '0.85rem' }}>
+                          <strong>{isHe ? 'מקדם המתאם של פירסון:' : 'Pearson Correlation:'}</strong><br/>
+                          <MathRenderer tex="\\rho_{X,Y} = \\frac{\\text{Cov}(X,Y)}{\\sqrt{\\text{Var}(X)\\text{Var}(Y)}}" /><br/>
+                          <span style={{fontSize:'0.8rem', color:'var(--text-muted)'}}><MathRenderer tex="-1 \\le \\rho_{X,Y} \\le 1" /></span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    );
+  };
+
   // Dynamic Translations
   const lTitle = isHe ? 'מרכז הנוסחאות וההגדרות' : 'Formula & Definition Hub';
   const lSubTitle = isHe 
     ? 'דף נוסחאות אינטראקטיבי להכנה מהירה למבחן. למד הגדרות, חקור משוואות ב-LaTeX, ולחץ על כל כרטיס כדי לפתוח מסך מפורט.'
     : 'Interactive formula sheet for rapid exam preparation. Study definitions, examine equations in beautiful LaTeX, and tap any card to open a full popup screen.';
   
-  const lProbTitle = isHe ? 'אלגברה ליניארית נומרית' : 'Numerical Linear Algebra';
-  const lStatsTitle = isHe ? 'אופטימיזציה נומרית' : 'Numerical Optimization';
+  const lProbTitle = isHe ? 'תורת ההסתברות' : 'Probability Theory';
+  const lStatsTitle = isHe ? 'סטטיסטיקה' : 'Statistics';
   
   const lSearchPlaceholder = isHe ? 'חפש משוואות, מילות מפתח או קטגוריות...' : 'Search equations, definition keywords or categories...';
   const lReset = isHe ? 'איפוס' : 'Reset';
   
   const lFilterTopic = isHe ? 'נושא' : 'Topic';
   const lFilterAllCourses = isHe ? 'כל הקורסים' : 'All Courses';
-  const lFilterProb = isHe ? 'אלגברה ליניארית נומרית (NLA)' : 'NLA (Linear Algebra)';
-  const lFilterStats = isHe ? 'אופטימיזציה נומרית (OPT)' : 'Optimization';
+  const lFilterProb = isHe ? 'הסתברות (PROB)' : 'Probability (PROB)';
+  const lFilterStats = isHe ? 'סטטיסטיקה (STATS)' : 'Statistics (STATS)';
   
   const lFilterMastery = isHe ? 'מדד שליטה בחומר' : 'Mastery status';
   const lFilterAll = isHe ? 'הכל' : 'All';
@@ -1115,6 +1598,15 @@ export default function FormulaBoard() {
                   <List size={14} />
                   {lSortedList}
                 </motion.button>
+                <motion.button 
+                  onClick={() => setViewMode('tables')}
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.96 }}
+                  className={`filter-btn filter-btn-primary ${viewMode === 'tables' ? 'active' : ''}`}
+                >
+                  <Layers size={14} />
+                  {isHe ? 'טבלאות השוואה' : 'Comparison Tables'}
+                </motion.button>
               </div>
             </div>
           </div>
@@ -1209,6 +1701,8 @@ export default function FormulaBoard() {
           <h3>{lNoMatches}</h3>
           <p style={{ color: 'var(--text-secondary)' }}>{lNoMatchesSub}</p>
         </div>
+      ) : viewMode === 'tables' ? (
+        renderComparisonTables()
       ) : viewMode === 'list' ? (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', marginBottom: '4rem' }}>
           {sortedFormulas.map(f => renderFormulaCard(f, true))}
