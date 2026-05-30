@@ -133,6 +133,13 @@ const CATEGORY_STYLES: Record<string, CategoryStyle> = {
     badgeText: '#0891b2',
     shadow: 'rgba(8, 145, 178, 0.05)',
     glow: 'rgba(8, 145, 178, 0.15)'
+  },
+  'Calculus Review': {
+    border: '#6366f1',
+    badgeBg: 'rgba(99, 102, 241, 0.12)',
+    badgeText: '#6366f1',
+    shadow: 'rgba(99, 102, 241, 0.05)',
+    glow: 'rgba(99, 102, 241, 0.15)'
   }
 };
 
@@ -145,13 +152,12 @@ const DEFAULT_STYLE: CategoryStyle = {
 };
 
 export default function FormulaBoard() {
-  const { language, seenFormulas, toggleSeenFormula } = useAppContext();
-  const [searchQuery, setSearchQuery] = useState('');
+  const { language, seenFormulas, toggleSeenFormula, searchQuery, setSearchQuery } = useAppContext();
   const [selectedCourse, setSelectedCourse] = useState<'all' | 'prob' | 'stats'>('all');
   const [selectedStatus, setSelectedStatus] = useState<'all' | 'green' | 'yellow' | 'red' | 'to-learn'>('all');
   const [selectedFormula, setSelectedFormula] = useState<Formula | null>(null);
   const [viewMode, setViewMode] = useState<'grouped' | 'list' | 'tables'>('grouped');
-  const [activeTableTab, setActiveTableTab] = useState<'distributions' | 'discrete-continuous' | '1d-2d' | 'inequalities' | 'estimators' | 'convergence'>('distributions');
+  const [activeTableTab, setActiveTableTab] = useState<'distributions' | 'discrete-continuous' | '1d-2d' | 'inequalities' | 'estimators' | 'convergence' | 'calculus'>('distributions');
   const [sortBy, setSortBy] = useState<'name' | 'course' | 'category'>('name');
   
   // Collapse Toggles for NLA & OPT Stats Blocks
@@ -181,13 +187,14 @@ export default function FormulaBoard() {
 
   // Filter Formulas
   const filteredFormulas = formulas.filter(f => {
-    const nameMatch = isHe ? (f.nameHe || f.name) : f.name;
-    const descMatch = isHe ? (f.descriptionHe || f.description) : f.description;
-    const catMatch = isHe ? (f.categoryHe || f.category) : f.category;
-
-    const matchesSearch = nameMatch.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                          descMatch.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          catMatch.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch = 
+      f.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      (f.nameHe && f.nameHe.toLowerCase().includes(searchQuery.toLowerCase())) ||
+      f.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (f.descriptionHe && f.descriptionHe.toLowerCase().includes(searchQuery.toLowerCase())) ||
+      f.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (f.categoryHe && f.categoryHe.toLowerCase().includes(searchQuery.toLowerCase())) ||
+      f.equation.toLowerCase().includes(searchQuery.toLowerCase());
                           
     const matchesCourse = selectedCourse === 'all' || f.courseId === selectedCourse;
     const matchesStatus = selectedStatus === 'all' || 
@@ -865,6 +872,22 @@ export default function FormulaBoard() {
             }}
           >
             {isHe ? 'סוגי התכנסות 🔄' : 'Types of Convergence 🔄'}
+          </motion.button>
+
+          <motion.button
+            onClick={() => setActiveTableTab('calculus')}
+            whileHover={{ scale: 1.03, y: -1 }}
+            whileTap={{ scale: 0.97 }}
+            className={`filter-btn ${activeTableTab === 'calculus' ? 'active' : ''}`}
+            style={{ 
+              background: activeTableTab === 'calculus' ? 'var(--primary-color)' : 'var(--math-bg)',
+              color: activeTableTab === 'calculus' ? 'white' : 'var(--text-secondary)',
+              border: '1px solid var(--surface-border)',
+              padding: '0.6rem 1.1rem',
+              fontWeight: 600
+            }}
+          >
+            {isHe ? 'מטריצת חדו"א ואינטגרלים 📐' : 'Calculus & Integration Matrix 📐'}
           </motion.button>
         </div>
 
@@ -1588,6 +1611,246 @@ export default function FormulaBoard() {
                   {isHe ? ' ו-' : ' and '}
                   <MathRenderer tex="\xrightarrow{L^q} \implies \xrightarrow{P}" />
                   {isHe ? '. ההיפוך אינו נכון בדרך כלל.' : '. The converse does not hold in general.'}
+                </div>
+              </div>
+            </motion.div>
+          )}
+
+          {activeTableTab === 'calculus' && (
+            <motion.div
+              key="calculus-table"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+            >
+              <div className="glass-card" style={{ padding: '1.75rem', borderLeft: '4px solid var(--primary-color)' }}>
+                <h2 style={{ fontSize: '1.45rem', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <span>📐</span> {isHe ? 'מטריצת חדו"א ואינטגרלים מלאה' : 'Master Calculus & Integration Matrix'}
+                </h2>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.92rem', marginBottom: '1.5rem' }}>
+                  {isHe 
+                    ? 'ריכוז שיטתי של שיטות האינטגרציה, פונקציות מיוחדות ואינטגרלים כפולים הנחוצים להצלחה בקורס, יחד עם שימושיהם הישירים בהסתברות רציפה.'
+                    : 'A systematic compilation of integration methods, special functions, and double integrals essential for the course, alongside their direct applications in continuous probability.'}
+                </p>
+
+                <div style={{ overflowX: 'auto', width: '100%' }}>
+                  <table className="custom-table" style={{ width: '100%', minWidth: '950px', borderCollapse: 'collapse', fontSize: '0.88rem' }}>
+                    <thead>
+                      <tr style={{ background: 'rgba(255,255,255,0.02)', borderBottom: '2px solid var(--surface-border)' }}>
+                        <th style={{ padding: '0.85rem', width: '18%', textAlign: isHe ? 'right' : 'left' }}>{isHe ? 'שיטה / מושג' : 'Method / Concept'}</th>
+                        <th style={{ padding: '0.85rem', width: '26%', textAlign: isHe ? 'right' : 'left', color: 'var(--primary-color)' }}>{isHe ? 'נוסחה מתמטית' : 'Mathematical Formula'}</th>
+                        <th style={{ padding: '0.85rem', width: '28%', textAlign: isHe ? 'right' : 'left' }}>{isHe ? 'אסטרטגיה וכללים' : 'Key Strategy & Rules'}</th>
+                        <th style={{ padding: '0.85rem', width: '28%', textAlign: isHe ? 'right' : 'left' }}>{isHe ? 'שימוש וקשר להסתברות רציפה' : 'Continuous Probability Connection'}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr style={{ borderBottom: '1px solid var(--surface-border)' }}>
+                        <td style={{ padding: '0.85rem', fontWeight: 'bold' }}>
+                          {isHe ? 'אינטגרציה בהצבה (u-Substitution)' : 'u-Substitution'}<br/>
+                          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'normal' }}>{isHe ? 'כלל השרשרת ההפוך' : 'Chain Rule Counterpart'}</span>
+                        </td>
+                        <td style={{ padding: '0.85rem' }}>
+                          <strong>{isHe ? 'אינטגרל לא מסוים:' : 'Indefinite:'}</strong><br/>
+                          <MathRenderer tex="\int f(g(x))g'(x)dx = \int f(u)du" /><br/><br/>
+                          <strong>{isHe ? 'אינטגרל מסוים (עדכון גבולות):' : 'Definite (Update bounds):'}</strong><br/>
+                          <MathRenderer tex="\int_{a}^{b} f(g(x))g'(x)dx = \int_{g(a)}^{g(b)} f(u)du" />
+                        </td>
+                        <td style={{ padding: '0.85rem' }}>
+                          {isHe ? (
+                            <div>
+                              1. נסמן: <MathRenderer tex="u = g(x)" /> (פונקציה פנימית)<br/>
+                              2. נגזור: <MathRenderer tex="du = g'(x)dx" /><br/>
+                              3. אינטגרל מסוים ⬅️ עדכון גבולות: <MathRenderer tex="a \to g(a)" />, <MathRenderer tex="b \to g(b)" />
+                            </div>
+                          ) : (
+                            <div>
+                              1. Substitute: <MathRenderer tex="u = g(x)" /> (inner function)<br/>
+                              2. Differentiate: <MathRenderer tex="du = g'(x)dx" /><br/>
+                              3. Definite integral ⬅️ Update bounds: <MathRenderer tex="a \to g(a)" />, <MathRenderer tex="b \to g(b)" />
+                            </div>
+                          )}
+                        </td>
+                        <td style={{ padding: '0.85rem' }}>
+                          {isHe ? (
+                            <div>
+                              נרמול פונקציות צפיפות (כמו התפלגות ריילי ומעריכית) וטרנספורמציות משתנים רציפים <MathRenderer tex="Y = g(X)" />.
+                            </div>
+                          ) : (
+                            <div>
+                              PDF normalization (Rayleigh, Exponential) and continuous transformations <MathRenderer tex="Y = g(X)" />.
+                            </div>
+                          )}
+                        </td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid var(--surface-border)' }}>
+                        <td style={{ padding: '0.85rem', fontWeight: 'bold' }}>
+                          {isHe ? 'אינטגרציה בחלקים (By Parts)' : 'Integration by Parts'}<br/>
+                          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'normal' }}>{isHe ? 'כלל המכפלה ההפוך' : 'Product Rule Counterpart'}</span>
+                        </td>
+                        <td style={{ padding: '0.85rem' }}>
+                          <strong>{isHe ? 'נוסחה כללית:' : 'General Formula:'}</strong><br/>
+                          <MathRenderer tex="\int u \, dv = uv - \int v \, du" /><br/><br/>
+                          <strong>{isHe ? 'אינטגרל מסוים:' : 'Definite Integral:'}</strong><br/>
+                          <MathRenderer tex="\int_{a}^{b} u(x)v'(x)dx = [u(x)v(x)]_a^b - \int_{a}^{b} v(x)u'(x)dx" />
+                        </td>
+                        <td style={{ padding: '0.85rem' }}>
+                          {isHe ? (
+                            <div>
+                              בחירת <MathRenderer tex="u" /> לפי סדר קדימויות **LIATE** (עדיפות: לוגריתמי ⬅️ אלגברי ⬅️ מעריכי).<br/>
+                              המטרה: לקבל אינטגרל חדש <MathRenderer tex="\int v\,du" /> פשוט יותר לפתרון.
+                            </div>
+                          ) : (
+                            <div>
+                              Choose <MathRenderer tex="u" /> using **LIATE** (Priority: Logarithmic ⬅️ Algebraic ⬅️ Exponential).<br/>
+                              Goal: Obtain a simpler remaining integral <MathRenderer tex="\int v\,du" />.
+                            </div>
+                          )}
+                        </td>
+                        <td style={{ padding: '0.85rem' }}>
+                          {isHe ? (
+                            <div>
+                              חישוב תוחלת <MathRenderer tex="\mathbb{E}[X]" /> ומומנטים <MathRenderer tex="\mathbb{E}[X^k]" /> של התפלגויות רציפות (מעריכית, גמא, ריילי).
+                            </div>
+                          ) : (
+                            <div>
+                              Calculating expectation <MathRenderer tex="\mathbb{E}[X]" /> and moments <MathRenderer tex="\mathbb{E}[X^k]" /> for continuous distributions (Exponential, Gamma, Rayleigh).
+                            </div>
+                          )}
+                        </td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid var(--surface-border)' }}>
+                        <td style={{ padding: '0.85rem', fontWeight: 'bold' }}>
+                          {isHe ? 'אינטגרלים לא אמיתיים' : 'Improper Integrals'}<br/>
+                          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'normal' }}>{isHe ? 'גבולות אינסופיים' : 'Infinite Boundaries'}</span>
+                        </td>
+                        <td style={{ padding: '0.85rem' }}>
+                          <MathRenderer tex="\int_{a}^{\infty} f(x)dx = \lim_{M \to \infty} \int_{a}^{M} f(x)dx" /><br/><br/>
+                          <MathRenderer tex="\int_{-\infty}^{\infty} f(x)dx = \lim_{L \to -\infty} \int_{L}^{c} f(x)dx + \lim_{R \to \infty} \int_{c}^{R} f(x)dx" />
+                        </td>
+                        <td style={{ padding: '0.85rem' }}>
+                          {isHe ? (
+                            <div>
+                              החלפת הגבול האינסופי במשתנה <MathRenderer tex="M" />, פתרון האינטגרל וחישוב הגבול: <MathRenderer tex="\lim_{M \to \infty}" />. מתכנס רק אם הגבול סופי.
+                            </div>
+                          ) : (
+                            <div>
+                              Replace infinite boundary with <MathRenderer tex="M" />, integrate normally, then evaluate <MathRenderer tex="\lim_{M \to \infty}" />. Bounded limit = convergence.
+                            </div>
+                          )}
+                        </td>
+                        <td style={{ padding: '0.85rem' }}>
+                          {isHe ? (
+                            <div>
+                              בדיקת נרמול, חישוב תוחלת, שונות ו-MGF של משתנים רציפים בעלי תומך אינסופי (כמו התפלגות נורמלית ומעריכית).
+                            </div>
+                          ) : (
+                            <div>
+                              Normalization, expectation, variance, and MGFs for distributions with infinite support (Normal, Exponential).
+                            </div>
+                          )}
+                        </td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid var(--surface-border)' }}>
+                        <td style={{ padding: '0.85rem', fontWeight: 'bold' }}>
+                          {isHe ? 'האינטגרל הגאוסיאני' : 'Gaussian Integral'}<br/>
+                          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'normal' }}>{isHe ? 'התפלגות נורמלית' : 'Normal Normalization'}</span>
+                        </td>
+                        <td style={{ padding: '0.85rem' }}>
+                          <MathRenderer tex="\int_{-\infty}^{\infty} e^{-\frac{x^2}{2}} dx = \sqrt{2\pi}" /><br/><br/>
+                          <MathRenderer tex="\int_{-\infty}^{\infty} e^{-x^2} dx = \sqrt{\pi}" />
+                        </td>
+                        <td style={{ padding: '0.85rem' }}>
+                          {isHe ? (
+                            <div>
+                              הוכחה: מעבר לקואורדינטות קוטביות בדו-ממד (<MathRenderer tex="x^2+y^2=r^2" />, איבר השטח הוא <MathRenderer tex="dA = r\,dr\,d\theta" />).
+                            </div>
+                          ) : (
+                            <div>
+                              Proof: Converting to 2D polar coordinates (<MathRenderer tex="x^2+y^2=r^2" />, area element <MathRenderer tex="dA = r\,dr\,d\theta" />).
+                            </div>
+                          )}
+                        </td>
+                        <td style={{ padding: '0.85rem' }}>
+                          {isHe ? (
+                            <div>
+                              הבסיס לנרמול ההתפלגות הנורמלית <MathRenderer tex="N(\mu, \sigma^2)" /> והגדרת קבוע הנרמול <MathRenderer tex="\frac{1}{\sigma\sqrt{2\pi}}" />.
+                            </div>
+                          ) : (
+                            <div>
+                              Normalization of the Normal distribution <MathRenderer tex="N(\mu, \sigma^2)" /> and defining the standard constant <MathRenderer tex="\frac{1}{\sigma\sqrt{2\pi}}" />.
+                            </div>
+                          )}
+                        </td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid var(--surface-border)' }}>
+                        <td style={{ padding: '0.85rem', fontWeight: 'bold' }}>
+                          {isHe ? 'פונקציית גמא (Gamma Function)' : 'Gamma Function'}<br/>
+                          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'normal' }}>{isHe ? 'הרחבת עצרת רציפה' : 'Continuous Factorial Extension'}</span>
+                        </td>
+                        <td style={{ padding: '0.85rem' }}>
+                          <MathRenderer tex="\Gamma(\alpha) = \int_{0}^{\infty} x^{\alpha-1} e^{-x} dx \quad (\alpha > 0)" /><br/><br/>
+                          <strong>{isHe ? 'זהויות מפתח:' : 'Key Identities:'}</strong><br/>
+                          <MathRenderer tex="\Gamma(\alpha+1) = \alpha \Gamma(\alpha), \quad \Gamma(n) = (n-1)!" />
+                        </td>
+                        <td style={{ padding: '0.85rem' }}>
+                          {isHe ? (
+                            <div>
+                              פותרת בשלב אחד אינטגרלים מורכבים של פולינום כפול מעריך דועך (<MathRenderer tex="x^{\alpha-1} e^{-x}" />) מעל התחום <MathRenderer tex="[0, \infty)" />.
+                            </div>
+                          ) : (
+                            <div>
+                              Solves integrals of algebraic terms times exponential decay (<MathRenderer tex="x^{\alpha-1} e^{-x}" />) over <MathRenderer tex="[0, \infty)" /> in a single step.
+                            </div>
+                          )}
+                        </td>
+                        <td style={{ padding: '0.85rem' }}>
+                          {isHe ? (
+                            <div>
+                              קביעת קבועי הנרמול והתוחלות של התפלגויות גמא (Gamma), חי-בריבוע (<MathRenderer tex="\chi^2" />) וסטודנט <MathRenderer tex="t" />.
+                            </div>
+                          ) : (
+                            <div>
+                              Defines normalization constants and moments for Gamma, Chi-Square (<MathRenderer tex="\chi^2" />), and Student-t distributions.
+                            </div>
+                          )}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style={{ padding: '0.85rem', fontWeight: 'bold' }}>
+                          {isHe ? 'אינטגרלים כפולים' : 'Double Integrals'}<br/>
+                          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'normal' }}>{isHe ? 'תחומים משולשיים שאינם מלבן' : 'Non-Rectangular / Triangular Regions'}</span>
+                        </td>
+                        <td style={{ padding: '0.85rem' }}>
+                          <MathRenderer tex="\iint_{D} f(x,y) dA = \int_{a}^{b} \int_{g_1(x)}^{g_2(x)} f(x,y) \, dy \, dx = \int_{c}^{d} \int_{h_1(y)}^{h_2(y)} f(x,y) \, dx \, dy" />
+                        </td>
+                        <td style={{ padding: '0.85rem' }}>
+                          {isHe ? (
+                            <div>
+                              גבולות פנימיים: פונקציות התלויות במשתנה החיצוני.<br/>
+                              גבולות חיצוניים: חייבים להיות קבועים מספריים מוחלטים!
+                            </div>
+                          ) : (
+                            <div>
+                              Inner limits: boundary curves (can contain variables).<br/>
+                              Outer limits: must strictly be numeric constants!
+                            </div>
+                          )}
+                        </td>
+                        <td style={{ padding: '0.85rem' }}>
+                          {isHe ? (
+                            <div>
+                              עבור משתנים רציפים משותפים: חישוב נרמול דו-ממדי, צפיפות שולית, קובריאנס ותוחלת משותפת <MathRenderer tex="\mathbb{E}[g(X,Y)]" />.
+                            </div>
+                          ) : (
+                            <div>
+                              Joint continuous variables: calculating 2D normalization, marginal densities, covariance, and joint expectation <MathRenderer tex="\mathbb{E}[g(X,Y)]" />.
+                            </div>
+                          )}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
               </div>
             </motion.div>

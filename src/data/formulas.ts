@@ -865,5 +865,52 @@ export const formulas: Formula[] = [
     equation: '\\hat{\\beta}_0 = \\bar{Y} - \\hat{\\beta}_1 \\bar{X}',
     description: 'The formula for estimating the y-intercept of the simple linear regression line.',
     descriptionHe: 'הנוסחה לאמידת החותך של קו הרגרסיה הליניארית הפשוטה.'
+  },
+  // ==========================================
+  // CALCULUS & INTEGRATION REVIEW
+  // ==========================================
+  {
+    id: 'u-substitution',
+    courseId: 'prob',
+    category: 'Calculus Review',
+    categoryHe: 'ריענון חדו"א',
+    name: 'u-Substitution (Integration by Substitution)',
+    nameHe: 'אינטגרציה בשיטת ההצבה (u-Substitution)',
+    equation: '\\int f(g(x))g\'(x)dx = \\int f(u)du, \\quad \\int_{a}^{b} f(g(x))g\'(x)dx = \\int_{g(a)}^{g(b)} f(u) du',
+    description: 'Simplifies complex products of functions by changing coordinates to a new variable u = g(x) and updating integration bounds accordingly.',
+    descriptionHe: 'מפשטת אינטגרלים המכילים מכפלות מורכבות על ידי החלפת המשתנה המקרי במשתנה עזר u, תוך עדכון גבולות האינטגרציה המסוימים בהתאם לערכי g(a) ו-g(b).'
+  },
+  {
+    id: 'integration-by-parts',
+    courseId: 'prob',
+    category: 'Calculus Review',
+    categoryHe: 'ריענון חדו"א',
+    name: 'Integration by Parts',
+    nameHe: 'אינטגרציה בחלקים',
+    equation: '\\int u \\, dv = uv - \\int v \\, du, \\quad \\int_{a}^{b} u(x)v\'(x)dx = [u(x)v(x)]_a^b - \\int_{a}^{b} v(x)u\'(x)dx',
+    description: 'The inverse of the Product Rule of differentiation, useful for evaluating integrals of products by shifting the derivative using the LIATE prioritization rule.',
+    descriptionHe: 'הפעולה ההפוכה לכלל המכפלה של גזירה. היא מסייעת בחישוב אינטגרלים של מכפלות פונקציות על ידי העברת פעולת הגזירה לפונקציה פשוטה יותר לפי כלל LIATE.'
+  },
+  {
+    id: 'gaussian-improper-integrals',
+    courseId: 'prob',
+    category: 'Calculus Review',
+    categoryHe: 'ריענון חדו"א',
+    name: 'Improper Limits & The Gaussian Integral',
+    nameHe: 'אינטגרלים לא אמיתיים והאינטגרל הגאוסיאני',
+    equation: '\\int_{-\\infty}^{\\infty} e^{-\\frac{x^2}{2}} dx = \\sqrt{2\\pi}, \\quad \\int_{a}^{\\infty} f(x)dx = \\lim_{M \\to \\infty} \\int_{a}^{M} f(x)dx',
+    description: 'Defines continuous integration over infinite intervals via limits, and establishes the essential Gaussian normalization constant for the Normal density.',
+    descriptionHe: 'מגדיר אינטגרציה רציפה מעל תחומים אינסופיים באמצעות גבולות מתמטיים, ומציג את ערך האינטגרל הגאוסיאני היסודי המשמש כבסיס לנרמול צפיפות התפלגות נורמלית.'
+  },
+  {
+    id: 'double-integrals-triangular',
+    courseId: 'prob',
+    category: 'Calculus Review',
+    categoryHe: 'ריענון חדו"א',
+    name: 'Double Integrals (Triangular Regions)',
+    nameHe: 'אינטגרלים כפולים (תחומים משולשיים)',
+    equation: '\\iint_{D} f(x,y) dA = \\int_{a}^{b} \\int_{g_1(x)}^{g_2(x)} f(x,y) \\, dy \\, dx = \\int_{c}^{d} \\int_{h_1(y)}^{h_2(y)} f(x,y) \\, dx \\, dy',
+    description: 'Enables 2D continuous integration over non-rectangular domains, key for marginalization and joint probabilities in multivariate continuous setups.',
+    descriptionHe: 'מאפשר ביצוע אינטגרציה דו-ממדית מעל תחומים שאינם מלבניים, דבר המהווה מפתח למציאת הסתברויות שוליות ותוחלות משותפות במרחבים רציפים רב-ממדיים.'
   }
 ];

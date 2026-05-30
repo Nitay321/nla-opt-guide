@@ -1,5 +1,6 @@
+import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, ArrowRight, BookOpen, Compass, Lightbulb } from 'lucide-react';
 import { chapters } from '../data/chapters';
 import TheoremBox from '../components/TheoremBox';
@@ -10,10 +11,21 @@ import { useAppContext } from '../App';
 export default function ChapterPage() {
   const { courseId, chapterId } = useParams();
   const { language } = useAppContext();
+  const [activeBlock, setActiveBlock] = useState<'prob' | 'calc'>('prob');
   
   const isHe = language === 'he';
   const chapterIdx = chapters.findIndex(c => c.id === chapterId);
   const chapter = chapters[chapterIdx];
+
+  const filteredDefinitions = chapter && chapter.id === 'prob-0'
+    ? chapter.definitions.filter(def => {
+        if (activeBlock === 'prob') {
+          return ['def-prob-0-1', 'def-prob-0-2', 'def-prob-0-3', 'def-prob-0-4'].includes(def.id);
+        } else {
+          return ['def-prob-0-5', 'def-prob-0-6', 'def-prob-0-7'].includes(def.id);
+        }
+      })
+    : chapter?.definitions || [];
 
   if (!chapter) {
     return (
@@ -117,6 +129,82 @@ export default function ChapterPage() {
         </div>
       </header>
 
+      {/* Premium Toggle Selector for Chapter 0 */}
+      {chapter.id === 'prob-0' && (
+        <div style={{
+          display: 'flex',
+          flexDirection: 'row',
+          direction: 'ltr',
+          background: 'rgba(255, 255, 255, 0.03)',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+          padding: '4px',
+          borderRadius: '100px',
+          border: '1px solid rgba(255, 255, 255, 0.08)',
+          maxWidth: '520px',
+          margin: '2rem auto 3rem auto',
+          boxShadow: 'var(--shadow-md)',
+          position: 'relative',
+          overflow: 'hidden'
+        }}>
+          <motion.div 
+            layout
+            transition={{ type: 'spring', stiffness: 350, damping: 28 }}
+            style={{
+              position: 'absolute',
+              top: '4px',
+              bottom: '4px',
+              left: activeBlock === 'prob' ? '4px' : 'calc(50% + 4px)',
+              width: 'calc(50% - 8px)',
+              background: 'linear-gradient(135deg, var(--primary-color), var(--secondary-color))',
+              borderRadius: '100px',
+              zIndex: 0,
+              boxShadow: '0 4px 15px rgba(99, 102, 241, 0.22)'
+            }}
+          />
+          <button 
+            onClick={() => setActiveBlock('prob')}
+            style={{
+              flex: 1,
+              padding: '0.8rem 1.5rem',
+              border: 'none',
+              borderRadius: '100px',
+              cursor: 'pointer',
+              fontWeight: 600,
+              fontSize: '1rem',
+              transition: 'color 0.25s ease',
+              background: 'transparent',
+              color: activeBlock === 'prob' ? '#ffffff' : 'var(--text-secondary)',
+              zIndex: 1,
+              position: 'relative',
+              outline: 'none'
+            }}
+          >
+            {isHe ? 'יסודות ההסתברות' : 'Probability Foundations'}
+          </button>
+          <button 
+            onClick={() => setActiveBlock('calc')}
+            style={{
+              flex: 1,
+              padding: '0.8rem 1.5rem',
+              border: 'none',
+              borderRadius: '100px',
+              cursor: 'pointer',
+              fontWeight: 600,
+              fontSize: '1rem',
+              transition: 'color 0.25s ease',
+              background: 'transparent',
+              color: activeBlock === 'calc' ? '#ffffff' : 'var(--text-secondary)',
+              zIndex: 1,
+              position: 'relative',
+              outline: 'none'
+            }}
+          >
+            {isHe ? 'ריענון חדו"א ואינטגרלים' : 'Calculus & Integration'}
+          </button>
+        </div>
+      )}
+
       {/* Core Syllabus Content */}
       <section style={{ marginBottom: '4rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', marginBottom: '2rem', borderBottom: '1px solid var(--surface-border)', paddingBottom: '0.8rem' }}>
@@ -124,9 +212,19 @@ export default function ChapterPage() {
           <h2 style={{ margin: 0, fontSize: '1.75rem' }}>{lCoreTheorems}</h2>
         </div>
         
-        {chapter.definitions.map(def => (
-          <TheoremBox key={def.id} definition={def} />
-        ))}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={chapter.id === 'prob-0' ? activeBlock : 'normal'}
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -15 }}
+            transition={{ duration: 0.25, ease: 'easeInOut' }}
+          >
+            {filteredDefinitions.map(def => (
+              <TheoremBox key={def.id} definition={def} />
+            ))}
+          </motion.div>
+        </AnimatePresence>
       </section>
 
       {/* Chapter Quiz Assessment */}

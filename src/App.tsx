@@ -28,6 +28,8 @@ interface AppContextType {
   seenFormulas: Record<string, 'green' | 'yellow' | 'red' | null | boolean>;
   toggleSeenFormula: (id: string, status?: 'green' | 'yellow' | 'red' | null) => void;
   updateUserAvatar: (avatarId: string) => Promise<void>;
+  searchQuery: string;
+  setSearchQuery: (query: string) => void;
 }
 
 export const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -972,6 +974,7 @@ function Navigation({ theme, toggleTheme }: { theme: 'dark' | 'light'; toggleThe
           </Link>
         </div>
 
+
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexShrink: 0 }}>
           {/* Zoom Controls */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', background: 'rgba(255,255,255,0.05)', padding: '0.2rem 0.5rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--surface-border)', height: '42px' }}>
@@ -1343,6 +1346,7 @@ function Navigation({ theme, toggleTheme }: { theme: 'dark' | 'light'; toggleThe
 }
 
 function App() {
+  const [searchQuery, setSearchQuery] = useState('');
   const [theme, setTheme] = useState<'dark' | 'light'>(() => {
     const saved = localStorage.getItem('theme');
     if (saved === 'light' || saved === 'dark') return saved;
@@ -1593,7 +1597,8 @@ function App() {
     <AppContext.Provider value={{ 
       language, zoom, toggleLanguage, zoomIn, zoomOut,
       user, signInWithGoogle, signOut, isSyncing, triggerSync,
-      seenFormulas, toggleSeenFormula, updateUserAvatar
+      seenFormulas, toggleSeenFormula, updateUserAvatar,
+      searchQuery, setSearchQuery
     }}>
       <Router>
         <div 
